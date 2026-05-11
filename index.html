@@ -447,7 +447,7 @@
 <div style="padding: 0 16px 60px; text-align: center;">
   <div style="width: 40px; height: 1px; background: #e0e0e0; margin: 0 auto 28px;"></div>
   <p style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase; color: #bbb;">Created by</p>
-  <p style="font-family: 'Cormorant', serif; font-weight: 300; font-size: 1.1rem; letter-spacing: 0.25em; text-transform: uppercase; color: #888; margin-top: 6px;">Your Name</p>
+  <p style="font-family: 'Cormorant', serif; font-weight: 300; font-size: 1.1rem; letter-spacing: 0.25em; text-transform: uppercase; color: #888; margin-top: 6px;">The Daily Art Cult</p>
 </div>
 
 <!-- POPUP -->
@@ -597,14 +597,18 @@ function loadPainting(painter) {
   const canvas = document.getElementById('paintingCanvas');
   const ctx = canvas.getContext('2d');
 
-  // Build the real URL but never expose it in the DOM
-  let url;
-  if (painter.count && painter.count > 0) {
-    const num = String(Math.floor(Math.random() * painter.count) + 1).padStart(3, '0');
-    url = `images/${painter.folder}/${num}.jpg`;
+  // Pick a random painting from the painter's paintings array
+  let url, paintingTitle;
+  if (painter.paintings && painter.paintings.length > 0) {
+    const pick = painter.paintings[Math.floor(Math.random() * painter.paintings.length)];
+    url = pick.url;
+    paintingTitle = pick.title;
   } else {
-    url = `https://picsum.photos/seed/${painter.folder}${Math.floor(Math.random()*80)}/700/420`;
+    url = `https://picsum.photos/seed/${painter.name}${Math.floor(Math.random()*80)}/700/420`;
+    paintingTitle = 'Unknown';
   }
+  // Store for popup use
+  window._currentPaintingTitle = paintingTitle;
 
   const img = new Image();
   img.crossOrigin = 'anonymous';
@@ -720,17 +724,17 @@ function showPopup(won) {
     const p = currentPainter;
     document.getElementById('popupCanvas').style.display = 'none';
     let popupUrl;
-    if (p.count && p.count > 0) {
-      const num = String(Math.floor(Math.random() * p.count) + 1).padStart(3, '0');
-      popupUrl = `images/${p.folder}/${num}.jpg`;
+    if (p.paintings && p.paintings.length > 0) {
+      popupUrl = p.paintings[Math.floor(Math.random() * p.paintings.length)].url;
     } else {
-      popupUrl = `https://picsum.photos/seed/${p.folder}portrait/420/220`;
+      popupUrl = `https://picsum.photos/seed/${p.name}portrait/420/220`;
     }
     drawPopupCanvas(popupUrl);
     emoji.textContent = '';
     title.textContent = p.name;
     const line1 = [p.nationality ? p.nationality + ' Painter' : '', (p.born && p.died) ? p.born + ' – ' + p.died : ''].filter(Boolean).join('  ·  ');
-    info.innerHTML = line1 + (p.bio ? '<br><br>' + p.bio : '');
+    const paintingLine = window._currentPaintingTitle ? 'Painting: ' + window._currentPaintingTitle : '';
+    info.innerHTML = line1 + (paintingLine ? '<br>' + paintingLine : '') + (p.bio ? '<br><br>' + p.bio : '');
     btn.textContent = 'Try Again';
   }
 
