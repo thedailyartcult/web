@@ -4,762 +4,444 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Daily Art Cult</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: #fff;
-    color: #1a1a1a;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 300;
-  }
-
-  /* ── HEADER ── */
-  header {
-    padding: 28px 20px 20px;
-    text-align: center;
-    border-bottom: 1px solid #e8e8e8;
-  }
-
-  header h1 {
-    font-family: 'Cormorant', serif;
-    font-weight: 300;
-    font-size: 2rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: #111;
-  }
-
-  header p {
-    font-size: 0.6rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: #aaa;
-    margin-top: 4px;
-  }
-
-  /* ── PAINTING ── */
-  #paintingCanvas {
-    width: 100%;
-    display: block;
-    max-height: 300px;
-    object-fit: cover;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-    pointer-events: none;
-  }
-
-  #paintingWrap {
-    position: relative;
-    line-height: 0;
-  }
-
-  /* Invisible shield over the painting — blocks right-click, drag, inspect on image */
-  #paintingShield {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    background: transparent;
-  }
-
-  /* ── STREAK DOTS ── */
-  #streakDots {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 0;
-    border-bottom: 1px solid #f0f0f0;
-  }
-
-  .dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    border: 1px solid #bbb;
-    background: #fff;
-    transition: all 0.25s;
-  }
-
-  .dot.filled {
-    background: #1a1a1a;
-    border-color: #1a1a1a;
-  }
-
-  /* ── CHOICES ── */
-  #choices {
-    display: flex;
-    flex-direction: column;
-    padding: 18px 16px 8px;
-    gap: 10px;
-  }
-
-  .choice-btn {
-    width: 100%;
-    padding: 17px 16px;
-    border: 1px solid #d0d0d0;
-    background: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 300;
-    font-size: 0.68rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-align: center;
-    color: #1a1a1a;
-    transition: border-color 0.2s, background 0.2s, color 0.2s;
-  }
-
-  .choice-btn:hover:not(:disabled) {
-    border-color: #1a1a1a;
-    background: #fafafa;
-  }
-
-  .choice-btn.correct {
-    border-color: #2d7a4a;
-    background: #f0faf4;
-    color: #1a4a2e;
-    letter-spacing: 0.28em;
-  }
-
-  .choice-btn.wrong {
-    border-color: #9a2a2a;
-    background: #fdf4f4;
-    color: #6a1a1a;
-  }
-
-  .choice-btn:disabled { cursor: default; }
-
-  /* ── DIVIDER ── */
-  .divider {
-    width: 40px;
-    height: 1px;
-    background: #ccc;
-    margin: 28px auto 0;
-  }
-
-  /* ── COLLECTIONS SECTION ── */
-  #collectionsSection {
-    padding: 32px 16px 50px;
-    text-align: center;
-  }
-
-  #collectionsSection h2 {
-    font-family: 'Cormorant', serif;
-    font-weight: 300;
-    font-size: 1.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #111;
-    margin-bottom: 6px;
-  }
-
-  #collectionsSection .sub {
-    font-size: 0.6rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: #aaa;
-    margin-bottom: 28px;
-  }
-
-  .col-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .col-card {
-    position: relative;
-    width: 100%;
-    height: 72px;
-    border: 1px solid #d0d0d0;
-    overflow: hidden;
-    cursor: pointer;
-    background: #fff;
-    transition: border-color 0.3s;
-  }
-
-  .col-card:hover { border-color: #1a1a1a; }
-  .col-card.active { border-color: #1a1a1a; }
-
-  .col-card-bg {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    filter: grayscale(20%) brightness(0.45);
-  }
-
-  .col-card:hover .col-card-bg,
-  .col-card.active .col-card-bg {
-    opacity: 1;
-  }
-
-  .col-label {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 300;
-    font-size: 0.65rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: #444;
-    transition: opacity 0.3s;
-    z-index: 2;
-  }
-
-  .col-card:hover .col-label,
-  .col-card.active .col-label {
-    opacity: 0;
-  }
-
-  .col-info {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    opacity: 0;
-    transition: opacity 0.3s;
-    gap: 4px;
-    padding: 0 12px;
-  }
-
-  .col-card:hover .col-info,
-  .col-card.active .col-info {
-    opacity: 1;
-  }
-
-  .col-info-name {
-    font-family: 'Cormorant', serif;
-    font-weight: 300;
-    font-size: 1rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #fff;
-  }
-
-  .col-info-meta {
-    font-size: 0.55rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.65);
-  }
-
-  .col-info-difficulty {
-    display: inline-block;
-    margin-top: 2px;
-    font-size: 0.5rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border: 1px solid rgba(255,255,255,0.4);
-    color: rgba(255,255,255,0.8);
-  }
-
-  /* ── OVERLAY ── */
-  #overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(10,10,10,0.6);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-  }
-
-  #overlay.show { display: flex; }
-
-  #popup {
-    background: #fff;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-    overflow: hidden;
-  }
-
-  #popupImg {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    display: none;
-  }
-
-  #popupBody {
-    padding: 30px 28px 32px;
-  }
-
-  #popupEmoji {
-    font-size: 2rem;
-    margin-bottom: 12px;
-  }
-
-  #popupTitle {
-    font-family: 'Cormorant', serif;
-    font-weight: 300;
-    font-size: 1.5rem;
-    letter-spacing: 0.15em;
-    color: #111;
-    margin-bottom: 10px;
-  }
-
-  #popupInfo {
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    color: #888;
-    line-height: 2;
-    margin-bottom: 24px;
-    text-transform: uppercase;
-  }
-
-  #popupBtn {
-    padding: 13px 40px;
-    border: 1px solid #1a1a1a;
-    background: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 300;
-    font-size: 0.62rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    cursor: pointer;
-    color: #1a1a1a;
-    transition: all 0.2s;
-  }
-
-  #popupBtn:hover {
-    background: #1a1a1a;
-    color: #fff;
+  body { font-family: 'Montserrat', sans-serif; background: #fff; color: #1a1a1a; }
+  
+  .app { display: flex; flex-direction: column; height: 100vh; }
+  header { text-align: center; padding: 20px; border-bottom: 1px solid #eee; }
+  header h1 { font-family: 'Cormorant', serif; font-weight: 300; font-size: 1.8rem; letter-spacing: 0.3em; }
+  header p { font-size: 0.55rem; letter-spacing: 0.3em; color: #aaa; margin-top: 5px; }
+  
+  .game { display: flex; flex: 1; min-height: 0; }
+  .painting-area { flex: 2; display: flex; align-items: center; justify-content: center; background: #fafafa; border-right: 1px solid #eee; position: relative; }
+  .painting-area canvas { max-width: 100%; max-height: calc(100vh - 100px); object-fit: contain; }
+  .loading-overlay { position: absolute; background: rgba(250,250,250,0.9); display: flex; align-items: center; justify-content: center; inset: 0; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #888; z-index: 5; }
+  
+  .choices-area { width: 320px; padding: 30px 20px; display: flex; flex-direction: column; }
+  .streak { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid #ccc; background: #fff; transition: all 0.2s; }
+  .dot.filled { background: #1a1a1a; border-color: #1a1a1a; }
+  
+  .prompt { text-align: center; font-size: 0.55rem; letter-spacing: 0.2em; color: #999; margin-bottom: 25px; text-transform: uppercase; }
+  
+  .choices { display: flex; flex-direction: column; gap: 12px; flex: 1; justify-content: center; }
+  .choice-btn { width: 100%; padding: 14px; border: 1px solid #ddd; background: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .choice-btn:hover:not(:disabled) { border-color: #1a1a1a; background: #f5f5f5; }
+  .choice-btn.correct { border-color: #2a7a4a; background: #e8f5ed; color: #2a7a4a; }
+  .choice-btn.wrong { border-color: #c44; background: #fee; color: #c44; }
+  .choice-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  
+  .collections { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+  .collections p { font-size: 0.5rem; letter-spacing: 0.2em; color: #aaa; text-align: center; margin-bottom: 10px; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .chip { font-size: 0.45rem; letter-spacing: 0.1em; padding: 6px 12px; border: 1px solid #ddd; background: #fff; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
+  .chip.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+  
+  .popup { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100; }
+  .popup.show { display: flex; }
+  .popup-card { background: #fff; max-width: 380px; width: 90%; text-align: center; padding: 30px; }
+  .popup-card h2 { font-family: 'Cormorant', serif; font-weight: 300; font-size: 1.5rem; margin-bottom: 15px; }
+  .popup-card p { font-size: 0.75rem; color: #666; margin-bottom: 20px; line-height: 1.6; }
+  .popup-card button { padding: 12px 30px; border: 1px solid #1a1a1a; background: #fff; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; transition: all 0.2s; }
+  .popup-card button:hover { background: #1a1a1a; color: #fff; }
+  
+  .error-message { color: #c44; text-align: center; padding: 20px; font-size: 0.7rem; }
+  
+  @media (max-width: 700px) {
+    .game { flex-direction: column; }
+    .painting-area { min-height: 300px; border-right: none; border-bottom: 1px solid #eee; }
+    .choices-area { width: 100%; padding: 20px; }
   }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>The Daily Art Cult</h1>
-  <p>Where art becomes ritual.</p>
-</header>
-
-<div id="paintingWrap">
-  <canvas id="paintingCanvas"></canvas>
-  <div id="paintingShield"
-    oncontextmenu="return false"
-    ondragstart="return false"
-    onselectstart="return false">
-  </div>
-</div>
-
-<div id="streakDots"></div>
-
-<div id="choices"></div>
-
-<div class="divider"></div>
-
-<!-- COLLECTIONS -->
-<div id="collectionsSection">
-  <h2>Your Collection</h2>
-  <p class="sub">Curated for you.</p>
-  <div class="col-grid">
-
-    <div class="col-card active" onclick="pickCollection(this)" data-col="popular">
-      <div class="col-card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg')"></div>
-      <div class="col-label">Popular Painters</div>
-      <div class="col-info">
-        <div class="col-info-name">Popular Painters</div>
-        <div class="col-info-meta">The Starry Night · Van Gogh · 1889</div>
-        <div class="col-info-difficulty">20 painters · Beginner friendly</div>
-      </div>
+<div class="app">
+  <header>
+    <h1>The Daily Art Cult</h1>
+    <p>Where art becomes ritual</p>
+  </header>
+  
+  <div class="game">
+    <div class="painting-area" id="paintingArea">
+      <canvas id="mainCanvas"></canvas>
+      <div id="loadingOverlay" class="loading-overlay" style="display: none;">Loading masterpiece...</div>
     </div>
-
-    <div class="col-card" onclick="pickCollection(this)" data-col="french">
-      <div class="col-card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Eug%C3%A8ne_Delacroix_-_La_libert%C3%A9_guidant_le_peuple.jpg/1280px-Eug%C3%A8ne_Delacroix_-_La_libert%C3%A9_guidant_le_peuple.jpg')"></div>
-      <div class="col-label">French Painters</div>
-      <div class="col-info">
-        <div class="col-info-name">French Painters</div>
-        <div class="col-info-meta">Liberty Leading the People · Delacroix · 1830</div>
-        <div class="col-info-difficulty">8 painters · Intermediate</div>
+    
+    <div class="choices-area">
+      <div class="streak" id="streakContainer"></div>
+      <div class="prompt">Who painted this?</div>
+      <div class="choices" id="choicesContainer"></div>
+      
+      <div class="collections">
+        <p>FILTER BY COLLECTION</p>
+        <div class="chip-group" id="collectionChips"></div>
       </div>
-    </div>
-
-    <div class="col-card" onclick="pickCollection(this)" data-col="impressionist">
-      <div class="col-card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg/1280px-Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg')"></div>
-      <div class="col-label">Impressionist Painters</div>
-      <div class="col-info">
-        <div class="col-info-name">Impressionist Painters</div>
-        <div class="col-info-meta">Water Lilies · Monet · 1906</div>
-        <div class="col-info-difficulty">7 painters · Intermediate</div>
-      </div>
-    </div>
-
-    <div class="col-card" onclick="pickCollection(this)" data-col="russian">
-      <div class="col-card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Repin_Cossacks.jpg/1280px-Repin_Cossacks.jpg')"></div>
-      <div class="col-label">Russian Painters</div>
-      <div class="col-info">
-        <div class="col-info-name">Russian Painters</div>
-        <div class="col-info-meta">Reply of the Zaporozhian Cossacks · Repin · 1891</div>
-        <div class="col-info-difficulty">5 painters · Hard</div>
-      </div>
-    </div>
-
-    <div class="col-card" onclick="pickCollection(this)" data-col="renaissance">
-      <div class="col-card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/1280px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg')"></div>
-      <div class="col-label">The Renaissance</div>
-      <div class="col-info">
-        <div class="col-info-name">The Renaissance</div>
-        <div class="col-info-meta">The Birth of Venus · Botticelli · 1485</div>
-        <div class="col-info-difficulty">7 painters · Intermediate</div>
-      </div>
-    </div>
-
-    <div class="col-card" onclick="pickCollection(this)" data-col="realist">
-      <div class="col-card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Gustave_Courbet_-_Bonjour_Monsieur_Courbet_-_Google_Art_Project.jpg/1280px-Gustave_Courbet_-_Bonjour_Monsieur_Courbet_-_Google_Art_Project.jpg')"></div>
-      <div class="col-label">Realist Painters</div>
-      <div class="col-info">
-        <div class="col-info-name">Realist Painters</div>
-        <div class="col-info-meta">Bonjour Monsieur Courbet · Courbet · 1854</div>
-        <div class="col-info-difficulty">7 painters · Hard</div>
-      </div>
-    </div>
-
-    <div class="col-card" onclick="pickCollection(this)" data-col="full">
-      <div class="col-card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg/1280px-%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg')"></div>
-      <div class="col-label">Full Collection</div>
-      <div class="col-info">
-        <div class="col-info-name">Full Collection</div>
-        <div class="col-info-meta">The School of Athens · Raphael · 1511</div>
-        <div class="col-info-difficulty">35 painters · Expert</div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- CREATOR -->
-<div style="padding: 0 16px 60px; text-align: center;">
-  <div style="width: 40px; height: 1px; background: #e0e0e0; margin: 0 auto 28px;"></div>
-  <p style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase; color: #bbb;">Created by</p>
-  <p style="font-family: 'Cormorant', serif; font-weight: 300; font-size: 1.1rem; letter-spacing: 0.25em; text-transform: uppercase; color: #888; margin-top: 6px;">The Daily Art Cult</p>
-</div>
-
-<!-- POPUP -->
-<div id="overlay">
-  <div id="popup">
-    <canvas id="popupCanvas" style="width:100%;max-height:200px;display:none;"></canvas>
-    <div id="popupBody">
-      <div id="popupEmoji"></div>
-      <div id="popupTitle"></div>
-      <div id="popupInfo"></div>
-      <button id="popupBtn" onclick="closePopup()">Continue</button>
     </div>
   </div>
 </div>
 
-<script src="painters.js" onerror="useDemoData()"></script>
+<div class="popup" id="popup">
+  <div class="popup-card">
+    <h2 id="popupTitle"></h2>
+    <p id="popupText"></p>
+    <button onclick="closePopup()">Continue</button>
+  </div>
+</div>
+
 <script>
-// ── ANTI-CHEAT ─────────────────────────────────────────────────────────────
-// 1. Block right-click everywhere
+// ========== ANTI-CHEAT ==========
 document.addEventListener('contextmenu', e => e.preventDefault());
-
-// 2. Block common inspect shortcuts (F12, Ctrl+Shift+I/J/C, Ctrl+U)
+document.addEventListener('dragstart', e => e.preventDefault());
 document.addEventListener('keydown', e => {
-  if (
-    e.key === 'F12' ||
-    (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) ||
-    (e.ctrlKey && e.key.toUpperCase() === 'U')
-  ) { e.preventDefault(); }
+  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','C','J'].includes(e.key)) || (e.ctrlKey && e.key === 'u')) {
+    e.preventDefault();
+  }
 });
 
-// 3. Block image drag (so they can't drag it to a new tab to see the URL)
-document.addEventListener('dragstart', e => {
-  if (e.target.tagName === 'IMG' || e.target.tagName === 'CANVAS') e.preventDefault();
-});
+// ========== PAINTERS MASTER LIST (embedded) ==========
+// This is the ONLY data file. Add more painters here to expand.
+// Each painter needs: id, name, category (Wikimedia Commons category), tags, nationality, born, died
+const PAINTERS_MASTER = [
+  // POPULAR
+  { id: "claude-monet", name: "Claude Monet", category: "Paintings_by_Claude_Monet", tags: ["popular", "french", "impressionist"], nationality: "French", born: 1840, died: 1926 },
+  { id: "vincent-van-gogh", name: "Vincent van Gogh", category: "Paintings_by_Vincent_van_Gogh", tags: ["popular", "impressionist"], nationality: "Dutch", born: 1853, died: 1890 },
+  { id: "pablo-picasso", name: "Pablo Picasso", category: "Paintings_by_Pablo_Picasso", tags: ["popular"], nationality: "Spanish", born: 1881, died: 1973 },
+  { id: "rembrandt", name: "Rembrandt van Rijn", category: "Paintings_by_Rembrandt_van_Rijn", tags: ["popular"], nationality: "Dutch", born: 1606, died: 1669 },
+  { id: "johannes-vermeer", name: "Johannes Vermeer", category: "Paintings_by_Johannes_Vermeer", tags: ["popular"], nationality: "Dutch", born: 1632, died: 1675 },
+  { id: "edouard-manet", name: "Édouard Manet", category: "Paintings_by_Édouard_Manet", tags: ["popular", "french", "impressionist"], nationality: "French", born: 1832, died: 1883 },
+  { id: "paul-cezanne", name: "Paul Cézanne", category: "Paintings_by_Paul_Cézanne", tags: ["popular", "french", "impressionist"], nationality: "French", born: 1839, died: 1906 },
+  { id: "pierre-renoir", name: "Pierre-Auguste Renoir", category: "Paintings_by_Pierre-Auguste_Renoir", tags: ["popular", "french", "impressionist"], nationality: "French", born: 1841, died: 1919 },
+  { id: "francisco-goya", name: "Francisco de Goya", category: "Paintings_by_Francisco_de_Goya", tags: ["popular", "realist"], nationality: "Spanish", born: 1746, died: 1828 },
+  { id: "eugene-delacroix", name: "Eugène Delacroix", category: "Paintings_by_Eugène_Delacroix", tags: ["popular", "french"], nationality: "French", born: 1798, died: 1863 },
+  { id: "sandro-botticelli", name: "Sandro Botticelli", category: "Paintings_by_Sandro_Botticelli", tags: ["popular", "renaissance"], nationality: "Italian", born: 1445, died: 1510 },
+  { id: "leonardo-da-vinci", name: "Leonardo da Vinci", category: "Paintings_by_Leonardo_da_Vinci", tags: ["popular", "renaissance"], nationality: "Italian", born: 1452, died: 1519 },
+  { id: "michelangelo", name: "Michelangelo", category: "Paintings_by_Michelangelo", tags: ["popular", "renaissance"], nationality: "Italian", born: 1475, died: 1564 },
+  { id: "raphael", name: "Raphael", category: "Paintings_by_Raphael", tags: ["popular", "renaissance"], nationality: "Italian", born: 1483, died: 1520 },
+  { id: "caravaggio", name: "Caravaggio", category: "Paintings_by_Caravaggio", tags: ["popular"], nationality: "Italian", born: 1571, died: 1610 },
+  { id: "diego-velazquez", name: "Diego Velázquez", category: "Paintings_by_Diego_Velázquez", tags: ["popular"], nationality: "Spanish", born: 1599, died: 1660 },
+  
+  // FRENCH
+  { id: "camille-pissarro", name: "Camille Pissarro", category: "Paintings_by_Camille_Pissarro", tags: ["french", "impressionist"], nationality: "French", born: 1830, died: 1903 },
+  { id: "alfred-sisley", name: "Alfred Sisley", category: "Paintings_by_Alfred_Sisley", tags: ["french", "impressionist"], nationality: "French", born: 1839, died: 1899 },
+  { id: "berthe-morisot", name: "Berthe Morisot", category: "Paintings_by_Berthe_Morisot", tags: ["french", "impressionist"], nationality: "French", born: 1841, died: 1895 },
+  { id: "gustave-courbet", name: "Gustave Courbet", category: "Paintings_by_Gustave_Courbet", tags: ["french", "realist"], nationality: "French", born: 1819, died: 1877 },
+  { id: "jean-millet", name: "Jean-François Millet", category: "Paintings_by_Jean-François_Millet", tags: ["french", "realist"], nationality: "French", born: 1814, died: 1875 },
+  
+  // RUSSIAN
+  { id: "ilya-repin", name: "Ilya Repin", category: "Paintings_by_Ilya_Repin", tags: ["russian", "realist"], nationality: "Russian", born: 1844, died: 1930 },
+  { id: "ivan-shishkin", name: "Ivan Shishkin", category: "Paintings_by_Ivan_Shishkin", tags: ["russian", "realist"], nationality: "Russian", born: 1832, died: 1898 },
+  { id: "isaac-levitan", name: "Isaac Levitan", category: "Paintings_by_Isaac_Levitan", tags: ["russian", "impressionist"], nationality: "Russian", born: 1860, died: 1900 },
+  
+  // RENAISSANCE
+  { id: "jan-van-eyck", name: "Jan van Eyck", category: "Paintings_by_Jan_van_Eyck", tags: ["renaissance"], nationality: "Flemish", born: 1390, died: 1441 },
+  { id: "titian", name: "Titian", category: "Paintings_by_Titian", tags: ["renaissance"], nationality: "Italian", born: 1488, died: 1576 },
+  { id: "el-greco", name: "El Greco", category: "Paintings_by_El_Greco", tags: ["renaissance"], nationality: "Greek", born: 1541, died: 1614 },
+  
+  // REALIST
+  { id: "winslow-homer", name: "Winslow Homer", category: "Paintings_by_Winslow_Homer", tags: ["realist"], nationality: "American", born: 1836, died: 1910 },
+  { id: "edward-hopper", name: "Edward Hopper", category: "Paintings_by_Edward_Hopper", tags: ["realist"], nationality: "American", born: 1882, died: 1967 },
+  
+  // EXTRA POPULAR (add more here to expand)
+  { id: "gustav-klimt", name: "Gustav Klimt", category: "Paintings_by_Gustav_Klimt", tags: ["popular"], nationality: "Austrian", born: 1862, died: 1918 },
+  { id: "edvard-munch", name: "Edvard Munch", category: "Paintings_by_Edvard_Munch", tags: ["popular"], nationality: "Norwegian", born: 1863, died: 1944 },
+  { id: "william-turner", name: "J.M.W. Turner", category: "Paintings_by_J._M._W._Turner", tags: ["popular"], nationality: "British", born: 1775, died: 1851 },
+  { id: "john-constable", name: "John Constable", category: "Paintings_by_John_Constable", tags: ["popular"], nationality: "British", born: 1776, died: 1837 }
+];
 
-
-let activePainters = [];
-let currentPainter = null;
+// ========== GAME STATE ==========
+let currentPainters = [];
+let currentRoundPainter = null;
+let currentPaintingUrl = null;
+let currentPaintingTitle = null;
 let streak = 0;
 let answered = false;
-let popupWasWin = false;
+let isLoading = false;
 
-function useDemoData() {
-  allPainters = [
-    { name:"Claude Monet",          folder:"ClaudeMonet",         count:0, born:1840, died:1926, nationality:"French",   bio:"Leading Impressionist known for his series of water lilies, haystacks, and Rouen Cathedral.",         tags:["popular","french","impressionist","full"] },
-    { name:"Vincent van Gogh",      folder:"VincentVanGogh",      count:0, born:1853, died:1890, nationality:"Dutch",    bio:"Post-Impressionist famous for The Starry Night and his expressive use of colour and emotion.",          tags:["popular","impressionist","full"] },
-    { name:"Pablo Picasso",         folder:"PabloPicasso",        count:0, born:1881, died:1973, nationality:"Spanish",  bio:"Co-founder of Cubism and one of the most influential artists of the 20th century.",                   tags:["popular","full"] },
-    { name:"Rembrandt van Rijn",    folder:"RembrandtVanRijn",    count:0, born:1606, died:1669, nationality:"Dutch",    bio:"Master of the Dutch Golden Age, celebrated for his portraits and dramatic chiaroscuro.",              tags:["popular","full"] },
-    { name:"Johannes Vermeer",      folder:"JohannesVermeer",     count:0, born:1632, died:1675, nationality:"Dutch",    bio:"Dutch master renowned for luminous interior scenes, such as Girl with a Pearl Earring.",              tags:["popular","full"] },
-    { name:"Édouard Manet",         folder:"EdouardManet",        count:0, born:1832, died:1883, nationality:"French",   bio:"Transitional figure between Realism and Impressionism who challenged academic conventions.",           tags:["popular","french","impressionist","full"] },
-    { name:"Paul Cézanne",          folder:"PaulCezanne",         count:0, born:1839, died:1906, nationality:"French",   bio:"Post-Impressionist who bridged 19th-century art with 20th-century modernism.",                       tags:["popular","french","impressionist","full"] },
-    { name:"Pierre-Auguste Renoir", folder:"PierreAugusteRenoir", count:0, born:1841, died:1919, nationality:"French",   bio:"Impressionist whose works celebrate beauty, warmth, and the pleasures of everyday life.",             tags:["popular","french","impressionist","full"] },
-    { name:"Francisco de Goya",     folder:"FranciscoGoya",       count:0, born:1746, died:1828, nationality:"Spanish",  bio:"The last of the Old Masters and the first of the moderns; known for dark, satirical works.",          tags:["popular","realist","full"] },
-    { name:"Eugène Delacroix",      folder:"EugeneDelacroix",     count:0, born:1798, died:1863, nationality:"French",   bio:"French Romantic painter whose Liberty Leading the People became a symbol of the Revolution.",         tags:["popular","french","full"] },
-    { name:"Sandro Botticelli",     folder:"SandroBotticelli",    count:0, born:1445, died:1510, nationality:"Italian",  bio:"Early Renaissance master famous for The Birth of Venus and Primavera.",                             tags:["popular","renaissance","full"] },
-    { name:"Leonardo da Vinci",     folder:"LeonardoDaVinci",     count:0, born:1452, died:1519, nationality:"Italian",  bio:"Renaissance polymath, painter of the Mona Lisa and The Last Supper.",                               tags:["popular","renaissance","full"] },
-    { name:"Michelangelo",          folder:"Michelangelo",        count:0, born:1475, died:1564, nationality:"Italian",  bio:"Sculptor and painter of the Sistine Chapel ceiling, defining figure of Renaissance art.",            tags:["popular","renaissance","full"] },
-    { name:"Raphael",               folder:"Raphael",             count:0, born:1483, died:1520, nationality:"Italian",  bio:"Renaissance master known for his Madonnas and the fresco The School of Athens.",                    tags:["popular","renaissance","full"] },
-    { name:"Caravaggio",            folder:"Caravaggio",          count:0, born:1571, died:1610, nationality:"Italian",  bio:"Baroque master famed for dramatic tenebrism and uncompromising realism.",                           tags:["popular","full"] },
-    { name:"Diego Velázquez",       folder:"DiegoVelazquez",      count:0, born:1599, died:1660, nationality:"Spanish",  bio:"Court painter to Philip IV and one of the greatest of the Old Masters.",                           tags:["popular","full"] },
-    { name:"Thomas Gainsborough",   folder:"ThomasGainsborough",  count:0, born:1727, died:1788, nationality:"British",  bio:"18th-century English portrait and landscape painter, rival of Joshua Reynolds.",                    tags:["popular","full"] },
-    { name:"Pieter Bruegel",        folder:"PieterBruegel",       count:0, born:1525, died:1569, nationality:"Flemish",  bio:"Renaissance painter known for Hunters in the Snow and vivid scenes of peasant life.",              tags:["popular","renaissance","full"] },
-    { name:"Jan van Eyck",          folder:"JanVanEyck",          count:0, born:1390, died:1441, nationality:"Flemish",  bio:"Early Flemish master who perfected oil painting, famous for the Ghent Altarpiece.",                tags:["renaissance","full"] },
-    { name:"Titian",                folder:"Titian",              count:0, born:1488, died:1576, nationality:"Italian",  bio:"Venetian Renaissance master known for rich colour, mythological, and devotional paintings.",        tags:["renaissance","full"] },
-    { name:"El Greco",              folder:"ElGreco",             count:0, born:1541, died:1614, nationality:"Greek",    bio:"Painter of the Spanish Renaissance known for elongated figures and vivid, otherworldly colour.",    tags:["renaissance","full"] },
-    { name:"Andrew Wyeth",          folder:"AndrewWyeth",         count:0, born:1917, died:2009, nationality:"American", bio:"Realist painter best known for Christina's World and his Brandywine Valley scenes.",               tags:["realist","full"] },
-    { name:"Winslow Homer",         folder:"WinslowHomer",        count:0, born:1836, died:1910, nationality:"American", bio:"American realist celebrated for marine subjects and scenes of rural life.",                        tags:["realist","full"] },
-    { name:"Gustave Courbet",       folder:"GustaveCourbet",      count:0, born:1819, died:1877, nationality:"French",   bio:"Founder of Realism in 19th-century French painting, who rejected Romantic conventions.",           tags:["french","realist","full"] },
-    { name:"Jean-François Millet",  folder:"JeanFrancoisMillet",  count:0, born:1814, died:1875, nationality:"French",   bio:"Barbizon School painter famed for monumental, dignified depictions of French peasants.",           tags:["french","realist","full"] },
-    { name:"Camille Pissarro",      folder:"CamillePissarro",     count:0, born:1830, died:1903, nationality:"French",   bio:"Danish-French Impressionist, mentor to Cézanne and Gauguin, and a central figure of the movement.", tags:["french","impressionist","full"] },
-    { name:"Alfred Sisley",         folder:"AlfredSisley",        count:0, born:1839, died:1899, nationality:"French",   bio:"Impressionist landscape painter, the most consistent of the movement throughout his career.",       tags:["french","impressionist","full"] },
-    { name:"Berthe Morisot",        folder:"BertheMorisot",       count:0, born:1841, died:1895, nationality:"French",   bio:"French Impressionist and the first woman to join the inner Impressionist circle.",                 tags:["french","impressionist","full"] },
-    { name:"Ilya Repin",            folder:"IlyaRepin",           count:0, born:1844, died:1930, nationality:"Russian",  bio:"The most celebrated Russian realist, known for Barge Haulers on the Volga.",                      tags:["russian","realist","full"] },
-    { name:"Ivan Shishkin",         folder:"IvanShishkin",        count:0, born:1832, died:1898, nationality:"Russian",  bio:"Russian Realist landscape painter famous for luminous, detailed depictions of forests.",           tags:["russian","realist","full"] },
-    { name:"Vasily Surikov",        folder:"VasilySurikov",       count:0, born:1848, died:1916, nationality:"Russian",  bio:"Russian historical painter known for large-scale works depicting key moments in Russian history.",   tags:["russian","full"] },
-    { name:"Isaac Levitan",         folder:"IsaacLevitan",        count:0, born:1860, died:1900, nationality:"Russian",  bio:"Russian landscape painter who created the concept of the 'mood landscape'.",                      tags:["russian","impressionist","full"] },
-    { name:"Vasily Vereshchagin",   folder:"VasilyVereshchagin",  count:0, born:1842, died:1904, nationality:"Russian",  bio:"Russian painter best known for stark, anti-war depictions of military campaigns.",                 tags:["russian","realist","full"] },
-  ];
-  init();
+// ========== UTILITIES ==========
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
-function init() {
-  buildStreakDots();
-  applyCollection('popular');
-}
-
-function buildStreakDots() {
-  const el = document.getElementById('streakDots');
-  el.innerHTML = '';
+function buildStreak() {
+  const container = document.getElementById('streakContainer');
+  container.innerHTML = '';
   for (let i = 0; i < 10; i++) {
-    const d = document.createElement('div');
-    d.className = 'dot';
-    d.id = 'dot-' + i;
-    el.appendChild(d);
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i < streak ? ' filled' : '');
+    container.appendChild(dot);
   }
 }
 
-function updateDots() {
-  for (let i = 0; i < 10; i++) {
-    document.getElementById('dot-' + i).className = 'dot' + (i < streak ? ' filled' : '');
+function showLoading(show) {
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.style.display = show ? 'flex' : 'none';
+  isLoading = show;
+}
+
+// ========== WIKIMEDIA API CALLS ==========
+// Fetch random paintings from a painter's category
+async function fetchRandomPaintings(painterCategory, limit = 20) {
+  const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category:${encodeURIComponent(painterCategory)}&gcmtype=file&gcmlimit=${limit}&prop=imageinfo&iiprop=url|dimensions&iiurlwidth=800&format=json&origin=*`;
+  
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (!data.query || !data.query.pages) return [];
+    
+    const paintings = [];
+    for (const page of Object.values(data.query.pages)) {
+      if (page.imageinfo && page.imageinfo[0] && page.imageinfo[0].thumburl) {
+        const info = page.imageinfo[0];
+        // Skip images that are too small (likely not proper paintings)
+        if (info.width < 200 || info.height < 150) continue;
+        
+        paintings.push({
+          title: page.title.replace(/^File:/, '').replace(/\.(jpg|jpeg|png)$/i, '').replace(/_/g, ' ').substring(0, 80),
+          url: info.thumburl,
+          width: info.width,
+          height: info.height
+        });
+      }
+    }
+    return paintings;
+  } catch (error) {
+    console.error(`Failed to fetch paintings for ${painterCategory}:`, error);
+    return [];
   }
 }
 
-function pickCollection(btn) {
-  document.querySelectorAll('.col-card').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  streak = 0;
-  updateDots();
-  applyCollection(btn.dataset.col);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+// Fetch a random valid painting (with retry logic)
+async function fetchValidPainting(painter) {
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const paintings = await fetchRandomPaintings(painter.category, 30);
+    if (paintings.length > 0) {
+      const randomIndex = Math.floor(Math.random() * paintings.length);
+      return paintings[randomIndex];
+    }
+    await new Promise(r => setTimeout(r, 500));
+  }
+  return null;
 }
 
-function applyCollection(key) {
-  activePainters = key === 'full'
-    ? allPainters
-    : allPainters.filter(p => p.tags && p.tags.includes(key));
-  nextRound();
-}
-
-function nextRound() {
+// ========== GAME ROUND ==========
+async function nextRound() {
+  if (answered || isLoading) return;
   answered = false;
-
-  if (activePainters.length < 4) {
-    document.getElementById('choices').innerHTML =
-      '<p style="padding:20px;color:#aaa;font-size:.65rem;letter-spacing:.2em;text-align:center;text-transform:uppercase">Not enough painters — add more in painters.js</p>';
+  
+  if (currentPainters.length < 2) {
+    document.getElementById('choicesContainer').innerHTML = '<div class="error-message">Not enough painters in this collection. Try "Full" or add more painters to PAINTERS_MASTER.</div>';
     return;
   }
-
-  currentPainter = activePainters[Math.floor(Math.random() * activePainters.length)];
-  const wrong = shuffle(activePainters.filter(p => p !== currentPainter)).slice(0, 3);
-  const options = shuffle([currentPainter, ...wrong]);
-
-  loadPainting(currentPainter);
-
-  const choicesEl = document.getElementById('choices');
-  choicesEl.innerHTML = '';
-  options.forEach(p => {
+  
+  showLoading(true);
+  
+  // Pick random painter for this round
+  const randomIndex = Math.floor(Math.random() * currentPainters.length);
+  currentRoundPainter = currentPainters[randomIndex];
+  
+  // Get wrong options (3 other painters)
+  const otherPainters = currentPainters.filter(p => p.id !== currentRoundPainter.id);
+  const wrongPainters = shuffle([...otherPainters]).slice(0, 3);
+  const options = shuffle([currentRoundPainter, ...wrongPainters]);
+  
+  // Fetch a random painting from the selected painter
+  const painting = await fetchValidPainting(currentRoundPainter);
+  
+  if (!painting) {
+    // If failed, try a different painter
+    showLoading(false);
+    console.warn(`Failed to get painting for ${currentRoundPainter.name}, trying another painter`);
+    setTimeout(() => nextRound(), 500);
+    return;
+  }
+  
+  currentPaintingUrl = painting.url;
+  currentPaintingTitle = painting.title;
+  
+  // Display the painting
+  await displayPainting(painting.url, painting.width, painting.height);
+  
+  // Display the choices
+  const container = document.getElementById('choicesContainer');
+  container.innerHTML = '';
+  options.forEach(opt => {
     const btn = document.createElement('button');
     btn.className = 'choice-btn';
-    btn.textContent = p.name;
-    btn.onclick = () => answer(btn, p);
-    choicesEl.appendChild(btn);
+    btn.textContent = opt.name;
+    btn.onclick = () => handleAnswer(btn, opt.id === currentRoundPainter.id, opt.name);
+    container.appendChild(btn);
+  });
+  
+  showLoading(false);
+}
+
+function displayPainting(imageUrl, imgWidth, imgHeight) {
+  return new Promise((resolve) => {
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = function() {
+      const maxW = window.innerWidth - 340;
+      const maxH = window.innerHeight - 100;
+      const scale = Math.min(maxW / img.width, maxH / img.height, 1);
+      
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.style.width = canvas.width + 'px';
+      canvas.style.height = canvas.height + 'px';
+      
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      
+      // Blur signature area (bottom right corner)
+      const blurW = canvas.width * 0.35;
+      const blurH = canvas.height * 0.2;
+      const blurX = canvas.width - blurW;
+      const blurY = canvas.height - blurH;
+      
+      ctx.save();
+      for (let i = 0; i < 3; i++) {
+        ctx.filter = `blur(${5 + i * 4}px)`;
+        ctx.drawImage(img, blurX / scale, blurY / scale, blurW / scale, blurH / scale, blurX - i, blurY - i, blurW + i * 2, blurH + i * 2);
+      }
+      ctx.filter = 'none';
+      ctx.restore();
+      
+      resolve();
+    };
+    
+    img.onerror = function() {
+      // On error, draw error state
+      canvas.width = 600;
+      canvas.height = 400;
+      ctx.fillStyle = '#fafafa';
+      ctx.fillRect(0, 0, 600, 400);
+      ctx.fillStyle = '#999';
+      ctx.font = '12px Montserrat';
+      ctx.textAlign = 'center';
+      ctx.fillText('Image failed to load. Trying again...', 300, 200);
+      setTimeout(() => nextRound(), 1000);
+      resolve();
+    };
+    
+    img.src = imageUrl;
   });
 }
 
-function loadPainting(painter) {
-  const canvas = document.getElementById('paintingCanvas');
-  const ctx = canvas.getContext('2d');
-
-  // Pick a random painting from the painter's paintings array
-  let url, paintingTitle;
-  if (painter.paintings && painter.paintings.length > 0) {
-    const pick = painter.paintings[Math.floor(Math.random() * painter.paintings.length)];
-    url = pick.url;
-    paintingTitle = pick.title;
-  } else {
-    url = `https://picsum.photos/seed/${painter.name}${Math.floor(Math.random()*80)}/700/420`;
-    paintingTitle = 'Unknown';
-  }
-  // Store for popup use
-  window._currentPaintingTitle = paintingTitle;
-
-  const img = new Image();
-  img.crossOrigin = 'anonymous';
-
-  img.onload = function() {
-    // Size canvas to image ratio, capped at 300px tall
-    const maxH = 300;
-    const ratio = Math.min(1, maxH / img.height);
-    canvas.width  = img.width  * ratio;
-    canvas.height = img.height * ratio;
-    canvas.style.width  = '100%';
-    canvas.style.maxHeight = maxH + 'px';
-
-    // Draw the painting onto the canvas
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-    // ── SIGNATURE BLUR: smudge the bottom-right corner where signatures live ──
-    const bw = canvas.width  * 0.38;   // cover 38% width
-    const bh = canvas.height * 0.22;   // cover 22% height
-    const bx = canvas.width  - bw;
-    const by = canvas.height - bh;
-
-    // Stack several increasingly blurred semi-transparent white washes
-    // (pure CSS blur isn't available on canvas, so we use a layered smear)
-    ctx.save();
-    for (let i = 0; i < 6; i++) {
-      ctx.filter = `blur(${4 + i * 3}px)`;
-      ctx.drawImage(img,
-        (bx / ratio), (by / ratio), (bw / ratio), (bh / ratio),  // source region
-        bx - i, by - i, bw + i * 2, bh + i * 2                   // dest (slightly expanded each pass)
-      );
-    }
-    ctx.filter = 'none';
-
-    // Soft vignette over the smeared zone to blend it naturally
-    const grad = ctx.createLinearGradient(bx - 40, by, canvas.width, canvas.height);
-    grad.addColorStop(0, 'rgba(255,255,255,0)');
-    grad.addColorStop(1, 'rgba(255,255,255,0.18)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(bx - 40, by, bw + 40, bh);
-    ctx.restore();
-  };
-
-  img.onerror = function() {
-    canvas.width = 700; canvas.height = 420;
-    ctx.fillStyle = '#f5f5f5';
-    ctx.fillRect(0, 0, 700, 420);
-    ctx.fillStyle = '#bbb';
-    ctx.font = '300 14px Montserrat, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Image not found', 350, 210);
-  };
-
-  // Load — src never appears in any DOM attribute
-  img.src = url;
-}
-
-function answer(btn, painter) {
+function handleAnswer(btn, isCorrect, painterName) {
   if (answered) return;
   answered = true;
-
+  
   const allBtns = document.querySelectorAll('.choice-btn');
   allBtns.forEach(b => b.disabled = true);
-
-  const correct = painter === currentPainter;
-
-  if (correct) {
+  
+  if (isCorrect) {
     btn.classList.add('correct');
     streak++;
-    updateDots();
-    if (streak >= 10) {
-      setTimeout(() => showPopup(true), 500);
+    buildStreak();
+    
+    if (streak === 10) {
+      showPopup(true);
     } else {
-      setTimeout(nextRound, 800);
+      setTimeout(() => nextRound(), 800);
     }
   } else {
     btn.classList.add('wrong');
-    allBtns.forEach(b => { if (b.textContent === currentPainter.name) b.classList.add('correct'); });
+    allBtns.forEach(b => {
+      if (b.textContent === currentRoundPainter.name) b.classList.add('correct');
+    });
     streak = 0;
-    updateDots();
-    setTimeout(() => showPopup(false), 500);
+    buildStreak();
+    showPopup(false);
   }
-}
-
-function drawPopupCanvas(url) {
-  const canvas = document.getElementById('popupCanvas');
-  const ctx = canvas.getContext('2d');
-  canvas.style.display = 'block';
-  const img = new Image();
-  img.crossOrigin = 'anonymous';
-  img.onload = function() {
-    canvas.width = img.width;
-    canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
-  };
-  img.src = url;
 }
 
 function showPopup(won) {
-  popupWasWin = won;
-  const emoji    = document.getElementById('popupEmoji');
-  const title    = document.getElementById('popupTitle');
-  const info     = document.getElementById('popupInfo');
-  const btn      = document.getElementById('popupBtn');
-
+  const popup = document.getElementById('popup');
+  const title = document.getElementById('popupTitle');
+  const text = document.getElementById('popupText');
+  
   if (won) {
-    document.getElementById('popupCanvas').style.display = 'none';
-    emoji.textContent = '✦';
-    title.textContent = '10 in a Row';
-    info.innerHTML = 'You correctly identified ten paintings in a row.<br>Exceptional.';
-    btn.textContent = 'Continue';
+    title.textContent = '✦ 10 in a Row ✦';
+    text.innerHTML = 'You correctly identified ten paintings in a row.<br>Exceptional.';
   } else {
-    const p = currentPainter;
-    document.getElementById('popupCanvas').style.display = 'none';
-    let popupUrl;
-    if (p.paintings && p.paintings.length > 0) {
-      popupUrl = p.paintings[Math.floor(Math.random() * p.paintings.length)].url;
-    } else {
-      popupUrl = `https://picsum.photos/seed/${p.name}portrait/420/220`;
-    }
-    drawPopupCanvas(popupUrl);
-    emoji.textContent = '';
-    title.textContent = p.name;
-    const line1 = [p.nationality ? p.nationality + ' Painter' : '', (p.born && p.died) ? p.born + ' – ' + p.died : ''].filter(Boolean).join('  ·  ');
-    const paintingLine = window._currentPaintingTitle ? 'Painting: ' + window._currentPaintingTitle : '';
-    info.innerHTML = line1 + (paintingLine ? '<br>' + paintingLine : '') + (p.bio ? '<br><br>' + p.bio : '');
-    btn.textContent = 'Try Again';
+    title.textContent = currentRoundPainter.name;
+    let info = '';
+    if (currentRoundPainter.nationality) info += currentRoundPainter.nationality + ' Painter';
+    if (currentRoundPainter.born && currentRoundPainter.died) info += `  ·  ${currentRoundPainter.born}–${currentRoundPainter.died}`;
+    if (currentPaintingTitle) info += `<br><br>“${currentPaintingTitle}”`;
+    text.innerHTML = info || 'Try again!';
   }
-
-  document.getElementById('overlay').classList.add('show');
+  
+  popup.classList.add('show');
 }
 
 function closePopup() {
-  document.getElementById('overlay').classList.remove('show');
-  if (popupWasWin) { streak = 0; updateDots(); }
+  document.getElementById('popup').classList.remove('show');
+  if (streak === 10) streak = 0;
+  buildStreak();
   nextRound();
 }
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+// ========== COLLECTION FILTER ==========
+function setCollection(collection) {
+  if (collection === 'full') {
+    currentPainters = PAINTERS_MASTER;
+  } else {
+    currentPainters = PAINTERS_MASTER.filter(p => p.tags && p.tags.includes(collection));
   }
-  return a;
+  
+  streak = 0;
+  buildStreak();
+  nextRound();
 }
 
-if (typeof PAINTERS !== 'undefined') {
-  allPainters = PAINTERS;
-  init();
+// ========== INITIALIZATION ==========
+function init() {
+  buildStreak();
+  
+  // Build collection chips dynamically from available tags
+  const allTags = new Set();
+  PAINTERS_MASTER.forEach(p => p.tags.forEach(t => allTags.add(t)));
+  const collections = ['popular', 'french', 'impressionist', 'russian', 'renaissance', 'realist', 'full'];
+  
+  const chipContainer = document.getElementById('collectionChips');
+  collections.forEach(col => {
+    const chip = document.createElement('button');
+    chip.className = 'chip' + (col === 'popular' ? ' active' : '');
+    chip.textContent = col.charAt(0).toUpperCase() + col.slice(1);
+    chip.onclick = () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      setCollection(col);
+    };
+    chipContainer.appendChild(chip);
+  });
+  
+  // Start with popular collection
+  currentPainters = PAINTERS_MASTER.filter(p => p.tags.includes('popular'));
+  nextRound();
 }
+
+// Handle window resize to redraw painting
+window.addEventListener('resize', () => {
+  if (currentPaintingUrl) {
+    const img = new Image();
+    img.onload = () => displayPainting(currentPaintingUrl, img.width, img.height);
+    img.src = currentPaintingUrl;
+  }
+});
+
+// Start the game
+init();
 </script>
 </body>
 </html>
