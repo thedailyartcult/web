@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>The Daily Thought Cult</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    background: #fafaf8;
+    color: #1a1a1a;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    overflow: hidden;
+  }
+
+  #pageShell { display: flex; flex-direction: column; height: 100vh; }
+
+  /* ── HEADER ── */
+  header {
+    flex-shrink: 0;
+    padding: 14px 24px 12px;
+    text-align: center;
+    border-bottom: 1px solid #e8e8e8;
+    background: #fff;
+    position: relative;
+    z-index: 10;
+  }
+
+  #siteTitle {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.38em;
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: 1.55rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #111;
+    cursor: default;
+    user-select: none;
+  }
+
+  #titleSwitcher {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  #wordThought, #wordArt {
+    display: block;
+    transition: opacity 0.28s ease, transform 0.28s ease;
+    letter-spacing: 0.32em;
+  }
+
+  #wordArt {
+    position: absolute;
+    top: 0; left: 0;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(6px);
+    color: #3a4a5c;
+    pointer-events: none;
+  }
+
+  #titleSwitcher::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 1px;
+    background: #bbb;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+
+  #titleSwitcher:hover::after { transform: scaleX(1); }
+
+  #titleDropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    min-width: 200px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    z-index: 200;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  }
+
+  #titleDropdown.open {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .title-option {
+    display: block;
+    width: 100%;
+    padding: 13px 18px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 0.5rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    transition: background 0.15s, color 0.15s;
+    text-decoration: none;
+  }
+
+  .title-option:hover { background: #f7f7f7; color: #111; }
+  .title-option .opt-label { display: block; font-size: 0.42rem; letter-spacing: 0.2em; color: #bbb; margin-top: 3px; }
+  .title-option + .title-option { border-top: 1px solid #f0f0f0; }
+
+  header p { font-size: 0.5rem; letter-spacing: 0.38em; text-transform: uppercase; color: #c0b8b0; margin-top: 4px; }
+
+  /* ── GAME AREA ── */
+  #gameArea { flex: 1; display: flex; min-height: 0; }
+
+  /* LEFT — quote display */
+  #quoteCol {
+    flex: 1 1 60%;
+    position: relative;
+    background: #f5f4f0;
+    border-right: 1px solid #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-width: 0;
+    padding: 48px;
+  }
+
+  /* Subtle paper texture */
+  #quoteCol::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  #quoteDisplay {
+    position: relative;
+    max-width: 560px;
+    text-align: center;
+    animation: quoteFadeIn 0.5s ease;
+  }
+
+  @keyframes quoteFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Opening quote mark */
+  #quoteDisplay::before {
+    content: '\201C';
+    position: absolute;
+    top: -32px;
+    left: -16px;
+    font-family: 'Cormorant', serif;
+    font-size: 5rem;
+    color: #e0dbd4;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  #quoteText {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+    line-height: 1.65;
+    color: #1a1a1a;
+    letter-spacing: 0.02em;
+  }
+
+  #quoteAuthor {
+    margin-top: 22px;
+    font-size: 0.48rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #c8c0b8;
+  }
+
+  /* RIGHT col */
+  #choicesCol {
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 18px 18px;
+    overflow-y: auto;
+    background: #fff;
+  }
+
+  /* Streak dots */
+  #streakDots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #f0ede8;
+    margin-bottom: 18px;
+    flex-shrink: 0;
+  }
+
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background: #fff;
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .dot.filled { background: #1a1a1a; border-color: #1a1a1a; transform: scale(1.15); }
+
+  #choicesPrompt {
+    font-size: 0.48rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #c8c0b8;
+    text-align: center;
+    margin-bottom: 14px;
+    flex-shrink: 0;
+  }
+
+  #choices {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .choice-btn {
+    position: relative;
+    width: 100%;
+    padding: 13px 12px 13px 36px;
+    border: 1px solid #e0ddd8;
+    background: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align: left;
+    color: #1a1a1a;
+    transition: border-color 0.18s, background 0.18s, color 0.18s, transform 0.14s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .choice-btn .btn-num {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.42rem;
+    letter-spacing: 0.1em;
+    color: #ccc;
+    transition: color 0.18s;
+  }
+
+  .choice-btn:hover:not(:disabled) { border-color: #1a1a1a; background: #faf9f7; transform: translateX(2px); }
+  .choice-btn:hover:not(:disabled) .btn-num { color: #888; }
+  .choice-btn.key-flash { background: #f0ede8; border-color: #aaa; }
+  .choice-btn.correct { border-color: #2d6a46; background: #f2faf5; color: #1a4030; transform: translateX(0); }
+  .choice-btn.correct .btn-num { color: #2d6a46; }
+  .choice-btn.wrong { border-color: #8a2a2a; background: #fdf3f3; color: #5a1a1a; }
+  .choice-btn:disabled { cursor: default; transform: translateX(0); }
+
+  /* Key hint */
+  #keyHint {
+    flex-shrink: 0;
+    text-align: center;
+    margin-top: 14px;
+    font-size: 0.4rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #d8d4ce;
+  }
+
+  #keyHint span { display: inline-block; border: 1px solid #e8e4e0; padding: 2px 5px; margin: 0 1px; font-size: 0.38rem; }
+
+  /* Overlay */
+  #overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(8,6,4,0.65);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(2px);
+    animation: overlayIn 0.2s ease;
+  }
+
+  @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+
+  #overlay.show { display: flex; }
+
+  #popup {
+    background: #fff;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    animation: popupIn 0.28s cubic-bezier(0.34,1.36,0.64,1);
+  }
+
+  @keyframes popupIn {
+    from { opacity: 0; transform: scale(0.92) translateY(12px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  #popupAccent { height: 3px; background: #1a1a1a; transition: background 0.3s; }
+  #popup.win  #popupAccent { background: #2d6a46; }
+  #popup.loss #popupAccent { background: #8a2a2a; }
+
+  #popupBody { padding: 26px 24px 28px; }
+  #popupEmoji { font-size: 1.6rem; margin-bottom: 8px; display: block; }
+
+  #popupTitle {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: 1.5rem;
+    letter-spacing: 0.15em;
+    color: #111;
+    margin-bottom: 10px;
+  }
+
+  #popupInfo {
+    font-size: 0.52rem;
+    letter-spacing: 0.12em;
+    color: #999;
+    line-height: 2.1;
+    margin-bottom: 22px;
+    text-transform: uppercase;
+  }
+
+  #popupBtn {
+    padding: 11px 34px;
+    border: 1px solid #1a1a1a;
+    background: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 0.55rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: #1a1a1a;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  #popupBtn:hover { background: #1a1a1a; color: #fff; }
+
+  #popupEnterHint { margin-top: 10px; font-size: 0.38rem; letter-spacing: 0.22em; text-transform: uppercase; color: #d0ccc8; }
+
+  @media (max-width: 640px) {
+    html, body { overflow: auto; }
+    #pageShell { height: auto; }
+    #gameArea { flex-direction: column; }
+    #quoteCol { flex: none; min-height: 240px; border-right: none; border-bottom: 1px solid #e8e8e8; padding: 32px 20px; }
+    #choicesCol { flex: none; width: 100%; padding: 14px; }
+    #siteTitle { font-size: 1.1rem; }
+  }
+  </style>
+</head>
+<body>
+<div id="pageShell">
+  <header>
+    <h1 id="siteTitle">
+      <span>The Daily</span>
+      <span id="titleSwitcher" tabindex="0" aria-label="Switch site">
+        <span id="wordThought">Thought</span>
+        <span id="wordArt">Art</span>
+        <div id="titleDropdown" role="menu">
+          <a class="title-option" href="index.html" role="menuitem">
+            Art
+            <span class="opt-label">The Daily Art Cult — Paintings</span>
+          </a>
+          <button class="title-option" onclick="stayOnThought()">
+            Thought
+            <span class="opt-label">The Daily Thought Cult — Philosophy</span>
+          </button>
+        </div>
+      </span>
+      <span>Cult</span>
+    </h1>
+    <p>Where wisdom becomes ritual.</p>
+  </header>
+
+  <div id="gameArea">
+    <div id="quoteCol">
+      <div id="quoteDisplay">
+        <div id="quoteText"></div>
+        <div id="quoteAuthor"></div>
+      </div>
+    </div>
+
+    <div id="choicesCol">
+      <div id="streakDots"></div>
+      <p id="choicesPrompt">Who said this?</p>
+      <div id="choices"></div>
+      <div id="keyHint">
+        <span>1</span><span>2</span><span>3</span><span>4</span> to select &nbsp;·&nbsp; <span>Enter</span> to confirm
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="overlay">
+  <div id="popup">
+    <div id="popupAccent"></div>
+    <div id="popupBody">
+      <span id="popupEmoji"></span>
+      <div id="popupTitle"></div>
+      <div id="popupInfo"></div>
+      <button id="popupBtn" onclick="closePopup()">Continue</button>
+      <div id="popupEnterHint">Press <span>Enter</span> to continue</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ---------- ANTI-CHEAT ----------
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) || (e.ctrlKey && e.key.toUpperCase() === 'U')) {
+      e.preventDefault();
+    }
+  });
+
+  // ---------- PHILOSOPHERS DATABASE ----------
+  // Each philosopher has multiple quotes. Add more freely.
+  const PHILOSOPHERS = [
+    { id: "socrates", name: "Socrates", born: "470 BCE", died: "399 BCE", school: "Classical Greek",
+      quotes: [
+        "The unexamined life is not worth living.",
+        "I know that I know nothing.",
+        "To find yourself, think for yourself.",
+        "Be kind, for everyone you meet is fighting a hard battle.",
+        "The only true wisdom is in knowing you know nothing."
+      ]
+    },
+    { id: "plato", name: "Plato", born: "428 BCE", died: "348 BCE", school: "Platonism",
+      quotes: [
+        "We can easily forgive a child who is afraid of the dark; the real tragedy of life is when men are afraid of the light.",
+        "Wise men speak because they have something to say; fools because they have to say something.",
+        "The measure of a man is what he does with power.",
+        "Only the dead have seen the end of war.",
+        "Necessity is the mother of invention."
+      ]
+    },
+    { id: "aristotle", name: "Aristotle", born: "384 BCE", died: "322 BCE", school: "Peripatetic",
+      quotes: [
+        "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
+        "Knowing yourself is the beginning of all wisdom.",
+        "The whole is greater than the sum of its parts.",
+        "It is the mark of an educated mind to be able to entertain a thought without accepting it.",
+        "Happiness depends upon ourselves."
+      ]
+    },
+    { id: "marcus-aurelius", name: "Marcus Aurelius", born: "121 CE", died: "180 CE", school: "Stoicism",
+      quotes: [
+        "You have power over your mind — not outside events. Realize this, and you will find strength.",
+        "The happiness of your life depends upon the quality of your thoughts.",
+        "Waste no more time arguing about what a good man should be. Be one.",
+        "The best revenge is to be unlike the one who performed the injury.",
+        "Everything we hear is an opinion, not a fact. Everything we see is a perspective, not the truth."
+      ]
+    },
+    { id: "seneca", name: "Seneca", born: "4 BCE", died: "65 CE", school: "Stoicism",
+      quotes: [
+        "We suffer more often in imagination than in reality.",
+        "Luck is what happens when preparation meets opportunity.",
+        "It is not that we have a short time to live, but that we waste a lot of it.",
+        "Difficulties strengthen the mind, as labor does the body.",
+        "He who fears death will never do anything worth of a man who is alive."
+      ]
+    },
+    { id: "epictetus", name: "Epictetus", born: "50 CE", died: "135 CE", school: "Stoicism",
+      quotes: [
+        "We cannot choose our external circumstances, but we can always choose how we respond to them.",
+        "No man is free who is not master of himself.",
+        "First say to yourself what you would be; and then do what you have to do.",
+        "It's not what happens to you, but how you react to it that matters.",
+        "Freedom is the only worthy goal in life."
+      ]
+    },
+    { id: "nietzsche", name: "Friedrich Nietzsche", born: "1844", died: "1900", school: "Existentialism",
+      quotes: [
+        "He who has a why to live can bear almost any how.",
+        "That which does not kill us makes us stronger.",
+        "Whoever fights monsters should see to it that in the process he does not become a monster.",
+        "There are no facts, only interpretations.",
+        "God is dead. God remains dead. And we have killed him."
+      ]
+    },
+    { id: "camus", name: "Albert Camus", born: "1913", died: "1960", school: "Absurdism",
+      quotes: [
+        "There is but one truly serious philosophical problem, and that is suicide.",
+        "One must imagine Sisyphus happy.",
+        "In the depth of winter, I finally learned that within me there lay an invincible summer.",
+        "You will never be happy if you continue to search for what happiness consists of.",
+        "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion."
+      ]
+    },
+    { id: "sartre", name: "Jean-Paul Sartre", born: "1905", died: "1980", school: "Existentialism",
+      quotes: [
+        "Existence precedes essence.",
+        "Man is condemned to be free.",
+        "Hell is other people.",
+        "We are our choices.",
+        "Freedom is what you do with what's been done to you."
+      ]
+    },
+    { id: "confucius", name: "Confucius", born: "551 BCE", died: "479 BCE", school: "Confucianism",
+      quotes: [
+        "It does not matter how slowly you go as long as you do not stop.",
+        "Our greatest glory is not in never falling, but in rising every time we fall.",
+        "Real knowledge is to know the extent of one's ignorance.",
+        "When anger rises, think of the consequences.",
+        "The man who moves a mountain begins by carrying away small stones."
+      ]
+    },
+    { id: "lao-tzu", name: "Lao Tzu", born: "6th Century BCE", died: "6th Century BCE", school: "Taoism",
+      quotes: [
+        "The journey of a thousand miles begins with a single step.",
+        "He who knows others is wise; he who knows himself is enlightened.",
+        "When I let go of what I am, I become what I might be.",
+        "Nature does not hurry, yet everything is accomplished.",
+        "The truth is not always beautiful, nor beautiful words the truth."
+      ]
+    },
+    { id: "kant", name: "Immanuel Kant", born: "1724", died: "1804", school: "German Idealism",
+      quotes: [
+        "Dare to know! Have courage to use your own reason.",
+        "Science is organized knowledge. Wisdom is organized life.",
+        "Two things fill the mind with ever new and increasing admiration and awe: the starry heavens above me and the moral law within me.",
+        "Act only according to that maxim whereby you can at the same time will that it should become a universal law.",
+        "Out of the crooked timber of humanity, no straight thing was ever made."
+      ]
+    },
+    { id: "descartes", name: "René Descartes", born: "1596", died: "1650", school: "Rationalism",
+      quotes: [
+        "I think, therefore I am.",
+        "Divide each difficulty into as many parts as is feasible and necessary to resolve it.",
+        "It is not enough to have a good mind; the main thing is to use it well.",
+        "If you would be a real seeker after truth, it is necessary that at least once in your life you doubt, as far as possible, all things."
+      ]
+    },
+    { id: "machiavelli", name: "Niccolò Machiavelli", born: "1469", died: "1527", school: "Political Realism",
+      quotes: [
+        "It is better to be feared than loved, if you cannot be both.",
+        "The ends justify the means.",
+        "Everyone sees what you appear to be, few experience what you really are.",
+        "There is no avoiding war; it can only be postponed to the advantage of others."
+      ]
+    },
+    { id: "kierkegaard", name: "Søren Kierkegaard", born: "1813", died: "1855", school: "Existentialism",
+      quotes: [
+        "Life can only be understood backwards; but it must be lived forwards.",
+        "People demand freedom of speech as a compensation for the freedom of thought which they seldom use.",
+        "Anxiety is the dizziness of freedom.",
+        "Once you label me you negate me."
+      ]
+    },
+    { id: "thoreau", name: "Henry David Thoreau", born: "1817", died: "1862", school: "Transcendentalism",
+      quotes: [
+        "The mass of men lead lives of quiet desperation.",
+        "Go confidently in the direction of your dreams. Live the life you have imagined.",
+        "Rather than love, than money, than fame, give me truth.",
+        "It's not what you look at that matters, it's what you see."
+      ]
+    },
+    { id: "voltaire", name: "Voltaire", born: "1694", died: "1778", school: "Enlightenment",
+      quotes: [
+        "I disapprove of what you say, but I will defend to the death your right to say it.",
+        "Common sense is not so common.",
+        "Those who can make you believe absurdities can make you commit atrocities.",
+        "The more I read, the more I acquire, the more certain I am that I know nothing."
+      ]
+    },
+    { id: "simone-de-beauvoir", name: "Simone de Beauvoir", born: "1908", died: "1986", school: "Feminist Existentialism",
+      quotes: [
+        "One is not born a woman, but becomes one.",
+        "Change your life today. Don't gamble on the future, act now, without delay.",
+        "I am too intelligent, too demanding, and too resourceful for anyone to be able to take charge of me entirely."
+      ]
+    },
+    { id: "rousseau", name: "Jean-Jacques Rousseau", born: "1712", died: "1778", school: "Social Contract",
+      quotes: [
+        "Man is born free, and everywhere he is in chains.",
+        "The world of reality has its limits; the world of imagination is boundless.",
+        "People who know little are usually great talkers, while men who know much say little.",
+        "Patience is bitter, but its fruit is sweet."
+      ]
+    },
+    { id: "marx", name: "Karl Marx", born: "1818", died: "1883", school: "Marxism",
+      quotes: [
+        "The philosophers have only interpreted the world in various ways; the point, however, is to change it.",
+        "Religion is the opium of the people.",
+        "History repeats itself, first as tragedy, second as farce.",
+        "Workers of the world unite; you have nothing to lose but your chains."
+      ]
+    }
+  ];
+
+  // ---------- DOM ELEMENTS ----------
+  const quoteTextEl = document.getElementById('quoteText');
+  const quoteAuthorEl = document.getElementById('quoteAuthor');
+  const choicesEl = document.getElementById('choices');
+  const choicesPrompt = document.getElementById('choicesPrompt');
+  const streakDots = document.getElementById('streakDots');
+  const overlay = document.getElementById('overlay');
+  const popupEmoji = document.getElementById('popupEmoji');
+  const popupTitle = document.getElementById('popupTitle');
+  const popupInfo = document.getElementById('popupInfo');
+
+  // ---------- GAME STATE ----------
+  let currentPhilosopher = null;
+  let currentQuoteText = null;
+  let streak = 0;
+  let answered = false;
+  let popupWasWin = false;
+  // Track used quotes per round to minimize repeats
+  let recentlyUsedQuotes = [];
+
+  // ---------- STREAK DOTS ----------
+  function buildStreakDots() {
+    streakDots.innerHTML = '';
+    for (let i = 0; i < 10; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot';
+      d.id = 'dot-' + i;
+      streakDots.appendChild(d);
+    }
+  }
+
+  function updateDots() {
+    for (let i = 0; i < 10; i++) {
+      const dot = document.getElementById('dot-' + i);
+      if (dot) dot.className = 'dot' + (i < streak ? ' filled' : '');
+    }
+  }
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function getRandomQuote(philosopher) {
+    // Get quotes not recently used
+    const available = philosopher.quotes.filter(q => !recentlyUsedQuotes.includes(q));
+    // If all quotes are recently used, reset
+    const pool = available.length > 0 ? available : philosopher.quotes;
+    const quote = pool[Math.floor(Math.random() * pool.length)];
+    
+    // Track in recently used
+    recentlyUsedQuotes.push(quote);
+    if (recentlyUsedQuotes.length > 20) {
+      recentlyUsedQuotes.shift(); // Remove oldest
+    }
+    return quote;
+  }
+
+  // ---------- LOAD ROUND ----------
+  function loadRound() {
+    if (answered) return;
+    answered = false;
+
+    // Pick random philosopher
+    currentPhilosopher = PHILOSOPHERS[Math.floor(Math.random() * PHILOSOPHERS.length)];
+    
+    // Pick random quote
+    currentQuoteText = getRandomQuote(currentPhilosopher);
+
+    // Get 3 wrong options
+    const others = PHILOSOPHERS.filter(p => p.id !== currentPhilosopher.id);
+    const wrongOptions = shuffle(others).slice(0, 3);
+
+    // Build and shuffle final options
+    let options = [...wrongOptions, currentPhilosopher];
+    options = shuffle(options);
+
+    // Display quote instantly
+    quoteTextEl.textContent = `"${currentQuoteText}"`;
+    quoteAuthorEl.textContent = '';
+
+    // Display choice buttons instantly
+    choicesEl.innerHTML = '';
+    options.forEach((philosopher, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.innerHTML = `<span class="btn-num">${idx + 1}</span>${philosopher.name}`;
+      btn.addEventListener('click', () => handleAnswer(btn, philosopher));
+      choicesEl.appendChild(btn);
+    });
+
+    choicesPrompt.style.display = '';
+  }
+
+  function handleAnswer(btn, selectedPhilosopher) {
+    if (answered) return;
+    answered = true;
+
+    const allBtns = document.querySelectorAll('.choice-btn');
+    allBtns.forEach(b => b.disabled = true);
+
+    const isCorrect = selectedPhilosopher.id === currentPhilosopher.id;
+
+    if (isCorrect) {
+      btn.classList.add('correct');
+      streak++;
+      updateDots();
+
+      if (streak >= 10) {
+        popupWasWin = true;
+        setTimeout(() => showPopup(true), 500);
+      } else {
+        setTimeout(() => {
+          answered = false;
+          loadRound();
+        }, 800);
+      }
+    } else {
+      btn.classList.add('wrong');
+      allBtns.forEach(b => {
+        if (b.textContent === currentPhilosopher.name) b.classList.add('correct');
+      });
+      streak = 0;
+      updateDots();
+      popupWasWin = false;
+      setTimeout(() => showPopup(false), 500);
+    }
+  }
+
+  // ---------- POPUP ----------
+  function showPopup(won) {
+    if (won) {
+      popupEmoji.textContent = '✦';
+      popupTitle.textContent = '10 in a Row';
+      popupInfo.innerHTML = 'You identified ten thinkers in a row.<br>Exceptional wisdom.';
+      document.getElementById('popupBtn').textContent = 'Continue';
+    } else {
+      popupEmoji.textContent = '';
+      popupTitle.textContent = currentPhilosopher.name;
+      const details = [
+        currentPhilosopher.school,
+        currentPhilosopher.born + ' – ' + currentPhilosopher.died
+      ].join('  ·  ');
+      popupInfo.innerHTML = `${details}<br><br>"${currentQuoteText}"`;
+      document.getElementById('popupBtn').textContent = 'Try Again';
+    }
+    overlay.classList.add('show');
+    document.getElementById('popup').className = won ? 'win' : 'loss';
+  }
+
+  window.closePopup = function() {
+    overlay.classList.remove('show');
+    document.getElementById('popup').className = '';
+    if (popupWasWin) { streak = 0; updateDots(); }
+    answered = false;
+    loadRound();
+  };
+
+  // ── KEYBOARD ──────────────────────────────────────────────────────────────
+  let keySelected = -1;
+
+  document.addEventListener('keydown', e => {
+    const isOpen = overlay.classList.contains('show');
+    if (isOpen) {
+      if (e.key === 'Enter') { e.preventDefault(); window.closePopup(); }
+      return;
+    }
+    if (answered) return;
+    const btns = Array.from(document.querySelectorAll('.choice-btn:not(:disabled)'));
+    if (!btns.length) return;
+
+    if (['1','2','3','4'].includes(e.key)) {
+      e.preventDefault();
+      const idx = parseInt(e.key) - 1;
+      if (idx < btns.length) {
+        btns.forEach(b => b.classList.remove('key-flash'));
+        btns[idx].classList.add('key-flash');
+        keySelected = idx;
+        setTimeout(() => btns[idx]?.classList.remove('key-flash'), 180);
+      }
+    }
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (keySelected >= 0 && keySelected < btns.length) {
+        btns[keySelected].click();
+        keySelected = -1;
+      }
+    }
+  });
+
+  // ── TITLE SWITCHER ────────────────────────────────────────────────────────
+  const switcher    = document.getElementById('titleSwitcher');
+  const dropdown    = document.getElementById('titleDropdown');
+  const wordThought = document.getElementById('wordThought');
+  const wordArt     = document.getElementById('wordArt');
+
+  function openDrop() {
+    dropdown.classList.add('open');
+    wordThought.style.opacity = '0';
+    wordThought.style.transform = 'translateY(-6px)';
+    wordArt.style.opacity = '1';
+    wordArt.style.transform = 'translateY(0)';
+    switcher.style.minWidth = wordArt.scrollWidth + 'px';
+  }
+
+  function closeDrop() {
+    dropdown.classList.remove('open');
+    wordThought.style.opacity = '1';
+    wordThought.style.transform = 'translateY(0)';
+    wordArt.style.opacity = '0';
+    wordArt.style.transform = 'translateY(6px)';
+    switcher.style.minWidth = '';
+  }
+
+  switcher.addEventListener('mouseenter', openDrop);
+  switcher.addEventListener('mouseleave', closeDrop);
+  switcher.addEventListener('focus', openDrop);
+  switcher.addEventListener('blur', e => { if (!switcher.contains(e.relatedTarget)) closeDrop(); });
+
+  window.stayOnThought = function() { closeDrop(); };
+
+  // ── INIT ──────────────────────────────────────────────────────────────────
+  function init() {
+    buildStreakDots();
+    updateDots();
+    loadRound();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
