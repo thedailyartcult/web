@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Essays — The Daily Art Cult</title>
+<meta name="description" content="Personal philosophical essays on art, beauty, meaning, and the examined life. Where painting meets thought.">
+<meta name="keywords" content="philosophy essays, art philosophy, philosophical writing, aesthetics, meaning of art, examined life, philosophical blog">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  /* ── RESET & BASE ── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink:       #111008;
+    --ink-soft:  #4a4540;
+    --ink-faint: #9a9088;
+    --rule:      #e8e4de;
+    --bg:        #fafaf8;
+    --bg-warm:   #f5f2ec;
+    --gold:      #8a6a3a;
+    --gold-lt:   #c4a882;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    /* Subtle paper grain */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.022'/%3E%3C/svg%3E");
+  }
+
+  /* ════════════════════════════════
+     HEADER — same DNA as game sites
+  ════════════════════════════════ */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250,250,248,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .header-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-decoration: none;
+  }
+
+  .header-brand-title {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: 1.1rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .header-brand-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .header-brand-sub {
+    font-size: 0.38rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  nav a {
+    font-size: 0.45rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.22s ease;
+  }
+
+  nav a:hover { color: var(--ink); }
+  nav a:hover::after { transform: scaleX(1); }
+
+  nav a.current {
+    color: var(--ink);
+    pointer-events: none;
+  }
+
+  nav a.current::after { transform: scaleX(1); }
+
+  .nav-play {
+    padding: 7px 16px;
+    border: 1px solid var(--ink);
+    font-size: 0.42rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-play:hover { background: var(--ink); color: var(--bg); }
+  .nav-play::after { display: none; }
+
+  /* ════════════════════════════════
+     HERO
+  ════════════════════════════════ */
+  .hero {
+    padding: 100px 40px 80px;
+    max-width: 860px;
+    margin: 0 auto;
+    animation: riseIn 0.7s ease both;
+  }
+
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    font-size: 0.45rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--gold-lt);
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
+    line-height: 1.08;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-desc {
+    font-size: 0.72rem;
+    line-height: 2;
+    color: var(--ink-soft);
+    max-width: 520px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ════════════════════════════════
+     FEATURED ESSAY
+  ════════════════════════════════ */
+  .featured {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg-warm);
+    padding: 70px 40px;
+    animation: riseIn 0.7s 0.15s ease both;
+  }
+
+  .featured-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .featured-label {
+    font-size: 0.4rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .featured-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--gold-lt);
+  }
+
+  .featured-title {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 20px;
+    letter-spacing: 0.01em;
+  }
+
+  .featured-excerpt {
+    font-size: 0.65rem;
+    line-height: 2.1;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+    letter-spacing: 0.03em;
+  }
+
+  .read-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.45rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s, gap 0.2s;
+  }
+
+  .read-link:hover { color: var(--gold); border-color: var(--gold); gap: 14px; }
+
+  .read-link svg { width: 14px; height: 14px; }
+
+  /* Featured pull quote — right column */
+  .featured-quote {
+    position: relative;
+    padding: 32px 32px 32px 40px;
+    border-left: 2px solid var(--gold-lt);
+  }
+
+  .featured-quote::before {
+    content: '\201C';
+    position: absolute;
+    top: -20px;
+    left: 24px;
+    font-family: 'Cormorant', serif;
+    font-size: 6rem;
+    color: var(--rule);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .featured-quote blockquote {
+    font-family: 'Cormorant', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+    line-height: 1.65;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+
+  .featured-quote cite {
+    display: block;
+    margin-top: 18px;
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-size: 0.42rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* ════════════════════════════════
+     ESSAYS GRID
+  ════════════════════════════════ */
+  .essays-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 80px 40px 60px;
+    animation: riseIn 0.7s 0.3s ease both;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 18px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: 0.9rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .section-count {
+    font-size: 0.4rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* Filter tags */
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 44px;
+  }
+
+  .filter-tag {
+    padding: 5px 14px;
+    border: 1px solid var(--rule);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 0.4rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    background: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+
+  .filter-tag:hover { border-color: var(--ink-soft); color: var(--ink); }
+  .filter-tag.active { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+
+  /* Essays list — editorial list style, not cards */
+  .essays-list { display: flex; flex-direction: column; }
+
+  .essay-row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 0 28px;
+    align-items: start;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.18s;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .essay-row.visible {
+    animation: rowIn 0.45s ease forwards;
+  }
+
+  @keyframes rowIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .essay-row:hover .essay-title { color: var(--gold); }
+  .essay-row:hover .essay-arrow { transform: translateX(4px); opacity: 1; }
+
+  .essay-num {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: 2rem;
+    color: var(--rule);
+    line-height: 1;
+    padding-top: 4px;
+    transition: color 0.2s;
+    user-select: none;
+  }
+
+  .essay-row:hover .essay-num { color: var(--gold-lt); }
+
+  .essay-body {}
+
+  .essay-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .essay-tag {
+    font-size: 0.38rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold-lt);
+    padding: 2px 8px;
+  }
+
+  .essay-title {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 10px;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+
+  .essay-excerpt {
+    font-size: 0.6rem;
+    line-height: 1.9;
+    color: var(--ink-faint);
+    letter-spacing: 0.03em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .essay-meta {
+    font-size: 0.38rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 12px;
+    display: flex;
+    gap: 14px;
+  }
+
+  .essay-arrow {
+    align-self: center;
+    color: var(--ink-faint);
+    opacity: 0;
+    transition: transform 0.22s ease, opacity 0.22s;
+  }
+
+  /* ════════════════════════════════
+     ABOUT THE AUTHOR
+  ════════════════════════════════ */
+  .author-section {
+    background: var(--bg-warm);
+    border-top: 1px solid var(--rule);
+    padding: 80px 40px;
+  }
+
+  .author-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .author-label {
+    font-size: 0.4rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+
+  .author-name {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: 2.4rem;
+    color: var(--ink);
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+
+  .author-title-line {
+    font-size: 0.42rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .author-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold-lt);
+    margin: 28px 0;
+  }
+
+  .author-bio {
+    font-size: 0.65rem;
+    line-height: 2.1;
+    color: var(--ink-soft);
+    letter-spacing: 0.03em;
+  }
+
+  .author-bio p + p { margin-top: 16px; }
+
+  .author-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .author-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.42rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.2s, gap 0.2s;
+  }
+
+  .author-link:hover { color: var(--gold); gap: 14px; }
+
+  .author-link svg { width: 12px; height: 12px; }
+
+  /* ════════════════════════════════
+     FOOTER
+  ════════════════════════════════ */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: 0.9rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .footer-brand em { font-style: normal; color: var(--gold); }
+
+  .footer-copy {
+    font-size: 0.38rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 20px;
+  }
+
+  .footer-links a {
+    font-size: 0.38rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--ink); }
+
+  /* ════════════════════════════════
+     ESSAY READER (overlay)
+  ════════════════════════════════ */
+  #readerOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 200;
+    overflow-y: auto;
+    animation: overlaySlideIn 0.35s ease;
+  }
+
+  @keyframes overlaySlideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  #readerOverlay.open { display: block; }
+
+  .reader-header {
+    position: sticky;
+    top: 0;
+    background: rgba(250,250,248,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+  }
+
+  .reader-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.42rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.18s, gap 0.18s;
+  }
+
+  .reader-back:hover { color: var(--ink); gap: 12px; }
+  .reader-back svg { width: 14px; height: 14px; }
+
+  .reader-progress {
+    font-size: 0.38rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* Progress bar */
+  #readingBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: var(--gold);
+    width: 0%;
+    z-index: 300;
+    transition: width 0.1s linear;
+  }
+
+  .reader-content {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 80px 40px 120px;
+  }
+
+  .reader-eyebrow {
+    font-size: 0.42rem;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .reader-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--gold-lt);
+  }
+
+  .reader-title {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 24px;
+    letter-spacing: 0.01em;
+  }
+
+  .reader-meta {
+    font-size: 0.42rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: flex;
+    gap: 16px;
+    margin-bottom: 56px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .reader-body {
+    font-family: 'Cormorant', serif;
+    font-weight: 400;
+    font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+    line-height: 1.85;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+  }
+
+  .reader-body p { margin-bottom: 1.8em; }
+
+  .reader-body p:first-child::first-letter {
+    float: left;
+    font-family: 'Cormorant', serif;
+    font-size: 4.5em;
+    line-height: 0.75;
+    padding-right: 0.08em;
+    color: var(--gold);
+    font-weight: 300;
+  }
+
+  .reader-body h2 {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: 1.6em;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    margin: 2.5em 0 1em;
+    text-transform: uppercase;
+  }
+
+  .reader-body blockquote {
+    margin: 2.5em 0;
+    padding: 0 0 0 28px;
+    border-left: 2px solid var(--gold-lt);
+    font-style: italic;
+    color: var(--ink-faint);
+    font-size: 1.15em;
+    line-height: 1.75;
+  }
+
+  /* ════════════════════════════════
+     MOBILE
+  ════════════════════════════════ */
+  @media (max-width: 720px) {
+    header { padding: 12px 20px; }
+    nav { gap: 14px; }
+    nav a:not(.nav-play) { display: none; }
+    .hero { padding: 60px 20px 48px; }
+    .featured { padding: 48px 20px; }
+    .featured-inner { grid-template-columns: 1fr; gap: 36px; }
+    .essays-section { padding: 48px 20px 40px; }
+    .author-inner { grid-template-columns: 1fr; gap: 32px; }
+    .essay-row { grid-template-columns: 40px 1fr auto; gap: 0 16px; }
+    footer { flex-direction: column; text-align: center; }
+    .reader-content { padding: 48px 20px 80px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="readingBar"></div>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header>
+  <a href="index.html" class="header-brand">
+    <span class="header-brand-title">The Daily <em>Art</em> Cult</span>
+    <span class="header-brand-sub">Where art becomes ritual</span>
+  </a>
+  <nav>
+    <a href="index.html">Play</a>
+    <a href="app.html">Thought Cult</a>
+    <a href="essays.html" class="current">Essays</a>
+    <a href="index.html" class="nav-play">← Back to Game</a>
+  </nav>
+</header>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section class="hero">
+  <div class="hero-eyebrow">Personal Essays</div>
+  <h1>Where Painting<br>Meets <em>Thought</em></h1>
+  <p class="hero-desc">
+    These are my attempts to think seriously about art — what it does to us, 
+    why we keep returning to certain painters, and what philosophy has to say 
+    about beauty, grief, and the examined life.
+  </p>
+</section>
+
+<!-- ═══════════════════════ FEATURED ═══════════════════════ -->
+<section class="featured">
+  <div class="featured-inner">
+    <div>
+      <div class="featured-label">Featured Essay</div>
+      <h2 class="featured-title">Why We Stare at Paintings We Don't Understand</h2>
+      <p class="featured-excerpt">
+        There is a particular kind of standing — in front of a Rothko, a Vermeer, 
+        a canvas you cannot name — where understanding leaves the room entirely. 
+        You are not reading the painting. You are being read by it. This is where 
+        philosophy begins and criticism ends.
+      </p>
+      <a href="#" class="read-link" onclick="openEssay(0); return false;">
+        Read Essay
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+    <div class="featured-quote">
+      <blockquote>
+        "The painting does not wait for you to understand it. It waits for you to 
+        stop trying — and in that surrender, something passes between you."
+      </blockquote>
+      <cite>— From the essay</cite>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ ESSAYS LIST ═══════════════════════ -->
+<section class="essays-section">
+  <div class="section-header">
+    <span class="section-title">All Essays</span>
+    <span class="section-count" id="essayCount">— essays</span>
+  </div>
+
+  <div class="filter-row" id="filterRow"></div>
+
+  <div class="essays-list" id="essaysList"></div>
+</section>
+
+<!-- ═══════════════════════ AUTHOR ═══════════════════════ -->
+<section class="author-section">
+  <div class="author-inner">
+    <div>
+      <div class="author-label">The Writer</div>
+      <div class="author-name">Your<br>Name</div>
+      <div class="author-title-line">Founder · The Daily Art Cult</div>
+      <div class="author-divider"></div>
+      <div class="author-links">
+        <a href="index.html" class="author-link">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+          Play the Art Game
+        </a>
+        <a href="app.html" class="author-link">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+          The Thought Cult
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="author-bio">
+        <p>
+          I built The Daily Art Cult because I believe most people know more about 
+          art than they think — they've simply never been given the chance to prove it 
+          to themselves. The guessing game is the entry point. These essays are what 
+          I actually think.
+        </p>
+        <p>
+          I write about painting the way philosophers write about anything they love 
+          but cannot fully explain. With obsession, uncertainty, and the quiet hope 
+          that writing it down might bring me closer to understanding it.
+        </p>
+        <p>
+          I am not an academic. I am someone who has spent too many hours in too many 
+          museums, arguing with the paintings, and occasionally losing.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer>
+  <div class="footer-brand">The Daily <em>Art</em> Cult</div>
+  <div class="footer-copy">© 2025 The Daily Art Cult</div>
+  <div class="footer-links">
+    <a href="index.html">Game</a>
+    <a href="app.html">Thought Cult</a>
+    <a href="essays.html">Essays</a>
+  </div>
+</footer>
+
+<!-- ═══════════════════════ READER OVERLAY ═══════════════════════ -->
+<div id="readerOverlay">
+  <div class="reader-header">
+    <button class="reader-back" onclick="closeReader()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M13 8H3M7 4L3 8l4 4"/>
+      </svg>
+      All Essays
+    </button>
+    <span class="reader-progress" id="readerProgress"></span>
+  </div>
+  <div class="reader-content" id="readerContent"></div>
+</div>
+
+<script>
+// ── ESSAY DATA ─────────────────────────────────────────────────────────────
+const ESSAYS = [
+  {
+    title: "Why We Stare at Paintings We Don't Understand",
+    tags: ["aesthetics", "perception"],
+    date: "March 2025",
+    readTime: "8 min",
+    excerpt: "There is a particular kind of standing — in front of a Rothko, a Vermeer, a canvas you cannot name — where understanding leaves the room entirely. You are not reading the painting. You are being read by it.",
+    body: `<p>There is a particular kind of standing — in front of a Rothko, a Vermeer, a canvas you cannot name — where understanding leaves the room entirely. You are not reading the painting. You are being read by it. This is where philosophy begins and criticism ends.</p>
+
+<p>Art critics have a professional obligation to understand what they are looking at. I envy them nothing. The moment of not-understanding, of genuine bewilderment in front of a canvas, is one of the few remaining places where adults are permitted to not know something without shame. The gallery is a sanctuary of licensed confusion.</p>
+
+<h2>The Attention Economy of Looking</h2>
+
+<p>We spend most of our waking lives consuming images that have been engineered to hold us for seconds — posts, thumbnails, feeds. A painting asks for something different. It asks for duration. And duration is what we've forgotten how to give.</p>
+
+<p>Wittgenstein wrote that if a lion could speak, we could not understand him — the form of life too different, the contexts incompatible. I think about this in front of certain paintings. Hieronymus Bosch, for instance. The Garden of Earthly Delights is not mysterious because it is complex. It is mysterious because it was made by a mind for whom the world meant something entirely different. We stand at the glass and press our faces against another form of life.</p>
+
+<blockquote>
+  The painting does not wait for you to understand it. It waits for you to stop trying — and in that surrender, something passes between you.
+</blockquote>
+
+<p>What passes is harder to name. Not meaning, exactly. Something closer to what the Japanese call <em>mono no aware</em> — the bittersweet awareness of impermanence. The painting was here before you. It will be here after. Your confusion is not a failure of education. It is an accurate response to the situation.</p>
+
+<h2>On the Usefulness of Not Knowing</h2>
+
+<p>I built the Daily Art Cult partly to give people the experience of recognising a painting before they can explain why they recognise it. The body knows things the mind hasn't catalogued yet. You see a Van Gogh brushstroke and something registers — the urgency of it, the direction, the pressure — before the name arrives.</p>
+
+<p>This is not mysticism. It is the ordinary miracle of pattern recognition shaped by exposure. The more paintings you see, the more you know without knowing you know. The guessing game is a way to make that implicit knowledge explicit, to surprise yourself with your own education.</p>
+
+<p>But what I want to write about is the other kind of looking. The kind where no recognition arrives. Where you stand, and the painting gives you nothing back but itself, and somehow that is enough — more than enough — to keep you there.</p>
+
+<p>That is the essay I'm still writing. This is its beginning.</p>`
+  },
+  {
+    title: "Caravaggio and the Ethics of Drama",
+    tags: ["baroque", "ethics", "caravaggio"],
+    date: "February 2025",
+    readTime: "11 min",
+    excerpt: "Caravaggio murdered a man and painted like an angel. This is not a paradox to resolve — it is the central fact of his art, and of art's uncomfortable relationship with the life that produces it.",
+    body: `<p>Caravaggio murdered a man and painted like an angel. This is not a paradox to resolve — it is the central fact of his art, and of art's uncomfortable relationship with the life that produces it. We want art to come from virtue. It rarely does.</p>
+
+<p>The Calling of Saint Matthew, in the Contarelli Chapel in Rome, is — I will say it plainly — the finest painting in the world. Not the most beautiful. Not the most technically accomplished. The finest, in the way that a precise argument is finer than a beautiful one. Every element is in service of a single moment: the finger, the light, the men around the table, the one who cannot believe the finger is pointing at him.</p>
+
+<h2>What Drama Costs</h2>
+
+<p>Caravaggio's tenebrism — the dramatic contrast between light and absolute darkness — is often described as a technique. It is more than that. It is a philosophical position. It says: meaning emerges from obscurity. It says: the light you see is meaningful precisely because of what surrounds it.</p>
+
+<blockquote>
+  He understood that drama is not decoration. Drama is the only honest response to a world where salvation and violence share the same moment.
+</blockquote>
+
+<p>The ethical problem is real. Knowing that Caravaggio killed someone — over a tennis match, of all the profane reasons — changes something about standing in front of his St. John in the Wilderness. The tenderness of that painting becomes complicated. As it should.</p>
+
+<p>But I have come to think that the complication is the point. Art that asks nothing of us morally — art that arrives already laundered of its maker's crimes — is easier to love and harder to mean anything by. Caravaggio's paintings are not despite his violence. They are in full knowledge of it. He painted redemption because he knew exactly what required redeeming.</p>`
+  },
+  {
+    title: "On Beauty as an Argument",
+    tags: ["aesthetics", "philosophy", "beauty"],
+    date: "January 2025",
+    readTime: "9 min",
+    excerpt: "Kant said that a judgement of beauty makes a universal claim without a concept. You say 'this is beautiful' and you mean everyone should agree — but you cannot prove it. This is not a weakness of aesthetics. It is its central insight.",
+    body: `<p>Kant said that a judgement of beauty makes a universal claim without a concept. You say 'this is beautiful' and you mean everyone should agree — but you cannot prove it. This is not a weakness of aesthetics. It is its central insight. Beauty is where we discover that some of our most important claims are ones we cannot argue for.</p>
+
+<p>This should terrify us more than it does. We live in an age of demanded justification. Show your work. Cite your sources. Peer review everything. And then we stand in front of Vermeer's Milkmaid and the justification machine goes quiet, and we know something we cannot say.</p>
+
+<h2>The Argument from Attention</h2>
+
+<p>Iris Murdoch thought that attending properly to beauty was a moral act — that the capacity to see a beautiful thing clearly, without ego or agenda, trained the soul for the harder business of seeing people clearly. I believe her. The discipline of looking at paintings is partly a discipline of selflessness. The painting does not care what you need it to mean.</p>
+
+<blockquote>
+  To call something beautiful is to make a claim about the world, not just yourself. It is one of the few arguments left that admits it cannot be won.
+</blockquote>
+
+<p>When I look at a painting I love — the Hunters in the Snow by Bruegel, the Return of the Prodigal Son by Rembrandt — I am not expressing a preference. I am making a claim. I am saying: here is something that rewards your full attention. I am saying: the world is not indifferent to beauty. I am saying: this matters.</p>
+
+<p>I cannot prove any of it. That, I have come to think, is exactly right.</p>`
+  },
+  {
+    title: "Vermeer's Light and the Problem of Presence",
+    tags: ["vermeer", "light", "presence"],
+    date: "December 2024",
+    readTime: "7 min",
+    excerpt: "There are only 34 authenticated Vermeer paintings. Thirty-four. In a career spanning two decades. This restraint is not incidental. It is the argument.",
+    body: `<p>There are only 34 authenticated Vermeer paintings. Thirty-four. In a career spanning two decades. This restraint is not incidental. It is the argument. Vermeer understood something that most artists — most people — never grasp: that presence requires boundaries. That the light in his paintings is so devastating precisely because of what he left in darkness.</p>
+
+<p>The Girl with a Pearl Earring looks over her shoulder at us and we feel the breath catch — not because of the pearl, not because of the turban, but because of the light on the wet paint of her lips. A highlight. A single white mark. And yet.</p>
+
+<h2>On Being Seen</h2>
+
+<p>Philosophers of consciousness distinguish between being in the world and being aware of being in the world. Vermeer's figures have both. They are absorbed in their tasks — reading letters, pouring milk, measuring time — and yet they carry their absorption lightly, as if they know they are being observed and have decided to ignore it with great dignity.</p>
+
+<blockquote>
+  The light doesn't illuminate the room. It selects. And in that selection is a philosophy — that what we see is always already a choice, and the most honest art admits it.
+</blockquote>
+
+<p>I think about this when I think about what it means to pay attention. Vermeer's light is not natural light. It is argued light — positioned, selected, weighted. The window is always on the left. The objects on the table are always weighted toward meaning. Nothing in Vermeer is an accident, which is why everything in Vermeer feels like grace.</p>
+
+<p>Thirty-four paintings. Spend a lifetime with them. It's still not enough.</p>`
+  },
+  {
+    title: "What the Impressionists Were Actually Arguing",
+    tags: ["impressionism", "perception", "monet"],
+    date: "November 2024",
+    readTime: "10 min",
+    excerpt: "Impressionism was not a style. It was a philosophical claim about perception — that the eye sees light before it sees objects, that sensation precedes cognition, that what we think we see and what we actually see are two different things.",
+    body: `<p>Impressionism was not a style. It was a philosophical claim about perception — that the eye sees light before it sees objects, that sensation precedes cognition, that what we think we see and what we actually see are two different things. Monet was not painting water lilies. He was painting the experience of seeing water lilies. These are not the same thing.</p>
+
+<p>The academic painters of the 19th century knew this and were appalled by it. The Impressionists were, from the perspective of the establishment, doing something philosophically dangerous. They were saying: the world as you think you know it is a construction. Underneath your confident perception is a chaos of light and sensation that your brain has been quietly editing into something manageable.</p>
+
+<h2>Bergson and the Moving Picture</h2>
+
+<p>Henri Bergson, writing in the same decades that Monet was painting his Haystacks series, argued that perception and duration were inseparable — that we never see a frozen moment, only the flow of time disguised as stable objects. Monet painted this. Thirty paintings of the same haystacks at different times of day, in different seasons, in different weather. Not because he ran out of subjects, but because he understood that the haystack was the least interesting thing in the scene. Time was the subject. Light was the argument.</p>
+
+<blockquote>
+  The Impressionists didn't paint what they saw. They painted the act of seeing. That is still the most radical thing anyone has done with a canvas.
+</blockquote>
+
+<p>We play the art guessing game and we learn to recognise a Monet from a Pissarro, a Renoir from a Sisley. The differences are real and learnable. But the more interesting question — the philosophical question — is what all of them were collectively arguing: that reality is not given. It is made, moment by moment, in the encounter between light and a mind willing to pay attention.</p>
+
+<p>That argument has never been answered. It has only been forgotten, and rediscovered, and forgotten again.</p>`
+  },
+  {
+    title: "The Russian Painters and the Weight of History",
+    tags: ["russian art", "history", "repin"],
+    date: "October 2024",
+    readTime: "12 min",
+    excerpt: "Ilya Repin painted Barge Haulers on the Volga in 1873. It is not a beautiful painting. It is not supposed to be. It is an accusation wearing the clothes of a landscape.",
+    body: `<p>Ilya Repin painted Barge Haulers on the Volga in 1873. It is not a beautiful painting. It is not supposed to be. It is an accusation wearing the clothes of a landscape. Eleven men, bound together by a harness, pulling a steamship by human strength alone, while the ship — with its full power, its modernity, its indifference — could simply turn on its engine and leave them all behind.</p>
+
+<p>The Russian Realists understood something about art that the Impressionists, for all their brilliance, chose not to engage with: that beauty can be complicit. That to paint a beautiful landscape of a country where millions are suffering is a political act, whether you mean it to be or not.</p>
+
+<h2>Art Under Pressure</h2>
+
+<p>What distinguishes the great Russian painters — Repin, Surikov, Kramskoy — is their willingness to make art that is uncomfortable to inhabit. Surikov's Morning of the Streltsy Execution shows us the moment before mass killing, and it refuses us the mercy of distance. We are in the crowd. We are witnesses. The painting will not let us be tourists.</p>
+
+<blockquote>
+  The question is not whether art should be political. The question is whether the artist is honest about the politics already present in every choice they make.
+</blockquote>
+
+<p>I think about this when I think about why certain paintings stay with me and others don't. The ones that stay are the ones that ask something of me — not just my attention, but my conscience. Repin asks me what I would have done. Standing at the Volga, watching the barge haulers. Would I have looked away?</p>
+
+<p>The painting does not let me pretend I don't know the answer.</p>`
+  },
+];
+
+// ── TAGS ──────────────────────────────────────────────────────────────────
+const allTags = ['all', ...new Set(ESSAYS.flatMap(e => e.tags))];
+let activeTag = 'all';
+
+function buildFilters() {
+  const row = document.getElementById('filterRow');
+  allTags.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-tag' + (tag === 'all' ? ' active' : '');
+    btn.textContent = tag === 'all' ? 'All Essays' : tag;
+    btn.onclick = () => {
+      activeTag = tag;
+      document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderEssays();
+    };
+    row.appendChild(btn);
+  });
+}
+
+function renderEssays() {
+  const list = document.getElementById('essaysList');
+  const filtered = activeTag === 'all' ? ESSAYS : ESSAYS.filter(e => e.tags.includes(activeTag));
+  document.getElementById('essayCount').textContent = `${filtered.length} essay${filtered.length !== 1 ? 's' : ''}`;
+
+  list.innerHTML = '';
+  filtered.forEach((essay, i) => {
+    const row = document.createElement('div');
+    row.className = 'essay-row';
+    row.style.animationDelay = `${i * 0.07}s`;
+    row.innerHTML = `
+      <div class="essay-num">0${i + 1}</div>
+      <div class="essay-body">
+        <div class="essay-tags">${essay.tags.map(t => `<span class="essay-tag">${t}</span>`).join('')}</div>
+        <div class="essay-title">${essay.title}</div>
+        <div class="essay-excerpt">${essay.excerpt}</div>
+        <div class="essay-meta">
+          <span>${essay.date}</span>
+          <span>${essay.readTime} read</span>
+        </div>
+      </div>
+      <div class="essay-arrow">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </div>`;
+    row.onclick = () => openEssay(ESSAYS.indexOf(essay));
+    list.appendChild(row);
+    // Trigger animation
+    setTimeout(() => row.classList.add('visible'), 50 + i * 70);
+  });
+}
+
+// ── READER ────────────────────────────────────────────────────────────────
+function openEssay(idx) {
+  const essay = ESSAYS[idx];
+  const overlay = document.getElementById('readerOverlay');
+  const content = document.getElementById('readerContent');
+
+  content.innerHTML = `
+    <div class="reader-eyebrow">${essay.tags[0]}</div>
+    <h1 class="reader-title">${essay.title}</h1>
+    <div class="reader-meta">
+      <span>${essay.date}</span>
+      <span>${essay.readTime} read</span>
+    </div>
+    <div class="reader-body">${essay.body}</div>`;
+
+  overlay.classList.add('open');
+  overlay.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+
+  // Reading progress bar
+  overlay.onscroll = () => {
+    const bar = document.getElementById('readingBar');
+    const pct = overlay.scrollTop / (overlay.scrollHeight - overlay.clientHeight) * 100;
+    bar.style.width = Math.min(pct, 100) + '%';
+    document.getElementById('readerProgress').textContent =
+      Math.round(pct) + '% read';
+  };
+}
+
+function closeReader() {
+  document.getElementById('readerOverlay').classList.remove('open');
+  document.getElementById('readingBar').style.width = '0%';
+  document.body.style.overflow = '';
+}
+
+// Close reader with Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeReader();
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+buildFilters();
+renderEssays();
+</script>
+</body>
+</html>
