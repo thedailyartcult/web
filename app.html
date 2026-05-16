@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>The Daily Thought Cult</title>
+  <title>The Daily Thought Cult — Philosophy Guessing Game</title>
+  <meta name="description" content="Can you identify the philosopher? The Daily Thought Cult is a free daily philosophy quiz — guess the thinker from one quote, every day.">
+  <meta name="keywords" content="guess the philosopher, philosophy quiz game, identify thinkers, famous quotes">
+  <meta name="author" content="The Daily Thought Cult">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
   <style>
@@ -30,6 +33,26 @@
     position: relative;
     z-index: 10;
   }
+
+  .reward-badge {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 0.48rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: #faf9f7;
+    padding: 4px 10px;
+    border-radius: 30px;
+    color: #7a6a5a;
+    border: 1px solid #e8e4e0;
+    pointer-events: none;
+  }
+
+  @media (max-width: 640px) { .reward-badge { display: none; } }
 
   #siteTitle {
     display: inline-flex;
@@ -87,7 +110,7 @@
     transform: translateX(-50%) translateY(-6px);
     background: #fff;
     border: 1px solid #e0e0e0;
-    min-width: 200px;
+    min-width: 240px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.22s ease, transform 0.22s ease;
@@ -281,7 +304,16 @@
   .choice-btn.key-flash { background: #f0ede8; border-color: #aaa; }
   .choice-btn.correct { border-color: #2d6a46; background: #f2faf5; color: #1a4030; transform: translateX(0); }
   .choice-btn.correct .btn-num { color: #2d6a46; }
-  .choice-btn.wrong { border-color: #8a2a2a; background: #fdf3f3; color: #5a1a1a; }
+  .choice-btn.wrong { border-color: #8a2a2a; background: #fdf3f3; color: #5a1a1a; animation: wrongShake 0.45s ease; }
+
+  @keyframes wrongShake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(3px); }
+  }
+
   .choice-btn:disabled { cursor: default; transform: translateX(0); }
 
   /* Key hint */
@@ -302,12 +334,12 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(8,6,4,0.65);
+    background: rgba(8,6,4,0.72);
     z-index: 100;
     align-items: center;
     justify-content: center;
     padding: 24px;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(3px);
     animation: overlayIn 0.2s ease;
   }
 
@@ -317,15 +349,15 @@
 
   #popup {
     background: #fff;
-    max-width: 380px;
+    max-width: 400px;
     width: 100%;
     text-align: center;
     overflow: hidden;
-    animation: popupIn 0.28s cubic-bezier(0.34,1.36,0.64,1);
+    animation: popupIn 0.32s cubic-bezier(0.34,1.36,0.64,1);
   }
 
   @keyframes popupIn {
-    from { opacity: 0; transform: scale(0.92) translateY(12px); }
+    from { opacity: 0; transform: scale(0.95) translateY(12px); }
     to   { opacity: 1; transform: scale(1) translateY(0); }
   }
 
@@ -334,7 +366,7 @@
   #popup.loss #popupAccent { background: #8a2a2a; }
 
   #popupBody { padding: 26px 24px 28px; }
-  #popupEmoji { font-size: 1.6rem; margin-bottom: 8px; display: block; }
+  #popupEmoji { font-size: 1.8rem; margin-bottom: 8px; display: block; }
 
   #popupTitle {
     font-family: 'Cormorant', serif;
@@ -349,7 +381,7 @@
     font-size: 0.52rem;
     letter-spacing: 0.12em;
     color: #999;
-    line-height: 2.1;
+    line-height: 2;
     margin-bottom: 22px;
     text-transform: uppercase;
   }
@@ -372,11 +404,15 @@
 
   #popupEnterHint { margin-top: 10px; font-size: 0.38rem; letter-spacing: 0.22em; text-transform: uppercase; color: #d0ccc8; }
 
+  /* Progress bar for 10-streak */
+  #streakProgressBar { height: 2px; background: #f0ede8; overflow: hidden; margin-top: 0; }
+  #streakProgressFill { height: 100%; background: #2d6a46; width: 0%; transition: width 0.6s ease; }
+
   @media (max-width: 640px) {
     html, body { overflow: auto; }
     #pageShell { height: auto; }
     #gameArea { flex-direction: column; }
-    #quoteCol { flex: none; min-height: 240px; border-right: none; border-bottom: 1px solid #e8e8e8; padding: 32px 20px; }
+    #quoteCol { flex: none; min-height: 280px; border-right: none; border-bottom: 1px solid #e8e8e8; padding: 32px 20px; }
     #choicesCol { flex: none; width: 100%; padding: 14px; }
     #siteTitle { font-size: 1.1rem; }
   }
@@ -385,19 +421,20 @@
 <body>
 <div id="pageShell">
   <header>
+    <div class="reward-badge">✨ <strong>Thought Cult</strong> — daily wisdom</div>
     <h1 id="siteTitle">
       <span>The Daily</span>
       <span id="titleSwitcher" tabindex="0" aria-label="Switch site">
         <span id="wordThought">Thought</span>
         <span id="wordArt">Art</span>
         <div id="titleDropdown" role="menu">
-          <a class="title-option" href="index.html" role="menuitem">
+          <a class="title-option" href="index.html">
             Art
             <span class="opt-label">The Daily Art Cult — Paintings</span>
           </a>
-          <button class="title-option" onclick="stayOnThought()">
+          <button class="title-option active-option" onclick="stayOnThought()">
             Thought
-            <span class="opt-label">The Daily Thought Cult — Philosophy</span>
+            <span class="opt-label">You are here · Philosophy</span>
           </button>
         </div>
       </span>
@@ -428,12 +465,13 @@
 <div id="overlay">
   <div id="popup">
     <div id="popupAccent"></div>
+    <div id="streakProgressBar"><div id="streakProgressFill"></div></div>
     <div id="popupBody">
       <span id="popupEmoji"></span>
       <div id="popupTitle"></div>
       <div id="popupInfo"></div>
       <button id="popupBtn" onclick="closePopup()">Continue</button>
-      <div id="popupEnterHint">Press <span>Enter</span> to continue</div>
+      <div id="popupEnterHint">Press <span style="border:1px solid #e8e4e0;padding:2px 5px;font-size:0.36rem;">Enter</span> to continue</div>
     </div>
   </div>
 </div>
@@ -448,16 +486,17 @@
     }
   });
 
-  // ---------- PHILOSOPHERS DATABASE ----------
-  // Each philosopher has multiple quotes. Add more freely.
+  // ---------- PHILOSOPHERS DATABASE (EXPANDED - 35+ thinkers) ----------
   const PHILOSOPHERS = [
+    // Ancient Greek
     { id: "socrates", name: "Socrates", born: "470 BCE", died: "399 BCE", school: "Classical Greek",
       quotes: [
         "The unexamined life is not worth living.",
         "I know that I know nothing.",
         "To find yourself, think for yourself.",
         "Be kind, for everyone you meet is fighting a hard battle.",
-        "The only true wisdom is in knowing you know nothing."
+        "The only true wisdom is in knowing you know nothing.",
+        "Wonder is the beginning of wisdom."
       ]
     },
     { id: "plato", name: "Plato", born: "428 BCE", died: "348 BCE", school: "Platonism",
@@ -466,7 +505,8 @@
         "Wise men speak because they have something to say; fools because they have to say something.",
         "The measure of a man is what he does with power.",
         "Only the dead have seen the end of war.",
-        "Necessity is the mother of invention."
+        "Necessity is the mother of invention.",
+        "Love is a serious mental disease."
       ]
     },
     { id: "aristotle", name: "Aristotle", born: "384 BCE", died: "322 BCE", school: "Peripatetic",
@@ -475,16 +515,27 @@
         "Knowing yourself is the beginning of all wisdom.",
         "The whole is greater than the sum of its parts.",
         "It is the mark of an educated mind to be able to entertain a thought without accepting it.",
-        "Happiness depends upon ourselves."
+        "Happiness depends upon ourselves.",
+        "Educating the mind without educating the heart is no education at all."
       ]
     },
+    { id: "epicurus", name: "Epicurus", born: "341 BCE", died: "270 BCE", school: "Epicureanism",
+      quotes: [
+        "Not what we have, but what we enjoy, constitutes our abundance.",
+        "The art of living well and the art of dying well are one.",
+        "Do not spoil what you have by desiring what you have not.",
+        "It is not so much our friends' help that helps us, as the confidence of their help."
+      ]
+    },
+    // Roman Stoics
     { id: "marcus-aurelius", name: "Marcus Aurelius", born: "121 CE", died: "180 CE", school: "Stoicism",
       quotes: [
         "You have power over your mind — not outside events. Realize this, and you will find strength.",
         "The happiness of your life depends upon the quality of your thoughts.",
         "Waste no more time arguing about what a good man should be. Be one.",
         "The best revenge is to be unlike the one who performed the injury.",
-        "Everything we hear is an opinion, not a fact. Everything we see is a perspective, not the truth."
+        "Everything we hear is an opinion, not a fact. Everything we see is a perspective, not the truth.",
+        "Dwell on the beauty of life. Watch the stars, and see yourself running with them."
       ]
     },
     { id: "seneca", name: "Seneca", born: "4 BCE", died: "65 CE", school: "Stoicism",
@@ -493,7 +544,8 @@
         "Luck is what happens when preparation meets opportunity.",
         "It is not that we have a short time to live, but that we waste a lot of it.",
         "Difficulties strengthen the mind, as labor does the body.",
-        "He who fears death will never do anything worth of a man who is alive."
+        "He who fears death will never do anything worthy of a man who is alive.",
+        "While we are postponing, life speeds by."
       ]
     },
     { id: "epictetus", name: "Epictetus", born: "50 CE", died: "135 CE", school: "Stoicism",
@@ -502,16 +554,66 @@
         "No man is free who is not master of himself.",
         "First say to yourself what you would be; and then do what you have to do.",
         "It's not what happens to you, but how you react to it that matters.",
-        "Freedom is the only worthy goal in life."
+        "Freedom is the only worthy goal in life.",
+        "Man is troubled not by events, but by his opinion of events."
       ]
     },
+    { id: "cicero", name: "Cicero", born: "106 BCE", died: "43 BCE", school: "Roman Philosophy",
+      quotes: [
+        "A room without books is like a body without a soul.",
+        "Gratitude is not only the greatest of virtues, but the parent of all others.",
+        "The safety of the people shall be the highest law.",
+        "Any man can make mistakes, but only a fool persists in his error."
+      ]
+    },
+    // Eastern Philosophy
+    { id: "confucius", name: "Confucius", born: "551 BCE", died: "479 BCE", school: "Confucianism",
+      quotes: [
+        "It does not matter how slowly you go as long as you do not stop.",
+        "Our greatest glory is not in never falling, but in rising every time we fall.",
+        "Real knowledge is to know the extent of one's ignorance.",
+        "When anger rises, think of the consequences.",
+        "The man who moves a mountain begins by carrying away small stones.",
+        "Everything has beauty, but not everyone sees it."
+      ]
+    },
+    { id: "lao-tzu", name: "Lao Tzu", born: "6th Century BCE", died: "6th Century BCE", school: "Taoism",
+      quotes: [
+        "The journey of a thousand miles begins with a single step.",
+        "He who knows others is wise; he who knows himself is enlightened.",
+        "When I let go of what I am, I become what I might be.",
+        "Nature does not hurry, yet everything is accomplished.",
+        "The truth is not always beautiful, nor beautiful words the truth.",
+        "Silence is a source of great strength."
+      ]
+    },
+    { id: "buddha", name: "Buddha (Siddhartha Gautama)", born: "5th Century BCE", died: "5th Century BCE", school: "Buddhism",
+      quotes: [
+        "The mind is everything. What you think you become.",
+        "Peace comes from within. Do not seek it without.",
+        "Do not dwell in the past, do not dream of the future, concentrate the mind on the present moment.",
+        "Hatred does not cease by hatred, but only by love; this is the eternal rule.",
+        "Three things cannot be long hidden: the sun, the moon, and the truth."
+      ]
+    },
+    { id: "sun-tzu", name: "Sun Tzu", born: "544 BCE", died: "496 BCE", school: "Military Strategy",
+      quotes: [
+        "The supreme art of war is to subdue the enemy without fighting.",
+        "Know thy self, know thy enemy. A thousand battles, a thousand victories.",
+        "In the midst of chaos, there is also opportunity.",
+        "Victorious warriors win first and then go to war.",
+        "Appear weak when you are strong, and strong when you are weak."
+      ]
+    },
+    // Modern European
     { id: "nietzsche", name: "Friedrich Nietzsche", born: "1844", died: "1900", school: "Existentialism",
       quotes: [
         "He who has a why to live can bear almost any how.",
         "That which does not kill us makes us stronger.",
         "Whoever fights monsters should see to it that in the process he does not become a monster.",
         "There are no facts, only interpretations.",
-        "God is dead. God remains dead. And we have killed him."
+        "God is dead. God remains dead. And we have killed him.",
+        "Without music, life would be a mistake."
       ]
     },
     { id: "camus", name: "Albert Camus", born: "1913", died: "1960", school: "Absurdism",
@@ -529,25 +631,8 @@
         "Man is condemned to be free.",
         "Hell is other people.",
         "We are our choices.",
-        "Freedom is what you do with what's been done to you."
-      ]
-    },
-    { id: "confucius", name: "Confucius", born: "551 BCE", died: "479 BCE", school: "Confucianism",
-      quotes: [
-        "It does not matter how slowly you go as long as you do not stop.",
-        "Our greatest glory is not in never falling, but in rising every time we fall.",
-        "Real knowledge is to know the extent of one's ignorance.",
-        "When anger rises, think of the consequences.",
-        "The man who moves a mountain begins by carrying away small stones."
-      ]
-    },
-    { id: "lao-tzu", name: "Lao Tzu", born: "6th Century BCE", died: "6th Century BCE", school: "Taoism",
-      quotes: [
-        "The journey of a thousand miles begins with a single step.",
-        "He who knows others is wise; he who knows himself is enlightened.",
-        "When I let go of what I am, I become what I might be.",
-        "Nature does not hurry, yet everything is accomplished.",
-        "The truth is not always beautiful, nor beautiful words the truth."
+        "Freedom is what you do with what's been done to you.",
+        "Every existing thing is born without reason, prolongs itself out of weakness, and dies by chance."
       ]
     },
     { id: "kant", name: "Immanuel Kant", born: "1724", died: "1804", school: "German Idealism",
@@ -564,15 +649,8 @@
         "I think, therefore I am.",
         "Divide each difficulty into as many parts as is feasible and necessary to resolve it.",
         "It is not enough to have a good mind; the main thing is to use it well.",
-        "If you would be a real seeker after truth, it is necessary that at least once in your life you doubt, as far as possible, all things."
-      ]
-    },
-    { id: "machiavelli", name: "Niccolò Machiavelli", born: "1469", died: "1527", school: "Political Realism",
-      quotes: [
-        "It is better to be feared than loved, if you cannot be both.",
-        "The ends justify the means.",
-        "Everyone sees what you appear to be, few experience what you really are.",
-        "There is no avoiding war; it can only be postponed to the advantage of others."
+        "If you would be a real seeker after truth, it is necessary that at least once in your life you doubt, as far as possible, all things.",
+        "The reading of all good books is like a conversation with the finest minds of past centuries."
       ]
     },
     { id: "kierkegaard", name: "Søren Kierkegaard", born: "1813", died: "1855", school: "Existentialism",
@@ -580,30 +658,34 @@
         "Life can only be understood backwards; but it must be lived forwards.",
         "People demand freedom of speech as a compensation for the freedom of thought which they seldom use.",
         "Anxiety is the dizziness of freedom.",
-        "Once you label me you negate me."
+        "Once you label me you negate me.",
+        "The most common form of despair is not being who you are."
       ]
     },
-    { id: "thoreau", name: "Henry David Thoreau", born: "1817", died: "1862", school: "Transcendentalism",
+    { id: "schopenhauer", name: "Arthur Schopenhauer", born: "1788", died: "1860", school: "Pessimism",
       quotes: [
-        "The mass of men lead lives of quiet desperation.",
-        "Go confidently in the direction of your dreams. Live the life you have imagined.",
-        "Rather than love, than money, than fame, give me truth.",
-        "It's not what you look at that matters, it's what you see."
+        "A man can be himself only so long as he is alone.",
+        "Compassion is the basis of morality.",
+        "Every person takes the limits of their own field of vision for the limits of the world.",
+        "Mostly it is loss which teaches us about the worth of things."
       ]
     },
+    { id: "hegel", name: "Georg Wilhelm Friedrich Hegel", born: "1770", died: "1831", school: "German Idealism",
+      quotes: [
+        "We learn from history that we do not learn from history.",
+        "Nothing great in the world has been accomplished without passion.",
+        "The only thing we learn from history is that we learn nothing from history.",
+        "Genuine tragedy is a conflict not between right and wrong but between two different rights."
+      ]
+    },
+    // Enlightenment
     { id: "voltaire", name: "Voltaire", born: "1694", died: "1778", school: "Enlightenment",
       quotes: [
         "I disapprove of what you say, but I will defend to the death your right to say it.",
         "Common sense is not so common.",
         "Those who can make you believe absurdities can make you commit atrocities.",
-        "The more I read, the more I acquire, the more certain I am that I know nothing."
-      ]
-    },
-    { id: "simone-de-beauvoir", name: "Simone de Beauvoir", born: "1908", died: "1986", school: "Feminist Existentialism",
-      quotes: [
-        "One is not born a woman, but becomes one.",
-        "Change your life today. Don't gamble on the future, act now, without delay.",
-        "I am too intelligent, too demanding, and too resourceful for anyone to be able to take charge of me entirely."
+        "The more I read, the more I acquire, the more certain I am that I know nothing.",
+        "Judge a man by his questions rather than his answers."
       ]
     },
     { id: "rousseau", name: "Jean-Jacques Rousseau", born: "1712", died: "1778", school: "Social Contract",
@@ -611,15 +693,115 @@
         "Man is born free, and everywhere he is in chains.",
         "The world of reality has its limits; the world of imagination is boundless.",
         "People who know little are usually great talkers, while men who know much say little.",
-        "Patience is bitter, but its fruit is sweet."
+        "Patience is bitter, but its fruit is sweet.",
+        "Nature never deceives us; it is we who deceive ourselves."
       ]
     },
+    { id: "montaigne", name: "Michel de Montaigne", born: "1533", died: "1592", school: "Renaissance",
+      quotes: [
+        "The greatest thing in the world is to know how to belong to oneself.",
+        "My life has been full of terrible misfortunes most of which never happened.",
+        "There is nothing more notable in Socrates than that he found time, when he was an old man, to learn music and dancing.",
+        "I quote others only in order the better to express myself."
+      ]
+    },
+    // Political Philosophy
     { id: "marx", name: "Karl Marx", born: "1818", died: "1883", school: "Marxism",
       quotes: [
         "The philosophers have only interpreted the world in various ways; the point, however, is to change it.",
         "Religion is the opium of the people.",
         "History repeats itself, first as tragedy, second as farce.",
-        "Workers of the world unite; you have nothing to lose but your chains."
+        "Workers of the world unite; you have nothing to lose but your chains.",
+        "From each according to his ability, to each according to his needs."
+      ]
+    },
+    { id: "machiavelli", name: "Niccolò Machiavelli", born: "1469", died: "1527", school: "Political Realism",
+      quotes: [
+        "It is better to be feared than loved, if you cannot be both.",
+        "The ends justify the means.",
+        "Everyone sees what you appear to be, few experience what you really are.",
+        "There is no avoiding war; it can only be postponed to the advantage of others.",
+        "Never was anything great achieved without danger."
+      ]
+    },
+    // American & British
+    { id: "thoreau", name: "Henry David Thoreau", born: "1817", died: "1862", school: "Transcendentalism",
+      quotes: [
+        "The mass of men lead lives of quiet desperation.",
+        "Go confidently in the direction of your dreams. Live the life you have imagined.",
+        "Rather than love, than money, than fame, give me truth.",
+        "It's not what you look at that matters, it's what you see.",
+        "I went to the woods because I wished to live deliberately."
+      ]
+    },
+    { id: "emerson", name: "Ralph Waldo Emerson", born: "1803", died: "1882", school: "Transcendentalism",
+      quotes: [
+        "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.",
+        "What lies behind us and what lies before us are tiny matters compared to what lies within us.",
+        "The only person you are destined to become is the person you decide to be.",
+        "Do not go where the path may lead, go instead where there is no path and leave a trail."
+      ]
+    },
+    { id: "mill", name: "John Stuart Mill", born: "1806", died: "1873", school: "Utilitarianism",
+      quotes: [
+        "It is better to be a human being dissatisfied than a pig satisfied; better to be Socrates dissatisfied than a fool satisfied.",
+        "Over himself, over his own mind and body, the individual is sovereign.",
+        "Actions are right in proportion as they tend to promote happiness, wrong as they tend to produce the reverse of happiness."
+      ]
+    },
+    { id: "russell", name: "Bertrand Russell", born: "1872", died: "1970", school: "Analytic Philosophy",
+      quotes: [
+        "The whole problem with the world is that fools and fanatics are always so certain of themselves, and wiser people so full of doubts.",
+        "I would never die for my beliefs because I might be wrong.",
+        "Love is wise, hatred is foolish.",
+        "One of the symptoms of an approaching nervous breakdown is the belief that one's work is terribly important."
+      ]
+    },
+    { id: "wittgenstein", name: "Ludwig Wittgenstein", born: "1889", died: "1951", school: "Analytic Philosophy",
+      quotes: [
+        "The limits of my language mean the limits of my world.",
+        "Whereof one cannot speak, thereof one must be silent.",
+        "A serious and good philosophical work could be written consisting entirely of jokes.",
+        "The human body is the best picture of the human soul."
+      ]
+    },
+    // Feminist Philosophy
+    { id: "simone-de-beauvoir", name: "Simone de Beauvoir", born: "1908", died: "1986", school: "Feminist Existentialism",
+      quotes: [
+        "One is not born a woman, but becomes one.",
+        "Change your life today. Don't gamble on the future, act now, without delay.",
+        "I am too intelligent, too demanding, and too resourceful for anyone to be able to take charge of me entirely.",
+        "To catch a husband is an art; to hold him is a job."
+      ]
+    },
+    { id: "arendt", name: "Hannah Arendt", born: "1906", died: "1975", school: "Political Theory",
+      quotes: [
+        "The sad truth is that most evil is done by people who never make up their minds to be good or evil.",
+        "Forgiveness is the key to action and freedom.",
+        "The most radical revolutionary will become a conservative the day after the revolution.",
+        "There are no dangerous thoughts; thinking itself is dangerous."
+      ]
+    },
+    // Modern & Contemporary
+    { id: "foucault", name: "Michel Foucault", born: "1926", died: "1984", school: "Post-structuralism",
+      quotes: [
+        "Power is exercised only over free subjects, and only insofar as they are free.",
+        "Knowledge is not made for understanding; it is made for cutting.",
+        "People know what they do; frequently they know why they do what they do; but what they don't know is what what they do does."
+      ]
+    },
+    { id: "derrida", name: "Jacques Derrida", born: "1930", died: "2004", school: "Deconstruction",
+      quotes: [
+        "There is nothing outside the text.",
+        "To pretend, I actually do the thing: I have therefore only pretended to pretend.",
+        "The one who writes, the one who puts death into words, is also the one who watches over the living."
+      ]
+    },
+    { id: "chomsky", name: "Noam Chomsky", born: "1928", school: "Linguistics & Politics",
+      quotes: [
+        "The smart way to keep people passive and obedient is to strictly limit the spectrum of acceptable opinion.",
+        "If we don't believe in freedom of expression for people we despise, we don't believe in it at all.",
+        "The whole point of education is to create independent, critical thinkers who can make informed decisions."
       ]
     }
   ];
@@ -628,7 +810,6 @@
   const quoteTextEl = document.getElementById('quoteText');
   const quoteAuthorEl = document.getElementById('quoteAuthor');
   const choicesEl = document.getElementById('choices');
-  const choicesPrompt = document.getElementById('choicesPrompt');
   const streakDots = document.getElementById('streakDots');
   const overlay = document.getElementById('overlay');
   const popupEmoji = document.getElementById('popupEmoji');
@@ -641,7 +822,6 @@
   let streak = 0;
   let answered = false;
   let popupWasWin = false;
-  // Track used quotes per round to minimize repeats
   let recentlyUsedQuotes = [];
 
   // ---------- STREAK DOTS ----------
@@ -672,16 +852,13 @@
   }
 
   function getRandomQuote(philosopher) {
-    // Get quotes not recently used
     const available = philosopher.quotes.filter(q => !recentlyUsedQuotes.includes(q));
-    // If all quotes are recently used, reset
     const pool = available.length > 0 ? available : philosopher.quotes;
     const quote = pool[Math.floor(Math.random() * pool.length)];
     
-    // Track in recently used
     recentlyUsedQuotes.push(quote);
-    if (recentlyUsedQuotes.length > 20) {
-      recentlyUsedQuotes.shift(); // Remove oldest
+    if (recentlyUsedQuotes.length > 25) {
+      recentlyUsedQuotes.shift();
     }
     return quote;
   }
@@ -691,25 +868,17 @@
     if (answered) return;
     answered = false;
 
-    // Pick random philosopher
     currentPhilosopher = PHILOSOPHERS[Math.floor(Math.random() * PHILOSOPHERS.length)];
-    
-    // Pick random quote
     currentQuoteText = getRandomQuote(currentPhilosopher);
 
-    // Get 3 wrong options
     const others = PHILOSOPHERS.filter(p => p.id !== currentPhilosopher.id);
     const wrongOptions = shuffle(others).slice(0, 3);
-
-    // Build and shuffle final options
     let options = [...wrongOptions, currentPhilosopher];
     options = shuffle(options);
 
-    // Display quote instantly
     quoteTextEl.textContent = `"${currentQuoteText}"`;
     quoteAuthorEl.textContent = '';
 
-    // Display choice buttons instantly
     choicesEl.innerHTML = '';
     options.forEach((philosopher, idx) => {
       const btn = document.createElement('button');
@@ -718,8 +887,6 @@
       btn.addEventListener('click', () => handleAnswer(btn, philosopher));
       choicesEl.appendChild(btn);
     });
-
-    choicesPrompt.style.display = '';
   }
 
   function handleAnswer(btn, selectedPhilosopher) {
@@ -763,30 +930,35 @@
       popupEmoji.textContent = '✦';
       popupTitle.textContent = '10 in a Row';
       popupInfo.innerHTML = 'You identified ten thinkers in a row.<br>Exceptional wisdom.';
+      const pct = Math.min((streak / 50) * 100, 100);
+      document.getElementById('streakProgressFill').style.width = pct + '%';
       document.getElementById('popupBtn').textContent = 'Continue';
     } else {
-      popupEmoji.textContent = '';
+      popupEmoji.textContent = '✧';
       popupTitle.textContent = currentPhilosopher.name;
-      const details = [
-        currentPhilosopher.school,
-        currentPhilosopher.born + ' – ' + currentPhilosopher.died
-      ].join('  ·  ');
-      popupInfo.innerHTML = `${details}<br><br>"${currentQuoteText}"`;
+      const schoolText = currentPhilosopher.school || 'Philosopher';
+      const yearsText = `${currentPhilosopher.born || '?'} – ${currentPhilosopher.died || '?'}`;
+      const details = `${schoolText}  ·  ${yearsText}`;
+      popupInfo.innerHTML = `${details}<br><br><span style="font-style:italic; text-transform:none; font-family:'Cormorant',serif;">“${currentQuoteText}”</span>`;
+      document.getElementById('streakProgressFill').style.width = '0%';
       document.getElementById('popupBtn').textContent = 'Try Again';
     }
-    overlay.classList.add('show');
     document.getElementById('popup').className = won ? 'win' : 'loss';
+    overlay.classList.add('show');
   }
 
   window.closePopup = function() {
     overlay.classList.remove('show');
     document.getElementById('popup').className = '';
-    if (popupWasWin) { streak = 0; updateDots(); }
+    if (popupWasWin) { 
+      streak = 0; 
+      updateDots(); 
+    }
     answered = false;
     loadRound();
   };
 
-  // ── KEYBOARD ──────────────────────────────────────────────────────────────
+  // ---------- KEYBOARD ----------
   let keySelected = -1;
 
   document.addEventListener('keydown', e => {
@@ -819,11 +991,11 @@
     }
   });
 
-  // ── TITLE SWITCHER ────────────────────────────────────────────────────────
-  const switcher    = document.getElementById('titleSwitcher');
-  const dropdown    = document.getElementById('titleDropdown');
+  // ---------- TITLE SWITCHER ----------
+  const switcher = document.getElementById('titleSwitcher');
+  const dropdown = document.getElementById('titleDropdown');
   const wordThought = document.getElementById('wordThought');
-  const wordArt     = document.getElementById('wordArt');
+  const wordArt = document.getElementById('wordArt');
 
   function openDrop() {
     dropdown.classList.add('open');
@@ -845,12 +1017,9 @@
 
   switcher.addEventListener('mouseenter', openDrop);
   switcher.addEventListener('mouseleave', closeDrop);
-  switcher.addEventListener('focus', openDrop);
-  switcher.addEventListener('blur', e => { if (!switcher.contains(e.relatedTarget)) closeDrop(); });
-
   window.stayOnThought = function() { closeDrop(); };
 
-  // ── INIT ──────────────────────────────────────────────────────────────────
+  // ---------- INIT ----------
   function init() {
     buildStreakDots();
     updateDots();
