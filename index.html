@@ -3,23 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Daily Art Cult</title>
- <link rel="icon" href="favicon.png" type="image/png">
-<meta name="description" content="Can you identify the painter? The Daily Art Cult is a free daily art quiz — guess the painter from one painting, every day.">
-<meta name="keywords" content="guess the painter, art quiz game, identify paintings, art history quiz">
+<title>The Daily Art Cult — Daily Painting Guessing Game</title>
+<meta name="description" content="Can you identify the painter? The Daily Art Cult is a free daily art quiz — guess the painter from one painting, every day. Build your art collection and earn shares.">
+<meta name="keywords" content="guess the painter, art quiz game, identify paintings, art history quiz, art collection, masterworks">
 <meta name="author" content="The Daily Art Cult">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://thedailyartcult.github.io/index.html">
+ <link rel="icon" type="image/png" href="favicon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Daily Art Cult">
 <meta property="og:title" content="The Daily Art Cult — Can You Guess the Painter?">
-<meta property="og:description" content="A free daily painting guessing game. One artwork. Four painters. Streaks. Collections.">
+<meta property="og:description" content="A free daily painting guessing game. One artwork. Four painters. Build your collection. Earn art shares.">
 <meta property="og:url" content="https://thedailyartcult.github.io/index.html">
 <meta property="og:image" content="https://thedailyartcult.github.io/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://upload.wikimedia.org">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; background: #fafaf8; color: #1a1a1a; font-family: 'Montserrat', sans-serif; font-weight: 300; overflow: hidden; }
@@ -43,14 +43,28 @@
   .title-option .opt-label { display: block; font-size: 0.4rem; letter-spacing: 0.18em; color: #ccc; margin-top: 3px; }
   .title-option + .title-option { border-top: 1px solid #f0f0f0; }
   header p { font-size: 0.5rem; letter-spacing: 0.38em; text-transform: uppercase; color: #c0b8b0; margin-top: 4px; }
-  #gameArea { flex: 1; display: flex; min-height: 0; }
-  #paintingCol { flex: 1 1 60%; position: relative; background: #f5f4f0; border-right: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: center; overflow: hidden; min-width: 0; }
+  
+  /* Main game layout */
+  #mainGameView { display: flex; flex: 1; min-height: 0; }
+  #gameArea { flex: 1 1 60%; position: relative; background: #f5f4f0; border-right: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: center; overflow: hidden; min-width: 0; }
+  #paintingCol { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
   #paintingCol::before { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; opacity: 0.4; }
   #paintingWrap { position: relative; line-height: 0; max-width: 100%; max-height: 100%; z-index: 2; filter: drop-shadow(0 4px 24px rgba(0,0,0,0.13)); transition: filter 0.4s ease; }
   #paintingWrap:hover { filter: drop-shadow(0 8px 40px rgba(0,0,0,0.18)); }
   #paintingCanvas { display: block; max-width: 100%; max-height: calc(100vh - 72px); width: auto; height: auto; user-select: none; pointer-events: none; animation: fadeCanvas 0.5s ease; }
   @keyframes fadeCanvas { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: scale(1); } }
-  #choicesCol { flex: 0 0 300px; display: flex; flex-direction: column; padding: 22px 18px 18px; overflow-y: auto; background: #fff; }
+  
+  /* Right panel with tabs */
+  #rightPanel { flex: 0 0 340px; display: flex; flex-direction: column; background: #fff; overflow: hidden; }
+  .panel-tabs { display: flex; border-bottom: 1px solid #e8e8e8; flex-shrink: 0; }
+  .panel-tab { flex: 1; padding: 14px 8px; background: none; border: none; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.48rem; letter-spacing: 0.2em; text-transform: uppercase; color: #aaa; cursor: pointer; transition: all 0.2s; }
+  .panel-tab.active { color: #1a1a1a; border-bottom: 2px solid #1a1a1a; }
+  .panel-tab:hover:not(.active) { color: #666; background: #faf9f7; }
+  
+  /* Game tab content */
+  .tab-content { display: none; flex: 1; overflow-y: auto; padding: 16px 18px; }
+  .tab-content.active { display: flex; flex-direction: column; }
+  
   #streakDots { display: flex; justify-content: center; align-items: center; gap: 7px; padding-bottom: 18px; border-bottom: 1px solid #f0ede8; margin-bottom: 18px; flex-shrink: 0; }
   .dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid #ccc; background: #fff; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); }
   .dot.filled { background: #1a1a1a; border-color: #1a1a1a; transform: scale(1.15); }
@@ -68,277 +82,96 @@
   #keyHint span { display: inline-block; border: 1px solid #e8e4e0; padding: 2px 5px; margin: 0 1px; font-size: 0.38rem; }
   #collectionSwitcher { flex-shrink: 0; margin-top: 16px; padding-top: 14px; border-top: 1px solid #f0ede8; }
   #collectionSwitcher p { font-size: 0.42rem; letter-spacing: 0.3em; text-transform: uppercase; color: #ccc; text-align: center; margin-bottom: 8px; }
-  #collectionBtns { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; max-height: 120px; overflow-y: auto; padding: 2px; }
+  #collectionBtns { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; max-height: 100px; overflow-y: auto; padding: 2px; }
   .col-chip { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.4rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 8px; border: 1px solid #e8e4e0; background: #fff; color: #aaa; cursor: pointer; transition: all 0.18s; }
   .col-chip:hover { border-color: #aaa; color: #555; }
   .col-chip.active { border-color: #1a1a1a; background: #1a1a1a; color: #fff; }
-  /* ── HEADER TAGLINE ANIMATION ── */
-  #siteTagline {
-    position: relative;
-    height: 1.4em;
-    overflow: hidden;
-    display: block;
-    margin-top: 4px;
-  }
-
-  #taglineDefault, #taglinePraise {
-    position: absolute;
-    left: 0; right: 0;
-    text-align: center;
-    font-size: 0.5rem;
-    letter-spacing: 0.38em;
-    text-transform: uppercase;
-    will-change: transform, opacity;
-  }
-
-  /* Default — visible at rest */
-  #taglineDefault {
-    color: #c0b8b0;
-    transform: translateY(0);
-    opacity: 1;
-    transition: transform 0.6s cubic-bezier(0.76,0,0.24,1), opacity 0.4s ease;
-  }
-
-  /* Praise — waits below, rises on correct */
-  #taglinePraise {
-    font-family: 'Cormorant', serif;
-    font-style: italic;
-    font-weight: 300;
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    text-transform: none;
-    color: #c4a454;
-    transform: translateY(110%);
-    opacity: 0;
-    transition: transform 0.65s cubic-bezier(0.22,1,0.36,1), opacity 0.45s ease;
-  }
-
-  /* State: praise visible — default exits up, praise rises in */
-  #siteTagline.praise-active #taglineDefault {
-    transform: translateY(-110%);
-    opacity: 0;
-  }
-  #siteTagline.praise-active #taglinePraise {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  /* ── TITLE GLOW on correct guess ── */
-  @keyframes titleCorrectGlow {
-    0%   { opacity: 1; }
-    18%  { opacity: 0.5; letter-spacing: 0.38em; }
-    50%  { opacity: 1; letter-spacing: 0.32em; }
-    100% { opacity: 1; letter-spacing: 0.32em; }
-  }
-  #siteTitle.correct-flash {
-    animation: titleCorrectGlow 1.1s ease forwards;
-  }
-
-  /* ── CORRECT BUTTON GOLD SHIMMER ── */
-  @keyframes correctShimmer {
-    0%   { background-position: -200% center; }
-    100% { background-position:  200% center; }
-  }
-
-  .choice-btn.correct {
-    border-color: #c4a454 !important;
-    background: linear-gradient(
-      90deg,
-      #f2faf5 0%,
-      #fdf8ec 40%,
-      #f9f4e4 50%,
-      #fdf8ec 60%,
-      #f2faf5 100%
-    );
-    background-size: 200% auto;
-    color: #5a4010;
-    animation: correctShimmer 1.2s ease forwards;
-  }
-
-  .choice-btn.correct .btn-num { color: #c4a454; }
-
-  /* ── OVERLAY ── */
-  #overlay {
-    display: none; position: fixed; inset: 0; z-index: 100;
-    align-items: center; justify-content: center; padding: 24px;
-    background: rgba(8,6,4,0.72);
-    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
-  }
+  
+  /* COLLECTION / ARCHIVES TAB (Masterworks-style) */
+  #collectionTab { overflow-y: auto; }
+  .portfolio-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e8e8e8; }
+  .portfolio-value { font-family: 'Cormorant', serif; font-size: 1.8rem; font-weight: 300; color: #2d6a46; letter-spacing: 0.05em; }
+  .portfolio-label { font-size: 0.35rem; letter-spacing: 0.2em; text-transform: uppercase; color: #aaa; margin-top: 4px; }
+  .shares-count { font-size: 0.5rem; color: #666; margin-top: 8px; }
+  .collection-stats { display: flex; justify-content: space-around; margin-bottom: 20px; padding: 10px; background: #faf9f7; border-radius: 4px; }
+  .stat-item { text-align: center; }
+  .stat-value { font-size: 0.7rem; font-weight: 400; color: #1a1a1a; }
+  .stat-label { font-size: 0.32rem; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; }
+  .artwork-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; margin-top: 8px; }
+  .artwork-card { background: #faf9f7; border: 1px solid #e8e8e8; border-radius: 4px; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+  .artwork-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .artwork-thumb { width: 100%; aspect-ratio: 1 / 0.8; object-fit: cover; background: #f0ede8; }
+  .artwork-info { padding: 8px 6px; text-align: center; }
+  .artwork-painter { font-size: 0.45rem; font-weight: 400; letter-spacing: 0.08em; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .artwork-title { font-size: 0.35rem; letter-spacing: 0.05em; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .artwork-share { font-size: 0.3rem; color: #c4a454; margin-top: 3px; }
+  .empty-collection { text-align: center; padding: 40px 20px; color: #bbb; }
+  .empty-collection p { font-size: 0.5rem; letter-spacing: 0.15em; margin-top: 10px; }
+  
+  /* Share certificate modal */
+  .share-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 300; opacity: 0; visibility: hidden; transition: all 0.3s; }
+  .share-modal.active { opacity: 1; visibility: visible; }
+  .share-certificate { background: #fef9ed; max-width: 480px; width: 90%; padding: 28px; text-align: center; border: 2px solid #c4a454; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+  .certificate-icon { font-size: 2rem; margin-bottom: 10px; }
+  .certificate-title { font-family: 'Cormorant', serif; font-size: 1.4rem; letter-spacing: 0.15em; color: #1a1a1a; margin-bottom: 5px; }
+  .certificate-sub { font-size: 0.4rem; letter-spacing: 0.2em; color: #c4a454; margin-bottom: 20px; text-transform: uppercase; }
+  .certificate-line { margin: 12px 0; font-size: 0.55rem; }
+  .certificate-line strong { font-weight: 500; color: #2d6a46; }
+  .certificate-number { font-family: monospace; font-size: 0.7rem; letter-spacing: 0.1em; color: #666; margin: 15px 0; padding: 8px; background: #f0ede8; display: inline-block; }
+  .certificate-footer { font-size: 0.35rem; letter-spacing: 0.1em; color: #aaa; margin-top: 20px; border-top: 1px solid #e0d8cc; padding-top: 15px; }
+  .close-certificate { margin-top: 20px; padding: 8px 24px; background: none; border: 1px solid #1a1a1a; font-family: 'Montserrat', sans-serif; font-size: 0.45rem; letter-spacing: 0.2em; cursor: pointer; transition: all 0.2s; }
+  .close-certificate:hover { background: #1a1a1a; color: #fff; }
+  
+  /* Overlay and popup styles */
+  #overlay { display: none; position: fixed; inset: 0; z-index: 100; align-items: center; justify-content: center; padding: 24px; background: rgba(8,6,4,0.72); backdrop-filter: blur(3px); }
   #overlay.show { display: flex; animation: overlayIn 0.22s ease; }
   @keyframes overlayIn { from { opacity:0; } to { opacity:1; } }
-
-  /* Loss overlay — lighter, painting still breathes behind */
-  #overlay.show.loss-overlay {
-    background: rgba(8,6,4,0.5);
-    backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px);
-    align-items: flex-end;
-    padding-bottom: 32px;
-  }
-
-  /* ── WRONG ANSWER SHAKE on the button ── */
-  @keyframes wrongShake {
-    0%,100% { transform: translateX(0); }
-    20%      { transform: translateX(-7px); }
-    40%      { transform: translateX(7px); }
-    60%      { transform: translateX(-5px); }
-    80%      { transform: translateX(4px); }
-  }
+  #overlay.show.loss-overlay { background: rgba(8,6,4,0.5); backdrop-filter: blur(1px); align-items: flex-end; padding-bottom: 32px; }
+  @keyframes wrongShake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(4px); } }
   .choice-btn.wrong { animation: wrongShake 0.45s ease; }
-
-  /* ── BASE POPUP ── */
-  #popup {
-    background: #fff; width: 100%; max-width: 400px;
-    text-align: center; overflow: hidden;
-    box-shadow: 0 32px 80px rgba(0,0,0,0.28);
-  }
-
-  /* Win popup — slides up from below */
-  #popup.win, #popup.audiobook {
-    animation: popupSlideUp 0.36s cubic-bezier(0.34,1.3,0.64,1);
-  }
-  @keyframes popupSlideUp {
-    from { opacity:0; transform: translateY(28px) scale(0.95); }
-    to   { opacity:1; transform: translateY(0)    scale(1);    }
-  }
-
-  /* ── LOSS POPUP — painting fills the top ── */
-  #popup.loss {
-    max-width: 460px;
-    animation: popupReveal 0.4s cubic-bezier(0.22,1,0.36,1);
-  }
-  @keyframes popupReveal {
-    from { opacity:0; transform: scale(0.9); }
-    to   { opacity:1; transform: scale(1);   }
-  }
-
-  /* The painting reveal area — only shown on loss */
-  #popupPaintingReveal {
-    display: none;
-    position: relative;
-    width: 100%;
-    height: 220px;
-    overflow: hidden;
-    background: #1a1814;
-  }
+  #popup { background: #fff; width: 100%; max-width: 400px; text-align: center; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.28); }
+  #popup.win, #popup.audiobook { animation: popupSlideUp 0.36s cubic-bezier(0.34,1.3,0.64,1); }
+  @keyframes popupSlideUp { from { opacity:0; transform: translateY(28px) scale(0.95); } to { opacity:1; transform: translateY(0) scale(1); } }
+  #popup.loss { max-width: 460px; animation: popupReveal 0.4s cubic-bezier(0.22,1,0.36,1); }
+  @keyframes popupReveal { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
+  #popupPaintingReveal { display: none; position: relative; width: 100%; height: 220px; overflow: hidden; background: #1a1814; }
   #popup.loss #popupPaintingReveal { display: block; }
-
-  #popupPaintingImg {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 0.6s ease 0.2s;
-  }
+  #popupPaintingImg { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.6s ease 0.2s; }
   #popupPaintingImg.loaded { opacity: 1; }
-
-  /* Placeholder when image fails to load */
-  #popupPaintingImg.error-load {
-    object-fit: contain;
-    background: #2a2520;
-  }
-
-  /* Gradient over painting so text below reads cleanly */
-  #popupPaintingReveal::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, transparent 40%, rgba(10,8,6,0.55) 100%);
-    pointer-events: none;
-  }
-
-  /* Painter name floated over the bottom of the painting */
-  #popupPaintingCaption {
-    display: none;
-    position: absolute;
-    bottom: 14px; left: 18px; right: 18px;
-    text-align: left;
-    z-index: 2;
-  }
+  #popupPaintingImg.error-load { object-fit: contain; background: #2a2520; }
+  #popupPaintingReveal::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(10,8,6,0.55) 100%); pointer-events: none; }
+  #popupPaintingCaption { display: none; position: absolute; bottom: 14px; left: 18px; right: 18px; text-align: left; z-index: 2; }
   #popup.loss #popupPaintingCaption { display: block; }
-
-  #popupPaintingCaption .caption-painter {
-    font-family: 'Cormorant', serif; font-weight: 300;
-    font-size: 1.3rem; letter-spacing: 0.1em;
-    color: #fff; line-height: 1.1;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.6);
-  }
-  #popupPaintingCaption .caption-title {
-    font-size: 0.42rem; letter-spacing: 0.22em;
-    text-transform: uppercase; color: rgba(255,255,255,0.6);
-    margin-top: 3px;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-  }
-
-  /* ── ACCENT BAR ── */
+  #popupPaintingCaption .caption-painter { font-family: 'Cormorant', serif; font-weight: 300; font-size: 1.3rem; letter-spacing: 0.1em; color: #fff; line-height: 1.1; text-shadow: 0 1px 8px rgba(0,0,0,0.6); }
+  #popupPaintingCaption .caption-title { font-size: 0.42rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: 3px; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
   #popupAccent { height: 3px; background: #1a1a1a; }
-  #popup.win  #popupAccent { background: #2d6a46; }
+  #popup.win #popupAccent { background: #2d6a46; }
   #popup.loss #popupAccent { background: #8a2a2a; display: none; }
-  #popup.audiobook #popupAccent {
-    height: 4px;
-    background: linear-gradient(90deg,#c4a454,#e8cc80,#c4a454);
-    background-size: 200% 100%;
-    animation: goldShimmer 2s linear infinite;
-  }
+  #popup.audiobook #popupAccent { height: 4px; background: linear-gradient(90deg,#c4a454,#e8cc80,#c4a454); background-size: 200% 100%; animation: goldShimmer 2s linear infinite; }
   @keyframes goldShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-
-  /* ── STREAK PROGRESS BAR (win popup only) ── */
   #streakProgressBar { height: 2px; background: #f0ede8; overflow: hidden; }
   #streakProgressFill { height: 100%; background: #2d6a46; width: 0%; transition: width 0.9s ease; }
-
-  /* ── POPUP BODY ── */
   #popupBody { padding: 24px 22px 26px; }
   #popupEmoji { font-size: 1.5rem; margin-bottom: 8px; display: block; }
-  #popupTitle {
-    font-family: 'Cormorant', serif; font-weight: 300;
-    font-size: 1.4rem; letter-spacing: 0.12em; color: #111; margin-bottom: 8px;
-  }
-  /* On loss the painter name is shown in the painting caption — hide text title */
+  #popupTitle { font-family: 'Cormorant', serif; font-weight: 300; font-size: 1.4rem; letter-spacing: 0.12em; color: #111; margin-bottom: 8px; }
   #popup.loss #popupTitle { display: none; }
-
   #popupInfo { font-size: 0.5rem; letter-spacing: 0.12em; color: #999; line-height: 2.1; margin-bottom: 20px; text-transform: uppercase; }
-  /* On loss, info is just the painting subtitle — style it differently */
   #popup.loss #popupInfo { color: #bbb; font-size: 0.46rem; margin-bottom: 20px; }
-
   #audiobookHint { font-size: 0.4rem; letter-spacing: 0.22em; text-transform: uppercase; color: #c4a454; margin-bottom: 18px; }
-
-  /* ── AUDIOBOOK FORM ── */
-  #audiobookForm { text-align: left; }
+  #audiobookForm { text-align: left; display: none; }
   .ab-label { display: block; font-size: 0.4rem; letter-spacing: 0.28em; text-transform: uppercase; color: #bbb; margin-bottom: 6px; }
-  .ab-select, .ab-input {
-    width: 100%; padding: 11px 14px; margin-bottom: 12px;
-    border: 1px solid #e0ddd8; background: #fafaf8;
-    font-family: 'Montserrat', sans-serif; font-weight: 300;
-    font-size: 0.55rem; letter-spacing: 0.08em; color: #1a1a1a;
-    outline: none; transition: border-color 0.18s;
-    -webkit-appearance: none; appearance: none;
-  }
+  .ab-select, .ab-input { width: 100%; padding: 11px 14px; margin-bottom: 12px; border: 1px solid #e0ddd8; background: #fafaf8; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.55rem; letter-spacing: 0.08em; color: #1a1a1a; outline: none; transition: border-color 0.18s; }
   .ab-select:focus, .ab-input:focus { border-color: #c4a454; }
-  .ab-select {
-    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23bbb' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 14px center;
-    padding-right: 36px; cursor: pointer;
-  }
-  .ab-submit {
-    width: 100%; padding: 13px; border: none;
-    background: linear-gradient(135deg,#c4a454,#ddb96a);
-    font-family: 'Montserrat', sans-serif; font-weight: 300;
-    font-size: 0.5rem; letter-spacing: 0.3em; text-transform: uppercase;
-    color: #fff; cursor: pointer; transition: opacity 0.2s;
-  }
+  .ab-select { background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23bbb' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; cursor: pointer; }
+  .ab-submit { width: 100%; padding: 13px; border: none; background: linear-gradient(135deg,#c4a454,#ddb96a); font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.5rem; letter-spacing: 0.3em; text-transform: uppercase; color: #fff; cursor: pointer; transition: opacity 0.2s; }
   .ab-submit:hover { opacity: 0.88; }
   #abSuccess { display:none; padding: 10px 0 4px; }
-
-  /* ── POPUP BUTTON ── */
-  #popupBtn {
-    padding: 11px 34px; border: 1px solid #1a1a1a; background: #fff;
-    font-family: 'Montserrat', sans-serif; font-weight: 300;
-    font-size: 0.55rem; letter-spacing: 0.32em; text-transform: uppercase;
-    cursor: pointer; color: #1a1a1a; transition: background 0.2s, color 0.2s;
-  }
+  #popupBtn { padding: 11px 34px; border: 1px solid #1a1a1a; background: #fff; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.55rem; letter-spacing: 0.32em; text-transform: uppercase; cursor: pointer; color: #1a1a1a; transition: background 0.2s, color 0.2s; }
   #popupBtn:hover { background: #1a1a1a; color: #fff; }
   .ab-continue { padding: 11px 34px; border: 1px solid #1a1a1a; background: #fff; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.55rem; letter-spacing: 0.32em; text-transform: uppercase; cursor: pointer; color: #1a1a1a; transition: background 0.2s, color 0.2s; }
   .ab-continue:hover { background: #1a1a1a; color: #fff; }
   #popupEnterHint { margin-top: 10px; font-size: 0.38rem; letter-spacing: 0.22em; text-transform: uppercase; color: #d8d4ce; }
-  @media (max-width: 640px) { html, body { overflow: auto; } #pageShell { height: auto; } #gameArea { flex-direction: column; } #paintingCol { flex: none; height: 56vw; min-height: 200px; border-right: none; border-bottom: 1px solid #e8e8e8; } #paintingCanvas { max-height: 56vw; } #choicesCol { flex: none; width: 100%; padding: 14px; } #siteTitle { font-size: 1.1rem; } }
+  @media (max-width: 640px) { html, body { overflow: auto; } #pageShell { height: auto; } #mainGameView { flex-direction: column; } #gameArea { flex: none; height: 56vw; min-height: 200px; border-right: none; border-bottom: 1px solid #e8e8e8; } #paintingCanvas { max-height: 56vw; } #rightPanel { flex: none; width: 100%; } #siteTitle { font-size: 1.1rem; } }
 </style>
 </head>
 <body>
@@ -349,88 +182,77 @@
       <span id="titleSwitcher" tabindex="0">
         <span id="wordArt">Art</span>
         <span id="wordThought">Thought</span>
-       <div id="titleDropdown" role="menu">
-  <button class="title-option active-option" onclick="stayOnArt()">Art<span class="opt-label">You are here · Paintings</span></button>
-  <a class="title-option" href="app.html">Thought<span class="opt-label">Philosophy · Daily Quotes</span></a>
-</div>
+        <div id="titleDropdown" role="menu">
+          <button class="title-option active-option" onclick="stayOnArt()">Art<span class="opt-label">You are here · Paintings</span></button>
+          <a class="title-option" href="app.html">Thought<span class="opt-label">Philosophy · Daily Quotes</span></a>
+        </div>
       </span>
       <span>Cult</span>
     </h1>
-    <p id="siteTagline">
-      <span id="taglineDefault">Where art becomes ritual.</span>
-      <span id="taglinePraise"></span>
-    </p>
+    <p>Where art becomes ritual.</p>
   </header>
-  <div id="gameArea">
-    <div id="paintingCol">
-      <div id="paintingWrap">
-        <canvas id="paintingCanvas"></canvas>
-        <div id="paintingShield" oncontextmenu="return false" ondragstart="return false"></div>
+  <div id="mainGameView">
+    <div id="gameArea">
+      <div id="paintingCol">
+        <div id="paintingWrap">
+          <canvas id="paintingCanvas"></canvas>
+        </div>
       </div>
     </div>
-    <div id="choicesCol">
-      <div id="streakDots"></div>
-      <p id="choicesPrompt">Who painted this?</p>
-      <div id="choices"></div>
-      <div id="keyHint"><span>1</span><span>2</span><span>3</span><span>4</span> to select &nbsp;·&nbsp; <span>Enter</span> to confirm</div>
-      <div id="collectionSwitcher">
-        <p>Your Collection</p>
-        <div id="collectionBtns"></div>
+    <div id="rightPanel">
+      <div class="panel-tabs">
+        <button class="panel-tab active" data-tab="game">Play</button>
+        <button class="panel-tab" data-tab="collection">My Collection</button>
+      </div>
+      
+      <!-- Game Tab -->
+      <div id="gameTab" class="tab-content active">
+        <div id="streakDots"></div>
+        <p id="choicesPrompt">Who painted this?</p>
+        <div id="choices"></div>
+        <div id="keyHint"><span>1</span><span>2</span><span>3</span><span>4</span> to select &nbsp;·&nbsp; <span>Enter</span> to confirm</div>
+        <div id="collectionSwitcher">
+          <p>Your Collection</p>
+          <div id="collectionBtns"></div>
+        </div>
+      </div>
+      
+      <!-- Collection / Archives Tab (Masterworks-style) -->
+      <div id="collectionTab" class="tab-content">
+        <div class="portfolio-header">
+          <div class="portfolio-value" id="portfolioValue">$0</div>
+          <div class="portfolio-label">Portfolio Value</div>
+          <div class="shares-count" id="sharesCount">0 art shares owned</div>
+        </div>
+        <div class="collection-stats">
+          <div class="stat-item"><div class="stat-value" id="statPainters">0</div><div class="stat-label">Artists</div></div>
+          <div class="stat-item"><div class="stat-value" id="statWorks">0</div><div class="stat-label">Works</div></div>
+          <div class="stat-item"><div class="stat-value" id="statStreak">0</div><div class="stat-label">Best Streak</div></div>
+        </div>
+        <div id="artworkGrid" class="artwork-grid"></div>
+        <div id="emptyCollection" class="empty-collection" style="display:none;">
+          <div>🎨</div>
+          <p>Your collection is empty.<br>Correctly guess paintings to earn shares.</p>
+        </div>
       </div>
     </div>
   </div>
 </div>
-<div id="overlay">
-  <div id="popup">
 
-    <!-- PAINTING REVEAL — only visible on wrong answer (.loss class) -->
-    <div id="popupPaintingReveal">
-      <img id="popupPaintingImg" src="" alt="">
-      <div id="popupPaintingCaption">
-        <div class="caption-painter" id="captionPainter"></div>
-        <div class="caption-title"  id="captionTitle"></div>
-      </div>
-    </div>
+<div id="overlay"><div id="popup"><div id="popupPaintingReveal"><img id="popupPaintingImg" src="" alt=""><div id="popupPaintingCaption"><div class="caption-painter" id="captionPainter"></div><div class="caption-title" id="captionTitle"></div></div></div><div id="popupAccent"></div><div id="streakProgressBar"><div id="streakProgressFill"></div></div><div id="popupBody"><span id="popupEmoji"></span><div id="popupTitle"></div><div id="popupInfo"></div><div id="audiobookHint"></div><div id="audiobookForm"><label class="ab-label" for="abPainter">Choose your audiobook</label><select class="ab-select" id="abPainter"><option value="">Select a painter…</option><option>Claude Monet — Impressionism &amp; Light</option><option>Vincent van Gogh — The Tormented Genius</option><option>Leonardo da Vinci — Mind of a Renaissance Man</option><option>Rembrandt — Masters of Light &amp; Shadow</option><option>Pablo Picasso — Breaking Every Rule</option><option>Johannes Vermeer — Mystery of the Dutch Master</option><option>Caravaggio — Drama, Darkness &amp; Devotion</option><option>Gustav Klimt — Gold, Symbolism &amp; Vienna</option><option>Salvador Dalí — The Surrealist Mind</option><option>Edvard Munch — Anxiety &amp; Expression</option></select><label class="ab-label" for="abEmail">Your email address</label><input class="ab-input" type="email" id="abEmail" placeholder="your@email.com"><button class="ab-submit" onclick="submitAudiobook()">Claim My Free Audiobook →</button><div id="abSuccess" style="display:none"><div style="font-size:0.5rem;letter-spacing:0.12em;color:#999;line-height:2.1;text-transform:uppercase;margin-bottom:18px">Your audiobook is on its way.<br>Check your inbox within 24 hours.</div><button class="ab-continue" onclick="closePopup()">Continue Playing</button></div></div><button id="popupBtn" onclick="closePopup()">Continue</button><div id="popupEnterHint">Press <span style="border:1px solid #e8e4e0;padding:2px 5px;font-size:0.36rem;">Enter</span> to continue</div></div></div></div>
 
-    <div id="popupAccent"></div>
-    <div id="streakProgressBar"><div id="streakProgressFill"></div></div>
-
-    <div id="popupBody">
-      <span id="popupEmoji"></span>
-      <div id="popupTitle"></div>
-      <div id="popupInfo"></div>
-      <div id="audiobookHint"></div>
-
-      <!-- Audiobook form — only shown on 50-streak -->
-      <div id="audiobookForm" style="display:none">
-        <label class="ab-label" for="abPainter">Choose your audiobook</label>
-        <select class="ab-select" id="abPainter">
-          <option value="">Select a painter…</option>
-          <option>Claude Monet — Impressionism &amp; Light</option>
-          <option>Vincent van Gogh — The Tormented Genius</option>
-          <option>Leonardo da Vinci — Mind of a Renaissance Man</option>
-          <option>Rembrandt — Masters of Light &amp; Shadow</option>
-          <option>Pablo Picasso — Breaking Every Rule</option>
-          <option>Johannes Vermeer — Mystery of the Dutch Master</option>
-          <option>Caravaggio — Drama, Darkness &amp; Devotion</option>
-          <option>Gustav Klimt — Gold, Symbolism &amp; Vienna</option>
-          <option>Salvador Dalí — The Surrealist Mind</option>
-          <option>Edvard Munch — Anxiety &amp; Expression</option>
-        </select>
-        <label class="ab-label" for="abEmail">Your email address</label>
-        <input class="ab-input" type="email" id="abEmail" placeholder="your@email.com">
-        <button class="ab-submit" onclick="submitAudiobook()">Claim My Free Audiobook →</button>
-        <div id="abSuccess" style="display:none;padding:10px 0 4px;text-align:center">
-          <div style="font-size:0.5rem;letter-spacing:0.12em;color:#999;line-height:2.1;text-transform:uppercase;margin-bottom:18px">
-            Your audiobook is on its way.<br>Check your inbox within 24 hours.
-          </div>
-          <button class="ab-continue" onclick="closePopup()">Continue Playing</button>
-        </div>
-      </div>
-
-      <button id="popupBtn" onclick="closePopup()">Continue</button>
-      <div id="popupEnterHint">Press <span style="border:1px solid #e8e4e0;padding:2px 5px;font-size:0.36rem;">Enter</span> to continue</div>
-    </div>
+<!-- Share Certificate Modal -->
+<div id="shareModal" class="share-modal">
+  <div class="share-certificate">
+    <div class="certificate-icon">📜</div>
+    <div class="certificate-title">CERTIFICATE OF ART SHARE</div>
+    <div class="certificate-sub">The Daily Art Cult · Masterworks Division</div>
+    <div class="certificate-line">This certifies that <strong id="certOwner">Art Collector</strong> holds one (1) share in</div>
+    <div class="certificate-line"><strong id="certArtwork">Artwork Name</strong></div>
+    <div class="certificate-line">by <strong id="certPainter">Painter Name</strong></div>
+    <div class="certificate-number" id="certNumber">SHARE-0000-0000</div>
+    <div class="certificate-footer">This fractional share represents aesthetic ownership and cultural equity in the artwork. Valid forever.</div>
+    <button class="close-certificate" onclick="closeShareModal()">Close</button>
   </div>
 </div>
 
@@ -441,12 +263,142 @@ document.addEventListener('keydown', e => {
 });
 
 // ============================================
-// MASSIVE EXPANDED POPULAR COLLECTION - 80+ PAINTERS
-// This ensures you NEVER see the same painter twice in a short streak
+// ART COLLECTION SYSTEM (Masterworks-style)
+// ============================================
+
+let userCollection = [];
+let portfolioValue = 0;
+let bestStreak = 0;
+
+function loadCollection() {
+  const saved = localStorage.getItem('artCult_collection');
+  if (saved) {
+    try {
+      userCollection = JSON.parse(saved);
+    } catch(e) { userCollection = []; }
+  }
+  const savedBest = localStorage.getItem('artCult_bestStreak');
+  if (savedBest) bestStreak = parseInt(savedBest) || 0;
+  updatePortfolioValue();
+  renderCollection();
+}
+
+function saveCollection() {
+  localStorage.setItem('artCult_collection', JSON.stringify(userCollection));
+  localStorage.setItem('artCult_bestStreak', bestStreak.toString());
+}
+
+function generateShareNumber() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < 12; i++) {
+    result += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return `ART-${result.slice(0,4)}-${result.slice(4,8)}-${result.slice(8,12)}`;
+}
+
+function addToCollection(painter, paintingUrl, paintingTitle) {
+  const share = {
+    id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),
+    painterId: painter.id,
+    painterName: painter.name,
+    painterNationality: painter.nationality || 'Unknown',
+    paintingUrl: paintingUrl,
+    paintingTitle: paintingTitle || 'Untitled Masterpiece',
+    shareNumber: generateShareNumber(),
+    dateAcquired: new Date().toISOString(),
+    estimatedValue: Math.floor(Math.random() * 5000) + 500
+  };
+  
+  const exists = userCollection.some(item => item.paintingUrl === paintingUrl);
+  if (!exists) {
+    userCollection.unshift(share);
+    saveCollection();
+    updatePortfolioValue();
+    renderCollection();
+    return true;
+  }
+  return false;
+}
+
+function updatePortfolioValue() {
+  portfolioValue = userCollection.reduce((sum, item) => sum + (item.estimatedValue || 500), 0);
+  const stats = getCollectionStats();
+  
+  const portfolioEl = document.getElementById('portfolioValue');
+  const sharesEl = document.getElementById('sharesCount');
+  const paintersEl = document.getElementById('statPainters');
+  const worksEl = document.getElementById('statWorks');
+  const streakEl = document.getElementById('statStreak');
+  
+  if (portfolioEl) portfolioEl.innerHTML = '$' + portfolioValue.toLocaleString();
+  if (sharesEl) sharesEl.innerHTML = userCollection.length + ' art share' + (userCollection.length !== 1 ? 's' : '') + ' owned';
+  if (paintersEl) paintersEl.innerHTML = stats.uniquePainters;
+  if (worksEl) worksEl.innerHTML = stats.totalWorks;
+  if (streakEl) streakEl.innerHTML = bestStreak;
+}
+
+function getCollectionStats() {
+  const uniquePainters = new Set(userCollection.map(item => item.painterId)).size;
+  return { uniquePainters, totalWorks: userCollection.length };
+}
+
+function renderCollection() {
+  const grid = document.getElementById('artworkGrid');
+  const emptyMsg = document.getElementById('emptyCollection');
+  
+  if (!userCollection.length) {
+    if (grid) grid.innerHTML = '';
+    if (emptyMsg) emptyMsg.style.display = 'block';
+    return;
+  }
+  if (emptyMsg) emptyMsg.style.display = 'none';
+  
+  if (grid) {
+    grid.innerHTML = userCollection.map(item => `
+      <div class="artwork-card" onclick="showShareCertificate('${item.id}')">
+        <img class="artwork-thumb" src="${item.paintingUrl}" alt="${escapeHtml(item.paintingTitle)}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'80\' viewBox=\'0 0 100 80\'%3E%3Crect width=\'100\' height=\'80\' fill=\'%23f0ede8\'/%3E%3Ctext x=\'50\' y=\'45\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'10\'%3E🎨%3C/text%3E%3C/svg%3E'">
+        <div class="artwork-info">
+          <div class="artwork-painter">${escapeHtml(item.painterName)}</div>
+          <div class="artwork-title">${escapeHtml(item.paintingTitle.substring(0, 25))}</div>
+          <div class="artwork-share">1 Share · $${(item.estimatedValue || 500).toLocaleString()}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
+}
+
+function showShareCertificate(shareId) {
+  const share = userCollection.find(s => s.id === shareId);
+  if (!share) return;
+  
+  document.getElementById('certOwner').textContent = 'Art Collector';
+  document.getElementById('certArtwork').textContent = share.paintingTitle;
+  document.getElementById('certPainter').textContent = share.painterName;
+  document.getElementById('certNumber').textContent = share.shareNumber;
+  
+  document.getElementById('shareModal').classList.add('active');
+}
+
+function closeShareModal() {
+  document.getElementById('shareModal').classList.remove('active');
+}
+
+// ============================================
+// PAINTERS MASTER LIST (80+ painters)
 // ============================================
 
 const PAINTERS_MASTER = [
-  // CORE POPULAR MASTERS (35+)
   { id: "monet", name: "Claude Monet", category: "Paintings_by_Claude_Monet", tags: ["popular","french","impressionist"], nationality: "French", born: 1840, died: 1926 },
   { id: "vangogh", name: "Vincent van Gogh", category: "Paintings_by_Vincent_van_Gogh", tags: ["popular","dutch","post-impressionist"], nationality: "Dutch", born: 1853, died: 1890 },
   { id: "picasso", name: "Pablo Picasso", category: "Paintings_by_Pablo_Picasso", tags: ["popular","spanish","modern"], nationality: "Spanish", born: 1881, died: 1973 },
@@ -487,8 +439,7 @@ const PAINTERS_MASTER = [
   { id: "botticelli", name: "Sandro Botticelli", category: "Paintings_by_Sandro_Botticelli", tags: ["popular","italian","renaissance"], nationality: "Italian", born: 1445, died: 1510 },
   { id: "leonardo", name: "Leonardo da Vinci", category: "Paintings_by_Leonardo_da_Vinci", tags: ["popular","italian","renaissance"], nationality: "Italian", born: 1452, died: 1519 },
   { id: "caravaggio", name: "Caravaggio", category: "Paintings_by_Caravaggio", tags: ["popular","italian","baroque"], nationality: "Italian", born: 1571, died: 1610 },
-  { id: "raphael", name: "Raphael", category: "Paintings_by_Raphael", tags: ["popular","italian","renaissance"], nationality: "Italian", born: 1483, died: 1520 },
-  { id: "michelangelo", name: "Michelangelo", category: "Paintings_by_Michelangelo", tags: ["popular","italian","renaissance"], nationality: "Italian", born: 1475, died: 1564 }
+  { id: "raphael", name: "Raphael", category: "Paintings_by_Raphael", tags: ["popular","italian","renaissance"], nationality: "Italian", born: 1483, died: 1520 }
 ];
 
 function getUniqueCollections() {
@@ -497,19 +448,20 @@ function getUniqueCollections() {
   return Array.from(set).sort((a,b) => a==='full'?-1:b==='full'?1:a==='popular'?-1:b==='popular'?1:a.localeCompare(b));
 }
 
-// ========== PAINTER REPETITION PREVENTION ==========
-// Track recently used painters - NEVER repeat until you've seen at least 15 different ones
-let recentPainters = [];  // IDs of painters used in last N rounds
-const MAX_RECENT_PAINTERS = 15;  // Must see 15 different painters before repeating any
-
-// Track painting history per painter (prevents same painting repeating)
+let recentPainters = [];
+const MAX_RECENT_PAINTERS = 15;
 let paintingsCache = new Map();
 let perPainterArtHistory = new Map();
 const MAX_ART_HISTORY = 8;
 
-// Store current painting info for the loss popup
 let currentPaintingUrl = '';
 let currentPaintingTitle = '';
+let currentPainter = null;
+let activePainters = [];
+let streak = 0;
+let answered = false;
+let isLoading = false;
+let popupWasWin = false;
 
 async function fetchPaintingsForPainter(painter) {
   if (paintingsCache.has(painter.id)) return paintingsCache.get(painter.id);
@@ -556,29 +508,22 @@ function getFreshPainting(painter, paintings) {
   return chosen;
 }
 
-// Get a painter that hasn't been used recently
 function getFreshPainter(availablePainters) {
   const eligible = availablePainters.filter(p => !recentPainters.includes(p.id));
   if (eligible.length === 0) {
-    // Reset recent painters if all have been seen
     recentPainters = [];
     return availablePainters[Math.floor(Math.random() * availablePainters.length)];
   }
   return eligible[Math.floor(Math.random() * eligible.length)];
 }
 
-// Get wrong choices that are also fresh (not recently used, not the correct one)
 function getFreshWrongChoices(correctPainter, allPainters, count = 3) {
   const recentSet = new Set(recentPainters);
   recentSet.add(correctPainter.id);
   let candidates = allPainters.filter(p => !recentSet.has(p.id) && p.id !== correctPainter.id);
-  
   if (candidates.length < count) {
-    // Fallback: just exclude correct painter
     candidates = allPainters.filter(p => p.id !== correctPainter.id);
   }
-  
-  // Shuffle and take first 'count'
   for (let i = candidates.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
@@ -586,30 +531,30 @@ function getFreshWrongChoices(correctPainter, allPainters, count = 3) {
   return candidates.slice(0, count);
 }
 
-// ========== GAME STATE ==========
-let activePainters = [];
-let currentPainter = null;
-let streak = 0;
-let answered = false;
-let isLoading = false;
-let popupWasWin = false;
-
 function buildStreakDots() {
   const el = document.getElementById('streakDots');
+  if (!el) return;
   el.innerHTML = '';
   for (let i = 0; i < 10; i++) {
     const d = document.createElement('div'); d.className = 'dot'; d.id = 'dot-'+i; el.appendChild(d);
   }
 }
+
 function updateDots() {
   for (let i = 0; i < 10; i++) {
     const dot = document.getElementById('dot-'+i);
     if (dot) dot.className = 'dot' + (i < streak ? ' filled' : '');
   }
+  if (streak > bestStreak) {
+    bestStreak = streak;
+    saveCollection();
+    updatePortfolioValue();
+  }
 }
 
 async function loadPainting(painter) {
   const canvas = document.getElementById('paintingCanvas');
+  if (!canvas) return false;
   const ctx = canvas.getContext('2d');
   canvas.width = 700; canvas.height = 400;
   ctx.fillStyle = '#f5f4f0'; ctx.fillRect(0,0,700,400);
@@ -621,15 +566,15 @@ async function loadPainting(painter) {
   const painting = getFreshPainting(painter, paintings);
   if (!painting) return false;
   
-  // Store current painting info for loss popup
   currentPaintingUrl = painting.url;
   currentPaintingTitle = painting.title;
   
   return new Promise((resolve) => {
     const img = new Image();
+    img.crossOrigin = 'Anonymous';
     img.onload = () => {
       const col = document.getElementById('paintingCol');
-      const availW = col ? col.clientWidth - 20 : window.innerWidth - 340;
+      const availW = col ? col.clientWidth - 20 : window.innerWidth - 360;
       const availH = col ? col.clientHeight - 30 : window.innerHeight - 90;
       let scale = Math.min(availW / img.width, availH / img.height, 1);
       canvas.width = Math.max(180, Math.round(img.width * scale));
@@ -639,10 +584,7 @@ async function loadPainting(painter) {
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       resolve(true);
     };
-    img.onerror = () => {
-      console.error('Failed to load painting image:', painting.url);
-      resolve(false);
-    };
+    img.onerror = () => { resolve(false); };
     img.src = painting.url;
   });
 }
@@ -652,17 +594,13 @@ async function nextRound() {
   if (!activePainters.length) return;
   isLoading = true;
   
-  // Get a fresh painter (not in recent history)
   currentPainter = getFreshPainter(activePainters);
-  
   const success = await loadPainting(currentPainter);
   if (!success) { isLoading = false; setTimeout(() => nextRound(), 400); return; }
   
-  // Add to recent painters list
   recentPainters.push(currentPainter.id);
   if (recentPainters.length > MAX_RECENT_PAINTERS) recentPainters.shift();
   
-  // Get fresh wrong choices (also not recently used)
   const wrongs = getFreshWrongChoices(currentPainter, activePainters, 3);
   let options = [...wrongs, currentPainter];
   for (let i = options.length - 1; i > 0; i--) {
@@ -671,106 +609,18 @@ async function nextRound() {
   }
   
   const choicesDiv = document.getElementById('choices');
-  choicesDiv.innerHTML = '';
-  options.forEach((p, idx) => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn';
-    btn.innerHTML = `<span class="btn-num">${idx+1}</span>${p.name}`;
-    btn.onclick = () => answer(btn, p);
-    choicesDiv.appendChild(btn);
-  });
+  if (choicesDiv) {
+    choicesDiv.innerHTML = '';
+    options.forEach((p, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.innerHTML = `<span class="btn-num">${idx+1}</span>${p.name}`;
+      btn.onclick = () => answer(btn, p);
+      choicesDiv.appendChild(btn);
+    });
+  }
   isLoading = false;
   answered = false;
-}
-
-// ── PRAISE DATA ───────────────────────────────────────────────────────────
-const PAINTER_PRAISE = {
-  "claude-monet":           "You saw through the light. Monet would approve.",
-  "vincent-van-gogh":       "Few can see the urgency in the brushstroke. You did.",
-  "pablo-picasso":          "Cubism cannot hide from you.",
-  "rembrandt":              "The Dutch Golden Age bows to your eye.",
-  "johannes-vermeer":       "Only 34 paintings exist. You know every one.",
-  "edouard-manet":          "The scandal of his time. The clarity of yours.",
-  "paul-cezanne":           "The bridge between centuries. You crossed it.",
-  "pierre-renoir":          "You felt the warmth before you named it.",
-  "francisco-goya":         "You walked into the dark and found him.",
-  "eugene-delacroix":       "Liberty guided your eye.",
-  "sandro-botticelli":      "Venus herself is no mystery to you.",
-  "leonardo-da-vinci":      "The Renaissance reveals itself to few.",
-  "michelangelo":           "The Sistine ceiling is yours.",
-  "raphael":                "Grace recognised.",
-  "caravaggio":             "Even in darkness, you found him.",
-  "diego-velazquez":        "The Spanish court is no stranger to you.",
-  "thomas-gainsborough":    "The English portrait bows to your eye.",
-  "pieter-bruegel":         "You found him in the crowd.",
-  "jan-van-eyck":           "The Flemish masters hide nothing from you.",
-  "titian":                 "Venice is yours.",
-  "camille-pissarro":       "The mentor of all Impressionists. Known.",
-  "alfred-sisley":          "The most consistent. Consistently recognised.",
-  "berthe-morisot":         "The first woman of Impressionism. You know her work.",
-  "gustave-courbet":        "Realism unmasked.",
-  "jean-millet":            "The fields of France reveal themselves to you.",
-  "georges-seurat":         "Dot by dot, you found him.",
-  "paul-gauguin":           "Tahiti cannot hide a painter from you.",
-  "henri-toulouse-lautrec": "Moulin Rouge, unmasked.",
-  "ilya-repin":             "The Volga bows to those who know it.",
-  "ivan-shishkin":          "The Russian forest reveals itself.",
-  "vasily-surikov":         "History painted. History recognised.",
-  "isaac-levitan":          "The mood of the landscape. You felt it.",
-  "vasily-vereshchagin":    "War painted honestly. Honestly recognised.",
-  "el-greco":               "The elongated saints kneel before your eye.",
-  "peter-paul-rubens":      "Baroque excess, quietly named.",
-  "william-turner":         "Light and chaos. You named it.",
-  "john-constable":         "The English sky belongs to you now.",
-  "gustav-klimt":           "Gold cannot hide a master from a master.",
-  "egon-schiele":           "Raw and unsparing. You knew him.",
-  "edvard-munch":           "You heard the scream. You knew the hand.",
-  "john-singer-sargent":    "The portraitist of an age. Recognised.",
-  "mary-cassatt":           "Cassatt is one of the hardest. Your eye is rare.",
-  "edward-hopper":          "Solitude recognised.",
-  "andrew-wyeth":           "Christina's world is no longer a mystery.",
-  "winslow-homer":          "The American sea. You know its painter.",
-  "salvador-dali":          "The surreal cannot escape your eye.",
-  "amedeo-modigliani":      "The elongated grace. You knew it.",
-  "alphonse-mucha":         "Art nouveau, elegantly named.",
-};
-
-const GENERIC_PRAISE = [
-  "Another painting owned.",
-  "Your eye is becoming dangerous.",
-  "The cult grows.",
-  "Correct. Keep going.",
-  "The masters reveal themselves to those who look."
-];
-
-let lastGenericIdx = -1;
-
-function flashPraise(painterId, callback) {
-  const specific = PAINTER_PRAISE[painterId];
-  let generic;
-  do { generic = Math.floor(Math.random() * GENERIC_PRAISE.length); }
-  while (generic === lastGenericIdx && GENERIC_PRAISE.length > 1);
-  lastGenericIdx = generic;
-
-  // Pick one: painter-specific if exists, otherwise generic
-  const line = specific || GENERIC_PRAISE[generic];
-
-  const tagline  = document.getElementById('siteTagline');
-  const praiseEl = document.getElementById('taglinePraise');
-
-  praiseEl.textContent = line;
-  tagline.classList.add('praise-active');
-
-  // Brief shimmer on the title itself
-  const titleEl = document.getElementById('siteTitle');
-  titleEl.classList.add('correct-flash');
-  setTimeout(() => titleEl.classList.remove('correct-flash'), 1200);
-
-  setTimeout(() => {
-    tagline.classList.remove('praise-active');
-    // Wait for slide-out transition then fire callback
-    setTimeout(callback, 520);
-  }, 2000);
 }
 
 function answer(btn, painter) {
@@ -783,18 +633,21 @@ function answer(btn, painter) {
     btn.classList.add('correct');
     streak++;
     updateDots();
+    
+    addToCollection(currentPainter, currentPaintingUrl, currentPaintingTitle);
+    
     if (streak >= 50) {
-      flashPraise(painter.id, () => showAudiobookReward());
+      showAudiobookReward();
     } else if (streak >= 10) {
-      flashPraise(painter.id, () => setTimeout(() => showPopup(true), 500));
+      setTimeout(() => showPopup(true), 500);
     } else {
-      flashPraise(painter.id, () => setTimeout(() => { answered = false; nextRound(); }, 750));
+      setTimeout(() => { answered = false; nextRound(); }, 750);
     }
   } else {
     btn.classList.add('wrong');
     allBtns.forEach(b => { if (b.textContent === currentPainter.name) b.classList.add('correct'); });
     streak = 0; updateDots();
-    recentPainters = []; // Reset painter history on loss
+    recentPainters = [];
     setTimeout(() => showPopup(false), 500);
   }
 }
@@ -803,18 +656,28 @@ function showAudiobookReward() {
   const title = document.getElementById('popupTitle');
   const info  = document.getElementById('popupInfo');
   const emoji = document.getElementById('popupEmoji');
-  emoji.textContent = '🎧';
-  title.textContent = 'You\'ve Earned It';
-  info.innerHTML    = '50 paintings identified correctly.<br>Your audiobook awaits.';
-  document.getElementById('audiobookHint').textContent = '';
-  document.getElementById('streakProgressFill').style.width = '100%';
-  document.getElementById('audiobookForm').style.display = 'block';
-  document.getElementById('abSuccess').style.display    = 'none';
-  document.getElementById('popupBtn').style.display     = 'none';
-  document.getElementById('popupEnterHint').style.display = 'none';
-  document.getElementById('overlay').classList.add('show');
-  document.getElementById('overlay').classList.remove('loss-overlay');
-  document.getElementById('popup').className = 'audiobook';
+  if (emoji) emoji.textContent = '🎧';
+  if (title) title.textContent = 'You\'ve Earned It';
+  if (info) info.innerHTML = '50 paintings identified correctly.<br>Your audiobook awaits.';
+  const hint = document.getElementById('audiobookHint');
+  if (hint) hint.textContent = '';
+  const fill = document.getElementById('streakProgressFill');
+  if (fill) fill.style.width = '100%';
+  const form = document.getElementById('audiobookForm');
+  if (form) form.style.display = 'block';
+  const success = document.getElementById('abSuccess');
+  if (success) success.style.display = 'none';
+  const btn = document.getElementById('popupBtn');
+  if (btn) btn.style.display = 'none';
+  const enterHint = document.getElementById('popupEnterHint');
+  if (enterHint) enterHint.style.display = 'none';
+  const overlay = document.getElementById('overlay');
+  if (overlay) {
+    overlay.classList.add('show');
+    overlay.classList.remove('loss-overlay');
+  }
+  const popup = document.getElementById('popup');
+  if (popup) popup.className = 'audiobook';
   popupWasWin = true;
 }
 
@@ -825,72 +688,72 @@ function showPopup(won) {
   const info    = document.getElementById('popupInfo');
   const overlay = document.getElementById('overlay');
 
-  // Reset shared elements
-  document.getElementById('audiobookForm').style.display   = 'none';
-  document.getElementById('popupBtn').style.display        = '';
-  document.getElementById('popupEnterHint').style.display  = '';
-  document.getElementById('audiobookHint').textContent     = '';
-  document.getElementById('streakProgressFill').style.width = '0%';
+  const form = document.getElementById('audiobookForm');
+  if (form) form.style.display = 'none';
+  const popupBtn = document.getElementById('popupBtn');
+  if (popupBtn) popupBtn.style.display = '';
+  const enterHint = document.getElementById('popupEnterHint');
+  if (enterHint) enterHint.style.display = '';
+  const hint = document.getElementById('audiobookHint');
+  if (hint) hint.textContent = '';
+  const fill = document.getElementById('streakProgressFill');
+  if (fill) fill.style.width = '0%';
 
   if (won) {
-    emoji.textContent = '✦';
-    title.textContent = '10 in a Row';
-    info.innerHTML    = 'You correctly identified ten paintings in a row.<br>Exceptional.';
+    if (emoji) emoji.textContent = '✦';
+    if (title) title.textContent = '10 in a Row';
+    if (info) info.innerHTML = 'You correctly identified ten paintings in a row.<br>Exceptional.';
     const pct = Math.min((streak / 50) * 100, 100);
-    setTimeout(() => { document.getElementById('streakProgressFill').style.width = pct + '%'; }, 80);
-    document.getElementById('audiobookHint').textContent = (50 - streak) + ' correct left to unlock your free audiobook';
-    overlay.classList.remove('loss-overlay');
-    overlay.classList.add('show');
-    document.getElementById('popup').className = 'win';
+    setTimeout(() => { 
+      const f = document.getElementById('streakProgressFill');
+      if (f) f.style.width = pct + '%'; 
+    }, 80);
+    if (hint) hint.textContent = (50 - streak) + ' correct left to unlock your free audiobook';
+    if (overlay) {
+      overlay.classList.remove('loss-overlay');
+      overlay.classList.add('show');
+    }
+    const popup = document.getElementById('popup');
+    if (popup) popup.className = 'win';
   } else {
-    // Wrong answer — show the actual painting in the popup header
-    emoji.textContent = '';
+    if (emoji) emoji.textContent = '';
     const line1 = [
       currentPainter.nationality ? currentPainter.nationality + ' Painter' : '',
       (currentPainter.born && currentPainter.died) ? currentPainter.born + ' – ' + currentPainter.died : ''
     ].filter(Boolean).join('  ·  ');
-    info.innerHTML = line1;
-
-    // Populate painting caption
-    document.getElementById('captionPainter').textContent = currentPainter.name;
-    document.getElementById('captionTitle').textContent   = currentPaintingTitle || 'Artwork';
-
-    // Load painting image into the reveal panel
+    if (info) info.innerHTML = line1;
+    const capPainter = document.getElementById('captionPainter');
+    const capTitle = document.getElementById('captionTitle');
+    if (capPainter) capPainter.textContent = currentPainter.name;
+    if (capTitle) capTitle.textContent = currentPaintingTitle || 'Artwork';
     const img = document.getElementById('popupPaintingImg');
-    img.classList.remove('loaded');
-    img.classList.remove('error-load');
-    
-    if (currentPaintingUrl) {
-      img.onload = () => {
-        img.classList.add('loaded');
-      };
-      img.onerror = () => {
-        console.error('Failed to load image for popup:', currentPaintingUrl);
+    if (img) {
+      img.classList.remove('loaded');
+      img.classList.remove('error-load');
+      if (currentPaintingUrl) {
+        img.onload = () => { img.classList.add('loaded'); };
+        img.onerror = () => { img.classList.add('error-load'); img.classList.add('loaded'); };
+        img.src = currentPaintingUrl;
+      } else {
         img.classList.add('error-load');
-        // Set a fallback background color and text
-        img.alt = currentPaintingTitle || 'Painting image unavailable';
-        // Still show the caption even if image fails
-        img.classList.add('loaded'); // Show the container with fallback styling
-      };
-      img.src = currentPaintingUrl;
-    } else {
-      // No URL available - show placeholder
-      img.classList.add('error-load');
-      img.classList.add('loaded');
-      img.alt = 'Image temporarily unavailable';
+        img.classList.add('loaded');
+      }
     }
-
-    overlay.classList.add('loss-overlay');
-    overlay.classList.add('show');
-    document.getElementById('popup').className = 'loss';
+    if (overlay) {
+      overlay.classList.add('loss-overlay');
+      overlay.classList.add('show');
+    }
+    const popup = document.getElementById('popup');
+    if (popup) popup.className = 'loss';
   }
 }
 
 function closePopup() {
   const overlay = document.getElementById('overlay');
-  overlay.classList.remove('show');
-  overlay.classList.remove('win-overlay');
-  overlay.classList.remove('loss-overlay');
+  if (overlay) {
+    overlay.classList.remove('show');
+    overlay.classList.remove('loss-overlay');
+  }
   if (popupWasWin && streak >= 10) { 
     streak = 0; 
     updateDots(); 
@@ -910,7 +773,8 @@ function pickChip(btn) {
   if (key === 'full') activePainters = PAINTERS_MASTER;
   else activePainters = PAINTERS_MASTER.filter(p => p.tags.includes(key));
   if (activePainters.length < 2) {
-    document.getElementById('choices').innerHTML = '<p style="padding:20px;color:#aaa;text-align:center;">Not enough painters.<br>Try "Full" collection.</p>';
+    const choices = document.getElementById('choices');
+    if (choices) choices.innerHTML = '<p style="padding:20px;color:#aaa;text-align:center;">Not enough painters.<br>Try "Full" collection.</p>';
     return;
   }
   nextRound();
@@ -919,6 +783,7 @@ function pickChip(btn) {
 function buildCollectionButtons() {
   const collections = getUniqueCollections();
   const container = document.getElementById('collectionBtns');
+  if (!container) return;
   container.innerHTML = '';
   collections.forEach(col => {
     const btn = document.createElement('button');
@@ -931,10 +796,30 @@ function buildCollectionButtons() {
   });
 }
 
+function initTabs() {
+  const tabs = document.querySelectorAll('.panel-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetTab = tab.dataset.tab;
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      if (targetTab === 'game') {
+        document.getElementById('gameTab').classList.add('active');
+      } else if (targetTab === 'collection') {
+        document.getElementById('collectionTab').classList.add('active');
+      }
+    });
+  });
+}
+
 let keySelected = -1;
 document.addEventListener('keydown', e => {
   const overlay = document.getElementById('overlay');
-  if (overlay.classList.contains('show')) { if (e.key === 'Enter') { e.preventDefault(); closePopup(); } return; }
+  if (overlay && overlay.classList.contains('show')) { 
+    if (e.key === 'Enter') { e.preventDefault(); closePopup(); } 
+    return; 
+  }
   if (answered) return;
   const btns = Array.from(document.querySelectorAll('.choice-btn:not(:disabled)'));
   if (!btns.length) return;
@@ -948,43 +833,71 @@ document.addEventListener('keydown', e => {
       setTimeout(() => btns[idx]?.classList.remove('key-flash'), 180);
     }
   }
-  if (e.key === 'Enter') { e.preventDefault(); if (keySelected >=0 && keySelected < btns.length) { btns[keySelected].click(); keySelected=-1; } }
+  if (e.key === 'Enter') { 
+    e.preventDefault(); 
+    if (keySelected >=0 && keySelected < btns.length) { 
+      btns[keySelected].click(); 
+      keySelected=-1; 
+    } 
+  }
 });
 
 const switcher = document.getElementById('titleSwitcher');
 const dropdown = document.getElementById('titleDropdown');
 const wordArt = document.getElementById('wordArt');
 const wordThought = document.getElementById('wordThought');
-function openDrop() { dropdown.classList.add('open'); wordArt.style.opacity='0'; wordArt.style.transform='translateY(-6px)'; wordThought.style.opacity='1'; wordThought.style.transform='translateY(0)'; switcher.style.minWidth = wordThought.scrollWidth + 'px'; }
-function closeDrop() { dropdown.classList.remove('open'); wordArt.style.opacity='1'; wordArt.style.transform='translateY(0)'; wordThought.style.opacity='0'; wordThought.style.transform='translateY(6px)'; switcher.style.minWidth = ''; }
-switcher.addEventListener('mouseenter', openDrop);
-switcher.addEventListener('mouseleave', closeDrop);
+function openDrop() { 
+  if (dropdown) dropdown.classList.add('open'); 
+  if (wordArt) { wordArt.style.opacity='0'; wordArt.style.transform='translateY(-6px)'; }
+  if (wordThought) { wordThought.style.opacity='1'; wordThought.style.transform='translateY(0)'; }
+  if (switcher && wordThought) switcher.style.minWidth = wordThought.scrollWidth + 'px'; 
+}
+function closeDrop() { 
+  if (dropdown) dropdown.classList.remove('open'); 
+  if (wordArt) { wordArt.style.opacity='1'; wordArt.style.transform='translateY(0)'; }
+  if (wordThought) { wordThought.style.opacity='0'; wordThought.style.transform='translateY(6px)'; }
+  if (switcher) switcher.style.minWidth = ''; 
+}
+if (switcher) {
+  switcher.addEventListener('mouseenter', openDrop);
+  switcher.addEventListener('mouseleave', closeDrop);
+}
 function stayOnArt() { closeDrop(); }
 
 function submitAudiobook() {
-  const painter = document.getElementById('abPainter').value;
-  const email   = document.getElementById('abEmail').value;
-  if (!painter || !email || !email.includes('@')) {
-    document.getElementById('abEmail').style.borderColor = '#8a2a2a';
-    setTimeout(() => { document.getElementById('abEmail').style.borderColor = ''; }, 1200);
+  const painter = document.getElementById('abPainter');
+  const email = document.getElementById('abEmail');
+  if (!painter || !email || !email.value.includes('@')) {
+    if (email) {
+      email.style.borderColor = '#8a2a2a';
+      setTimeout(() => { if (email) email.style.borderColor = ''; }, 1200);
+    }
     return;
   }
-  // Wire to your email service here in production
-  document.getElementById('audiobookForm').style.opacity = '0';
+  const form = document.getElementById('audiobookForm');
+  if (form) form.style.opacity = '0';
   setTimeout(() => {
-    document.getElementById('audiobookForm').style.display = 'none';
-    document.getElementById('abSuccess').style.display = 'block';
-    document.getElementById('popupEmoji').textContent = '✦';
-    document.getElementById('popupTitle').textContent = 'On Its Way';
-    document.getElementById('popupInfo').innerHTML = 'Your audiobook is on its way.<br>Check your inbox within 24 hours.';
-    document.getElementById('popupBtn').style.display = '';
-    document.getElementById('popupEnterHint').style.display = '';
+    if (form) form.style.display = 'none';
+    const success = document.getElementById('abSuccess');
+    if (success) success.style.display = 'block';
+    const emoji = document.getElementById('popupEmoji');
+    if (emoji) emoji.textContent = '✦';
+    const title = document.getElementById('popupTitle');
+    if (title) title.textContent = 'On Its Way';
+    const info = document.getElementById('popupInfo');
+    if (info) info.innerHTML = 'Your audiobook is on its way.<br>Check your inbox within 24 hours.';
+    const btn = document.getElementById('popupBtn');
+    if (btn) btn.style.display = '';
+    const enterHint = document.getElementById('popupEnterHint');
+    if (enterHint) enterHint.style.display = '';
   }, 300);
 }
 
 function init() {
   buildStreakDots();
   buildCollectionButtons();
+  initTabs();
+  loadCollection();
   activePainters = PAINTERS_MASTER.filter(p => p.tags.includes('popular'));
   nextRound();
 }
