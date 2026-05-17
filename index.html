@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Daily Art Cult — Daily Painting Guessing Game</title>
+<title>The Daily Art Cult</title>
 <meta name="description" content="Can you identify the painter? The Daily Art Cult is a free daily art quiz — guess the painter from one painting, every day.">
 <meta name="keywords" content="guess the painter, art quiz game, identify paintings, art history quiz">
 <meta name="author" content="The Daily Art Cult">
@@ -71,6 +71,91 @@
   .col-chip { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.4rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 8px; border: 1px solid #e8e4e0; background: #fff; color: #aaa; cursor: pointer; transition: all 0.18s; }
   .col-chip:hover { border-color: #aaa; color: #555; }
   .col-chip.active { border-color: #1a1a1a; background: #1a1a1a; color: #fff; }
+  /* ── HEADER TAGLINE ANIMATION ── */
+  #siteTagline {
+    position: relative;
+    height: 1.4em;
+    overflow: hidden;
+    display: block;
+    margin-top: 4px;
+  }
+
+  #taglineDefault, #taglinePraise {
+    position: absolute;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 0.5rem;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    will-change: transform, opacity;
+  }
+
+  /* Default — visible at rest */
+  #taglineDefault {
+    color: #c0b8b0;
+    transform: translateY(0);
+    opacity: 1;
+    transition: transform 0.6s cubic-bezier(0.76,0,0.24,1), opacity 0.4s ease;
+  }
+
+  /* Praise — waits below, rises on correct */
+  #taglinePraise {
+    font-family: 'Cormorant', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: none;
+    color: #c4a454;
+    transform: translateY(110%);
+    opacity: 0;
+    transition: transform 0.65s cubic-bezier(0.22,1,0.36,1), opacity 0.45s ease;
+  }
+
+  /* State: praise visible — default exits up, praise rises in */
+  #siteTagline.praise-active #taglineDefault {
+    transform: translateY(-110%);
+    opacity: 0;
+  }
+  #siteTagline.praise-active #taglinePraise {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* ── TITLE GLOW on correct guess ── */
+  @keyframes titleCorrectGlow {
+    0%   { opacity: 1; }
+    18%  { opacity: 0.5; letter-spacing: 0.38em; }
+    50%  { opacity: 1; letter-spacing: 0.32em; }
+    100% { opacity: 1; letter-spacing: 0.32em; }
+  }
+  #siteTitle.correct-flash {
+    animation: titleCorrectGlow 1.1s ease forwards;
+  }
+
+  /* ── CORRECT BUTTON GOLD SHIMMER ── */
+  @keyframes correctShimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+  }
+
+  .choice-btn.correct {
+    border-color: #c4a454 !important;
+    background: linear-gradient(
+      90deg,
+      #f2faf5 0%,
+      #fdf8ec 40%,
+      #f9f4e4 50%,
+      #fdf8ec 60%,
+      #f2faf5 100%
+    );
+    background-size: 200% auto;
+    color: #5a4010;
+    animation: correctShimmer 1.2s ease forwards;
+  }
+
+  .choice-btn.correct .btn-num { color: #c4a454; }
+
   /* ── OVERLAY ── */
   #overlay {
     display: none; position: fixed; inset: 0; z-index: 100;
@@ -270,7 +355,10 @@
       </span>
       <span>Cult</span>
     </h1>
-    <p>Where art becomes ritual.</p>
+    <p id="siteTagline">
+      <span id="taglineDefault">Where art becomes ritual.</span>
+      <span id="taglinePraise"></span>
+    </p>
   </header>
   <div id="gameArea">
     <div id="paintingCol">
@@ -594,6 +682,96 @@ async function nextRound() {
   answered = false;
 }
 
+// ── PRAISE DATA ───────────────────────────────────────────────────────────
+const PAINTER_PRAISE = {
+  "claude-monet":           "You saw through the light. Monet would approve.",
+  "vincent-van-gogh":       "Few can see the urgency in the brushstroke. You did.",
+  "pablo-picasso":          "Cubism cannot hide from you.",
+  "rembrandt":              "The Dutch Golden Age bows to your eye.",
+  "johannes-vermeer":       "Only 34 paintings exist. You know every one.",
+  "edouard-manet":          "The scandal of his time. The clarity of yours.",
+  "paul-cezanne":           "The bridge between centuries. You crossed it.",
+  "pierre-renoir":          "You felt the warmth before you named it.",
+  "francisco-goya":         "You walked into the dark and found him.",
+  "eugene-delacroix":       "Liberty guided your eye.",
+  "sandro-botticelli":      "Venus herself is no mystery to you.",
+  "leonardo-da-vinci":      "The Renaissance reveals itself to few.",
+  "michelangelo":           "The Sistine ceiling is yours.",
+  "raphael":                "Grace recognised.",
+  "caravaggio":             "Even in darkness, you found him.",
+  "diego-velazquez":        "The Spanish court is no stranger to you.",
+  "thomas-gainsborough":    "The English portrait bows to your eye.",
+  "pieter-bruegel":         "You found him in the crowd.",
+  "jan-van-eyck":           "The Flemish masters hide nothing from you.",
+  "titian":                 "Venice is yours.",
+  "camille-pissarro":       "The mentor of all Impressionists. Known.",
+  "alfred-sisley":          "The most consistent. Consistently recognised.",
+  "berthe-morisot":         "The first woman of Impressionism. You know her work.",
+  "gustave-courbet":        "Realism unmasked.",
+  "jean-millet":            "The fields of France reveal themselves to you.",
+  "georges-seurat":         "Dot by dot, you found him.",
+  "paul-gauguin":           "Tahiti cannot hide a painter from you.",
+  "henri-toulouse-lautrec": "Moulin Rouge, unmasked.",
+  "ilya-repin":             "The Volga bows to those who know it.",
+  "ivan-shishkin":          "The Russian forest reveals itself.",
+  "vasily-surikov":         "History painted. History recognised.",
+  "isaac-levitan":          "The mood of the landscape. You felt it.",
+  "vasily-vereshchagin":    "War painted honestly. Honestly recognised.",
+  "el-greco":               "The elongated saints kneel before your eye.",
+  "peter-paul-rubens":      "Baroque excess, quietly named.",
+  "william-turner":         "Light and chaos. You named it.",
+  "john-constable":         "The English sky belongs to you now.",
+  "gustav-klimt":           "Gold cannot hide a master from a master.",
+  "egon-schiele":           "Raw and unsparing. You knew him.",
+  "edvard-munch":           "You heard the scream. You knew the hand.",
+  "john-singer-sargent":    "The portraitist of an age. Recognised.",
+  "mary-cassatt":           "Cassatt is one of the hardest. Your eye is rare.",
+  "edward-hopper":          "Solitude recognised.",
+  "andrew-wyeth":           "Christina's world is no longer a mystery.",
+  "winslow-homer":          "The American sea. You know its painter.",
+  "salvador-dali":          "The surreal cannot escape your eye.",
+  "amedeo-modigliani":      "The elongated grace. You knew it.",
+  "alphonse-mucha":         "Art nouveau, elegantly named.",
+};
+
+const GENERIC_PRAISE = [
+  "Another painting owned.",
+  "Your eye is becoming dangerous.",
+  "The cult grows.",
+  "Correct. Keep going.",
+  "The masters reveal themselves to those who look."
+];
+
+let lastGenericIdx = -1;
+
+function flashPraise(painterId, callback) {
+  const specific = PAINTER_PRAISE[painterId];
+  let generic;
+  do { generic = Math.floor(Math.random() * GENERIC_PRAISE.length); }
+  while (generic === lastGenericIdx && GENERIC_PRAISE.length > 1);
+  lastGenericIdx = generic;
+
+  // Pick one: painter-specific if exists, otherwise generic
+  const line = specific || GENERIC_PRAISE[generic];
+
+  const tagline  = document.getElementById('siteTagline');
+  const praiseEl = document.getElementById('taglinePraise');
+
+  praiseEl.textContent = line;
+  tagline.classList.add('praise-active');
+
+  // Brief shimmer on the title itself
+  const titleEl = document.getElementById('siteTitle');
+  titleEl.classList.add('correct-flash');
+  setTimeout(() => titleEl.classList.remove('correct-flash'), 1200);
+
+  setTimeout(() => {
+    tagline.classList.remove('praise-active');
+    // Wait for slide-out transition then fire callback
+    setTimeout(callback, 520);
+  }, 2000);
+}
+
 function answer(btn, painter) {
   if (answered) return;
   answered = true;
@@ -605,11 +783,11 @@ function answer(btn, painter) {
     streak++;
     updateDots();
     if (streak >= 50) {
-      showAudiobookReward();
+      flashPraise(painter.id, () => showAudiobookReward());
     } else if (streak >= 10) {
-      setTimeout(() => showPopup(true), 500);
+      flashPraise(painter.id, () => setTimeout(() => showPopup(true), 500));
     } else {
-      setTimeout(() => { answered = false; nextRound(); }, 750);
+      flashPraise(painter.id, () => setTimeout(() => { answered = false; nextRound(); }, 750));
     }
   } else {
     btn.classList.add('wrong');
