@@ -4,22 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Daily Art Cult — Daily Painting Guessing Game</title>
-<meta name="description" content="Can you identify the painter? The Daily Art Cult is a free daily art quiz — guess the painter from one painting, every day. Build your art collection and earn shares.">
-<meta name="keywords" content="guess the painter, art quiz game, identify paintings, art history quiz, art collection, masterworks">
+<meta name="description" content="Can you identify the painter? The Daily Art Cult is a free daily art quiz — guess the painter from one painting, every day.">
+<meta name="keywords" content="guess the painter, art quiz game, identify paintings, art history quiz">
 <meta name="author" content="The Daily Art Cult">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://thedailyartcult.github.io/index.html">
- <link rel="icon" type="image/png" href="favicon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Daily Art Cult">
 <meta property="og:title" content="The Daily Art Cult — Can You Guess the Painter?">
-<meta property="og:description" content="A free daily painting guessing game. One artwork. Four painters. Build your collection. Earn art shares.">
+<meta property="og:description" content="A free daily painting guessing game. One artwork. Four painters. Streaks. Collections.">
 <meta property="og:url" content="https://thedailyartcult.github.io/index.html">
 <meta property="og:image" content="https://thedailyartcult.github.io/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://upload.wikimedia.org">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; background: #fafaf8; color: #1a1a1a; font-family: 'Montserrat', sans-serif; font-weight: 300; overflow: hidden; }
@@ -43,28 +42,14 @@
   .title-option .opt-label { display: block; font-size: 0.4rem; letter-spacing: 0.18em; color: #ccc; margin-top: 3px; }
   .title-option + .title-option { border-top: 1px solid #f0f0f0; }
   header p { font-size: 0.5rem; letter-spacing: 0.38em; text-transform: uppercase; color: #c0b8b0; margin-top: 4px; }
-  
-  /* Main game layout */
-  #mainGameView { display: flex; flex: 1; min-height: 0; }
-  #gameArea { flex: 1 1 60%; position: relative; background: #f5f4f0; border-right: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: center; overflow: hidden; min-width: 0; }
-  #paintingCol { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  #gameArea { flex: 1; display: flex; min-height: 0; }
+  #paintingCol { flex: 1 1 60%; position: relative; background: #f5f4f0; border-right: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: center; overflow: hidden; min-width: 0; }
   #paintingCol::before { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; opacity: 0.4; }
   #paintingWrap { position: relative; line-height: 0; max-width: 100%; max-height: 100%; z-index: 2; filter: drop-shadow(0 4px 24px rgba(0,0,0,0.13)); transition: filter 0.4s ease; }
   #paintingWrap:hover { filter: drop-shadow(0 8px 40px rgba(0,0,0,0.18)); }
   #paintingCanvas { display: block; max-width: 100%; max-height: calc(100vh - 72px); width: auto; height: auto; user-select: none; pointer-events: none; animation: fadeCanvas 0.5s ease; }
   @keyframes fadeCanvas { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: scale(1); } }
-  
-  /* Right panel with tabs */
-  #rightPanel { flex: 0 0 340px; display: flex; flex-direction: column; background: #fff; overflow: hidden; }
-  .panel-tabs { display: flex; border-bottom: 1px solid #e8e8e8; flex-shrink: 0; }
-  .panel-tab { flex: 1; padding: 14px 8px; background: none; border: none; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.48rem; letter-spacing: 0.2em; text-transform: uppercase; color: #aaa; cursor: pointer; transition: all 0.2s; }
-  .panel-tab.active { color: #1a1a1a; border-bottom: 2px solid #1a1a1a; }
-  .panel-tab:hover:not(.active) { color: #666; background: #faf9f7; }
-  
-  /* Game tab content */
-  .tab-content { display: none; flex: 1; overflow-y: auto; padding: 16px 18px; }
-  .tab-content.active { display: flex; flex-direction: column; }
-  
+  #choicesCol { flex: 0 0 300px; display: flex; flex-direction: column; padding: 22px 18px 18px; overflow-y: auto; background: #fff; }
   #streakDots { display: flex; justify-content: center; align-items: center; gap: 7px; padding-bottom: 18px; border-bottom: 1px solid #f0ede8; margin-bottom: 18px; flex-shrink: 0; }
   .dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid #ccc; background: #fff; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); }
   .dot.filled { background: #1a1a1a; border-color: #1a1a1a; transform: scale(1.15); }
@@ -80,57 +65,64 @@
   .choice-btn:disabled { cursor: default; transform: translateX(0); }
   #keyHint { flex-shrink: 0; text-align: center; margin-top: 14px; font-size: 0.4rem; letter-spacing: 0.25em; text-transform: uppercase; color: #d8d4ce; }
   #keyHint span { display: inline-block; border: 1px solid #e8e4e0; padding: 2px 5px; margin: 0 1px; font-size: 0.38rem; }
+  #rightTabs { display: flex; border-bottom: 1px solid #f0ede8; flex-shrink: 0; }
+  .rtab { flex: 1; padding: 10px 4px; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.4rem; letter-spacing: 0.28em; text-transform: uppercase; text-align: center; cursor: pointer; color: #bbb; border: none; background: none; border-bottom: 2px solid transparent; transition: color 0.18s, border-color 0.18s; margin-bottom: -1px; }
+  .rtab:hover { color: #555; }
+  .rtab.active { color: #1a1a1a; border-bottom-color: #1a1a1a; }
+  #panelPlay { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; }
+  #panelCollection { display: none; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; padding: 14px 0; }
   #collectionSwitcher { flex-shrink: 0; margin-top: 16px; padding-top: 14px; border-top: 1px solid #f0ede8; }
   #collectionSwitcher p { font-size: 0.42rem; letter-spacing: 0.3em; text-transform: uppercase; color: #ccc; text-align: center; margin-bottom: 8px; }
-  #collectionBtns { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; max-height: 100px; overflow-y: auto; padding: 2px; }
+  #collectionBtns { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; max-height: 120px; overflow-y: auto; padding: 2px; }
   .col-chip { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.4rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 8px; border: 1px solid #e8e4e0; background: #fff; color: #aaa; cursor: pointer; transition: all 0.18s; }
   .col-chip:hover { border-color: #aaa; color: #555; }
   .col-chip.active { border-color: #1a1a1a; background: #1a1a1a; color: #fff; }
-  
-  /* COLLECTION / ARCHIVES TAB (Masterworks-style) */
-  #collectionTab { overflow-y: auto; }
-  .portfolio-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e8e8e8; }
-  .portfolio-value { font-family: 'Cormorant', serif; font-size: 1.8rem; font-weight: 300; color: #2d6a46; letter-spacing: 0.05em; }
-  .portfolio-label { font-size: 0.35rem; letter-spacing: 0.2em; text-transform: uppercase; color: #aaa; margin-top: 4px; }
-  .shares-count { font-size: 0.5rem; color: #666; margin-top: 8px; }
-  .collection-stats { display: flex; justify-content: space-around; margin-bottom: 20px; padding: 10px; background: #faf9f7; border-radius: 4px; }
-  .stat-item { text-align: center; }
-  .stat-value { font-size: 0.7rem; font-weight: 400; color: #1a1a1a; }
-  .stat-label { font-size: 0.32rem; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; }
-  .artwork-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; margin-top: 8px; }
-  .artwork-card { background: #faf9f7; border: 1px solid #e8e8e8; border-radius: 4px; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-  .artwork-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-  .artwork-thumb { width: 100%; aspect-ratio: 1 / 0.8; object-fit: cover; background: #f0ede8; }
-  .artwork-info { padding: 8px 6px; text-align: center; }
-  .artwork-painter { font-size: 0.45rem; font-weight: 400; letter-spacing: 0.08em; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .artwork-title { font-size: 0.35rem; letter-spacing: 0.05em; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .artwork-share { font-size: 0.3rem; color: #c4a454; margin-top: 3px; }
-  .empty-collection { text-align: center; padding: 40px 20px; color: #bbb; }
-  .empty-collection p { font-size: 0.5rem; letter-spacing: 0.15em; margin-top: 10px; }
-  
-  /* Share certificate modal */
-  .share-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 300; opacity: 0; visibility: hidden; transition: all 0.3s; }
-  .share-modal.active { opacity: 1; visibility: visible; }
-  .share-certificate { background: #fef9ed; max-width: 480px; width: 90%; padding: 28px; text-align: center; border: 2px solid #c4a454; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-  .certificate-icon { font-size: 2rem; margin-bottom: 10px; }
-  .certificate-title { font-family: 'Cormorant', serif; font-size: 1.4rem; letter-spacing: 0.15em; color: #1a1a1a; margin-bottom: 5px; }
-  .certificate-sub { font-size: 0.4rem; letter-spacing: 0.2em; color: #c4a454; margin-bottom: 20px; text-transform: uppercase; }
-  .certificate-line { margin: 12px 0; font-size: 0.55rem; }
-  .certificate-line strong { font-weight: 500; color: #2d6a46; }
-  .certificate-number { font-family: monospace; font-size: 0.7rem; letter-spacing: 0.1em; color: #666; margin: 15px 0; padding: 8px; background: #f0ede8; display: inline-block; }
-  .certificate-footer { font-size: 0.35rem; letter-spacing: 0.1em; color: #aaa; margin-top: 20px; border-top: 1px solid #e0d8cc; padding-top: 15px; }
-  .close-certificate { margin-top: 20px; padding: 8px 24px; background: none; border: 1px solid #1a1a1a; font-family: 'Montserrat', sans-serif; font-size: 0.45rem; letter-spacing: 0.2em; cursor: pointer; transition: all 0.2s; }
-  .close-certificate:hover { background: #1a1a1a; color: #fff; }
-  
-  /* Overlay and popup styles */
-  #overlay { display: none; position: fixed; inset: 0; z-index: 100; align-items: center; justify-content: center; padding: 24px; background: rgba(8,6,4,0.72); backdrop-filter: blur(3px); }
+  .daily-theme-indicator { display: inline-block; background: #c97e2a; color: #fff; font-size: 0.32rem; padding: 2px 8px; border-radius: 20px; margin-left: 8px; letter-spacing: 0.1em; vertical-align: middle; }
+  #mySharesEmpty { padding: 30px 18px; text-align: center; font-size: 0.42rem; letter-spacing: 0.22em; text-transform: uppercase; color: #ccc; line-height: 2.2; }
+  #mySharesList { display: flex; flex-direction: column; gap: 0; }
+  .share-card { border-bottom: 1px solid #f0ede8; padding: 14px 18px; cursor: pointer; transition: background 0.15s; }
+  .share-card:hover { background: #faf9f7; }
+  .share-card-painter { font-family: 'Cormorant', serif; font-weight: 300; font-size: 1.1rem; letter-spacing: 0.08em; color: #1a1a1a; }
+  .share-card-meta { font-size: 0.36rem; letter-spacing: 0.18em; text-transform: uppercase; color: #b0a090; margin-top: 3px; }
+  .share-card-id { font-size: 0.34rem; letter-spacing: 0.12em; color: #ccc; margin-top: 4px; }
+  .share-card-status { display: inline-block; font-size: 0.32rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; margin-top: 5px; }
+  .share-card-status.held { background: #f0faf5; color: #2d6a46; border: 1px solid #b8ddc8; }
+  .share-card-status.sold { background: #f5f5f5; color: #aaa; border: 1px solid #e0e0e0; }
+  #sellOverlay { display: none; position: fixed; inset: 0; z-index: 200; align-items: center; justify-content: center; padding: 24px; background: rgba(8,6,4,0.78); backdrop-filter: blur(4px); }
+  #sellOverlay.show { display: flex; animation: overlayIn 0.22s ease; }
+  #sellBox { background: #fff; width: 100%; max-width: 420px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.32); }
+  #sellAccent { height: 3px; background: #c4a454; }
+  #sellBody { padding: 26px 24px 28px; }
+  #sellTitle { font-family: 'Cormorant', serif; font-weight: 300; font-size: 1.3rem; letter-spacing: 0.1em; color: #111; margin-bottom: 4px; }
+  #sellSubtitle { font-size: 0.42rem; letter-spacing: 0.22em; text-transform: uppercase; color: #b0a090; margin-bottom: 22px; }
+  #slotList { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+  .slot-btn { width: 100%; padding: 12px 16px; border: 1px solid #e0ddd8; background: #fff; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.48rem; letter-spacing: 0.18em; text-transform: uppercase; text-align: left; cursor: pointer; color: #1a1a1a; transition: border-color 0.15s, background 0.15s; display: flex; justify-content: space-between; align-items: center; }
+  .slot-btn:hover:not(.taken) { border-color: #1a1a1a; background: #faf9f7; }
+  .slot-btn.taken { color: #ccc; cursor: default; }
+  .slot-btn.selected { border-color: #1a1a1a; background: #1a1a1a; color: #fff; }
+  .slot-tag { font-size: 0.3rem; letter-spacing: 0.14em; padding: 2px 6px; border-radius: 20px; }
+  .slot-tag.available { background: #f0faf5; color: #2d6a46; border: 1px solid #b8ddc8; }
+  .slot-tag.taken { background: #f5f5f5; color: #bbb; border: 1px solid #e0e0e0; }
+  .slot-btn.selected .slot-tag { background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.3); }
+  #sellEmailWrap { margin-bottom: 16px; }
+  #sellEmailLabel { display: block; font-size: 0.38rem; letter-spacing: 0.28em; text-transform: uppercase; color: #bbb; margin-bottom: 6px; }
+  #sellEmail { width: 100%; padding: 11px 14px; border: 1px solid #e0ddd8; background: #fafaf8; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.55rem; color: #1a1a1a; outline: none; transition: border-color 0.18s; }
+  #sellEmail:focus { border-color: #1a1a1a; }
+  #sellSubmitBtn { width: 100%; padding: 13px; border: none; background: #1a1a1a; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.5rem; letter-spacing: 0.3em; text-transform: uppercase; color: #fff; cursor: pointer; transition: opacity 0.2s; margin-bottom: 10px; }
+  #sellSubmitBtn:hover { opacity: 0.82; }
+  #sellSubmitBtn:disabled { opacity: 0.4; cursor: default; }
+  #sellCancel { display: block; width: 100%; text-align: center; font-size: 0.38rem; letter-spacing: 0.22em; text-transform: uppercase; color: #ccc; background: none; border: none; cursor: pointer; padding: 6px; }
+  #sellCancel:hover { color: #888; }
+  #sellSuccess { display: none; padding: 10px 0 4px; text-align: center; }
+  #sellSuccessMsg { font-size: 0.46rem; letter-spacing: 0.14em; color: #999; line-height: 2.2; text-transform: uppercase; margin-bottom: 18px; }
+  #overlay { display: none; position: fixed; inset: 0; z-index: 100; align-items: center; justify-content: center; padding: 24px; background: rgba(8,6,4,0.72); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
   #overlay.show { display: flex; animation: overlayIn 0.22s ease; }
   @keyframes overlayIn { from { opacity:0; } to { opacity:1; } }
   #overlay.show.loss-overlay { background: rgba(8,6,4,0.5); backdrop-filter: blur(1px); align-items: flex-end; padding-bottom: 32px; }
   @keyframes wrongShake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(4px); } }
   .choice-btn.wrong { animation: wrongShake 0.45s ease; }
   #popup { background: #fff; width: 100%; max-width: 400px; text-align: center; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.28); }
-  #popup.win, #popup.audiobook { animation: popupSlideUp 0.36s cubic-bezier(0.34,1.3,0.64,1); }
+  #popup.win { animation: popupSlideUp 0.36s cubic-bezier(0.34,1.3,0.64,1); }
   @keyframes popupSlideUp { from { opacity:0; transform: translateY(28px) scale(0.95); } to { opacity:1; transform: translateY(0) scale(1); } }
   #popup.loss { max-width: 460px; animation: popupReveal 0.4s cubic-bezier(0.22,1,0.36,1); }
   @keyframes popupReveal { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
@@ -146,9 +138,7 @@
   #popupPaintingCaption .caption-title { font-size: 0.42rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: 3px; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
   #popupAccent { height: 3px; background: #1a1a1a; }
   #popup.win #popupAccent { background: #2d6a46; }
-  #popup.loss #popupAccent { background: #8a2a2a; display: none; }
-  #popup.audiobook #popupAccent { height: 4px; background: linear-gradient(90deg,#c4a454,#e8cc80,#c4a454); background-size: 200% 100%; animation: goldShimmer 2s linear infinite; }
-  @keyframes goldShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  #popup.loss #popupAccent { display: none; }
   #streakProgressBar { height: 2px; background: #f0ede8; overflow: hidden; }
   #streakProgressFill { height: 100%; background: #2d6a46; width: 0%; transition: width 0.9s ease; }
   #popupBody { padding: 24px 22px 26px; }
@@ -157,750 +147,168 @@
   #popup.loss #popupTitle { display: none; }
   #popupInfo { font-size: 0.5rem; letter-spacing: 0.12em; color: #999; line-height: 2.1; margin-bottom: 20px; text-transform: uppercase; }
   #popup.loss #popupInfo { color: #bbb; font-size: 0.46rem; margin-bottom: 20px; }
-  #audiobookHint { font-size: 0.4rem; letter-spacing: 0.22em; text-transform: uppercase; color: #c4a454; margin-bottom: 18px; }
-  #audiobookForm { text-align: left; display: none; }
-  .ab-label { display: block; font-size: 0.4rem; letter-spacing: 0.28em; text-transform: uppercase; color: #bbb; margin-bottom: 6px; }
-  .ab-select, .ab-input { width: 100%; padding: 11px 14px; margin-bottom: 12px; border: 1px solid #e0ddd8; background: #fafaf8; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.55rem; letter-spacing: 0.08em; color: #1a1a1a; outline: none; transition: border-color 0.18s; }
-  .ab-select:focus, .ab-input:focus { border-color: #c4a454; }
-  .ab-select { background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23bbb' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; cursor: pointer; }
-  .ab-submit { width: 100%; padding: 13px; border: none; background: linear-gradient(135deg,#c4a454,#ddb96a); font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.5rem; letter-spacing: 0.3em; text-transform: uppercase; color: #fff; cursor: pointer; transition: opacity 0.2s; }
-  .ab-submit:hover { opacity: 0.88; }
-  #abSuccess { display:none; padding: 10px 0 4px; }
+  #certificate { display: none; padding: 22px 22px 6px; text-align: left; border: 1px solid #e8e4de; margin: 0 22px 18px; background: #faf9f7; position: relative; }
+  #certificate::before { content: ''; position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 1px solid #e0dbd3; pointer-events: none; }
+  #certLabel { font-size: 0.36rem; letter-spacing: 0.38em; text-transform: uppercase; color: #b8a898; margin-bottom: 10px; display: block; }
+  #certPainter { font-family: 'Cormorant', serif; font-weight: 300; font-size: 1.5rem; letter-spacing: 0.08em; color: #1a1a1a; line-height: 1.1; margin-bottom: 6px; }
+  #certMeta { font-size: 0.38rem; letter-spacing: 0.22em; text-transform: uppercase; color: #b0a090; margin-bottom: 14px; line-height: 1.9; }
+  #certId { font-size: 0.36rem; letter-spacing: 0.18em; color: #c8bfb4; border-top: 1px solid #ede9e4; padding-top: 10px; margin-top: 4px; }
+  #certId strong { color: #9a8a7a; font-weight: 400; }
+  #shareBtn { width: 100%; padding: 13px; border: none; background: #1a1a1a; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.5rem; letter-spacing: 0.3em; text-transform: uppercase; color: #fff; cursor: pointer; transition: opacity 0.2s; margin-bottom: 10px; display: none; }
+  #shareBtn:hover { opacity: 0.82; }
+  #shareCopied { font-size: 0.38rem; letter-spacing: 0.22em; text-transform: uppercase; color: #2d6a46; text-align: center; display: none; margin-bottom: 10px; }
   #popupBtn { padding: 11px 34px; border: 1px solid #1a1a1a; background: #fff; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.55rem; letter-spacing: 0.32em; text-transform: uppercase; cursor: pointer; color: #1a1a1a; transition: background 0.2s, color 0.2s; }
   #popupBtn:hover { background: #1a1a1a; color: #fff; }
-  .ab-continue { padding: 11px 34px; border: 1px solid #1a1a1a; background: #fff; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.55rem; letter-spacing: 0.32em; text-transform: uppercase; cursor: pointer; color: #1a1a1a; transition: background 0.2s, color 0.2s; }
-  .ab-continue:hover { background: #1a1a1a; color: #fff; }
   #popupEnterHint { margin-top: 10px; font-size: 0.38rem; letter-spacing: 0.22em; text-transform: uppercase; color: #d8d4ce; }
-  @media (max-width: 640px) { html, body { overflow: auto; } #pageShell { height: auto; } #mainGameView { flex-direction: column; } #gameArea { flex: none; height: 56vw; min-height: 200px; border-right: none; border-bottom: 1px solid #e8e8e8; } #paintingCanvas { max-height: 56vw; } #rightPanel { flex: none; width: 100%; } #siteTitle { font-size: 1.1rem; } }
+  @media (max-width: 640px) { html, body { overflow: auto; } #pageShell { height: auto; } #gameArea { flex-direction: column; } #paintingCol { flex: none; height: 56vw; min-height: 200px; border-right: none; border-bottom: 1px solid #e8e8e8; } #paintingCanvas { max-height: 56vw; } #choicesCol { flex: none; width: 100%; padding: 14px; } #siteTitle { font-size: 1.1rem; } }
 </style>
 </head>
 <body>
 <div id="pageShell">
-  <header>
-    <h1 id="siteTitle">
-      <span>The Daily</span>
-      <span id="titleSwitcher" tabindex="0">
-        <span id="wordArt">Art</span>
-        <span id="wordThought">Thought</span>
-        <div id="titleDropdown" role="menu">
-          <button class="title-option active-option" onclick="stayOnArt()">Art<span class="opt-label">You are here · Paintings</span></button>
-          <a class="title-option" href="app.html">Thought<span class="opt-label">Philosophy · Daily Quotes</span></a>
-        </div>
-      </span>
-      <span>Cult</span>
-    </h1>
-    <p>Where art becomes ritual.</p>
-  </header>
-  <div id="mainGameView">
-    <div id="gameArea">
-      <div id="paintingCol">
-        <div id="paintingWrap">
-          <canvas id="paintingCanvas"></canvas>
-        </div>
+  <header><h1 id="siteTitle"><span>The Daily</span><span id="titleSwitcher" tabindex="0"><span id="wordArt">Art</span><span id="wordThought">Thought</span><div id="titleDropdown" role="menu"><button class="title-option active-option" onclick="stayOnArt()">Art<span class="opt-label">You are here · Paintings</span></button><a class="title-option" href="app.html">Thought<span class="opt-label">Philosophy · Daily Quotes</span></a></div></span><span>Cult</span></h1><p>Where art becomes ritual.</p></header>
+  <div id="gameArea">
+    <div id="paintingCol"><div id="paintingWrap"><canvas id="paintingCanvas"></canvas><div id="paintingShield" oncontextmenu="return false" ondragstart="return false"></div></div></div>
+    <div id="choicesCol">
+      <div id="rightTabs"><button class="rtab active" onclick="switchTab('play')">Play</button><button class="rtab" onclick="switchTab('collection')" id="collectionTab">My Collection <span id="shareCountBadge" style="display:none"></span></button></div>
+      <div id="panelPlay">
+        <div style="padding: 22px 18px 0;"><div id="streakDots"></div><p id="choicesPrompt">Who painted this?</p><div id="choices"></div><div id="keyHint"><span>1</span><span>2</span><span>3</span><span>4</span> to select &nbsp;·&nbsp; <span>Enter</span> to confirm</div></div>
+        <div id="collectionSwitcher" style="margin: 16px 18px 0; padding-top: 14px; border-top: 1px solid #f0ede8;"><p>Filter Painters <span id="dailyThemeBadge" class="daily-theme-indicator" style="display:none;"></span></p><div id="collectionBtns"></div></div>
       </div>
-    </div>
-    <div id="rightPanel">
-      <div class="panel-tabs">
-        <button class="panel-tab active" data-tab="game">Play</button>
-        <button class="panel-tab" data-tab="collection">My Collection</button>
-      </div>
-      
-      <!-- Game Tab -->
-      <div id="gameTab" class="tab-content active">
-        <div id="streakDots"></div>
-        <p id="choicesPrompt">Who painted this?</p>
-        <div id="choices"></div>
-        <div id="keyHint"><span>1</span><span>2</span><span>3</span><span>4</span> to select &nbsp;·&nbsp; <span>Enter</span> to confirm</div>
-        <div id="collectionSwitcher">
-          <p>Your Collection</p>
-          <div id="collectionBtns"></div>
-        </div>
-      </div>
-      
-      <!-- Collection / Archives Tab (Masterworks-style) -->
-      <div id="collectionTab" class="tab-content">
-        <div class="portfolio-header">
-          <div class="portfolio-value" id="portfolioValue">$0</div>
-          <div class="portfolio-label">Portfolio Value</div>
-          <div class="shares-count" id="sharesCount">0 art shares owned</div>
-        </div>
-        <div class="collection-stats">
-          <div class="stat-item"><div class="stat-value" id="statPainters">0</div><div class="stat-label">Artists</div></div>
-          <div class="stat-item"><div class="stat-value" id="statWorks">0</div><div class="stat-label">Works</div></div>
-          <div class="stat-item"><div class="stat-value" id="statStreak">0</div><div class="stat-label">Best Streak</div></div>
-        </div>
-        <div id="artworkGrid" class="artwork-grid"></div>
-        <div id="emptyCollection" class="empty-collection" style="display:none;">
-          <div>🎨</div>
-          <p>Your collection is empty.<br>Correctly guess paintings to earn shares.</p>
-        </div>
-      </div>
+      <div id="panelCollection"><div id="mySharesEmpty"><div style="font-size:1.4rem;margin-bottom:10px;">🎨</div>Guess correctly to earn<br>your first share.</div><div id="mySharesList"></div></div>
     </div>
   </div>
 </div>
-
-<div id="overlay"><div id="popup"><div id="popupPaintingReveal"><img id="popupPaintingImg" src="" alt=""><div id="popupPaintingCaption"><div class="caption-painter" id="captionPainter"></div><div class="caption-title" id="captionTitle"></div></div></div><div id="popupAccent"></div><div id="streakProgressBar"><div id="streakProgressFill"></div></div><div id="popupBody"><span id="popupEmoji"></span><div id="popupTitle"></div><div id="popupInfo"></div><div id="audiobookHint"></div><div id="audiobookForm"><label class="ab-label" for="abPainter">Choose your audiobook</label><select class="ab-select" id="abPainter"><option value="">Select a painter…</option><option>Claude Monet — Impressionism &amp; Light</option><option>Vincent van Gogh — The Tormented Genius</option><option>Leonardo da Vinci — Mind of a Renaissance Man</option><option>Rembrandt — Masters of Light &amp; Shadow</option><option>Pablo Picasso — Breaking Every Rule</option><option>Johannes Vermeer — Mystery of the Dutch Master</option><option>Caravaggio — Drama, Darkness &amp; Devotion</option><option>Gustav Klimt — Gold, Symbolism &amp; Vienna</option><option>Salvador Dalí — The Surrealist Mind</option><option>Edvard Munch — Anxiety &amp; Expression</option></select><label class="ab-label" for="abEmail">Your email address</label><input class="ab-input" type="email" id="abEmail" placeholder="your@email.com"><button class="ab-submit" onclick="submitAudiobook()">Claim My Free Audiobook →</button><div id="abSuccess" style="display:none"><div style="font-size:0.5rem;letter-spacing:0.12em;color:#999;line-height:2.1;text-transform:uppercase;margin-bottom:18px">Your audiobook is on its way.<br>Check your inbox within 24 hours.</div><button class="ab-continue" onclick="closePopup()">Continue Playing</button></div></div><button id="popupBtn" onclick="closePopup()">Continue</button><div id="popupEnterHint">Press <span style="border:1px solid #e8e4e0;padding:2px 5px;font-size:0.36rem;">Enter</span> to continue</div></div></div></div>
-
-<!-- Share Certificate Modal -->
-<div id="shareModal" class="share-modal">
-  <div class="share-certificate">
-    <div class="certificate-icon">📜</div>
-    <div class="certificate-title">CERTIFICATE OF ART SHARE</div>
-    <div class="certificate-sub">The Daily Art Cult · Masterworks Division</div>
-    <div class="certificate-line">This certifies that <strong id="certOwner">Art Collector</strong> holds one (1) share in</div>
-    <div class="certificate-line"><strong id="certArtwork">Artwork Name</strong></div>
-    <div class="certificate-line">by <strong id="certPainter">Painter Name</strong></div>
-    <div class="certificate-number" id="certNumber">SHARE-0000-0000</div>
-    <div class="certificate-footer">This fractional share represents aesthetic ownership and cultural equity in the artwork. Valid forever.</div>
-    <button class="close-certificate" onclick="closeShareModal()">Close</button>
-  </div>
-</div>
+<div id="overlay"><div id="popup"><div id="popupPaintingReveal"><img id="popupPaintingImg" src="" alt=""><div id="popupPaintingCaption"><div class="caption-painter" id="captionPainter"></div><div class="caption-title" id="captionTitle"></div></div></div><div id="popupAccent"></div><div id="streakProgressBar"><div id="streakProgressFill"></div></div><div id="popupBody"><span id="popupEmoji"></span><div id="popupTitle"></div><div id="popupInfo"></div><div id="certificate"><span id="certLabel">Certificate of Ownership</span><div id="certPainter"></div><div id="certMeta"></div><div id="certId">Share ID: <strong id="certIdVal"></strong></div></div><button id="shareBtn" onclick="shareOwnership()">Share My Ownership →</button><div id="shareCopied">✦ Copied — send it to a friend</div><button id="popupBtn" onclick="closePopup()">Continue</button><div id="popupEnterHint">Press <span style="border:1px solid #e8e4e0;padding:2px 5px;font-size:0.36rem;">Enter</span> to continue</div></div></div></div>
+<div id="sellOverlay"><div id="sellBox"><div id="sellAccent"></div><div id="sellBody"><div id="sellTitle">Sell Your Share</div><div id="sellSubtitle" id="sellShareLabel">Choose a shareholder seat</div><div id="sellSuccess" style="display:none"><div id="sellSuccessMsg">Your slot is reserved.<br>Check your inbox — we'll be in touch.</div><button id="sellDoneBtn" onclick="closeSell()">Done</button></div><div id="sellForm"><div id="slotList"></div><div id="sellEmailWrap"><label id="sellEmailLabel" for="sellEmail">Your email — we'll confirm your slot</label><input id="sellEmail" type="email" placeholder="your@email.com"></div><button id="sellSubmitBtn" onclick="submitSell()">Claim This Seat →</button><button id="sellCancel" onclick="closeSell()">Cancel</button></div></div></div></div>
 
 <script>
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', e => {
-  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) || (e.ctrlKey && e.key.toUpperCase() === 'U')) e.preventDefault();
-});
+const SUPABASE_URL = 'https://frwjaixxlgthkgjtafhz.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZyd2phaXh4bGd0aGtnanRhZmh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNDUzNDQsImV4cCI6MjA5NDYyMTM0NH0.j2DKz__QMml4WplMYNmsQpTUw0qu-kZG7Md3qBEEdEc';
 
-// ============================================
-// ART COLLECTION SYSTEM (Masterworks-style)
-// ============================================
+async function sbInsert(table, data) { const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' }, body: JSON.stringify(data) }); return res.ok ? await res.json() : null; }
+async function sbSelect(table, filter = '') { const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }); return res.ok ? await res.json() : []; }
 
-let userCollection = [];
-let portfolioValue = 0;
-let bestStreak = 0;
+const SHAREHOLDER_SLOTS = ['The Medici Seat','The Sotheby\'s Chair','The Louvre Reserve','The Rockefeller Vault','The Tate Throne','The Guggenheim Post','The Rothschild Seat'];
+let myShares = []; let takenSlots = new Set(); let activeSellShare = null; let selectedSlot = null;
+function switchTab(tab) { document.querySelectorAll('.rtab').forEach(t=>t.classList.remove('active')); if(tab==='play'){ document.querySelector('.rtab:first-child').classList.add('active'); document.getElementById('panelPlay').style.display='flex'; document.getElementById('panelCollection').style.display='none'; } else { document.querySelector('.rtab:last-child').classList.add('active'); document.getElementById('panelPlay').style.display='none'; document.getElementById('panelCollection').style.display='flex'; renderCollection(); } }
+function renderCollection() { const empty=document.getElementById('mySharesEmpty'); const list=document.getElementById('mySharesList'); list.innerHTML=''; if(!myShares.length){ empty.style.display='block'; return; } empty.style.display='none'; myShares.forEach(s=>{ const card=document.createElement('div'); card.className='share-card'; const statusHtml=s.status==='sold'?'<span class="share-card-status sold">Sold</span>':'<span class="share-card-status held">Held — tap to sell</span>'; card.innerHTML=`<div class="share-card-painter">${s.painterName}</div><div class="share-card-meta">${s.nationality} · ${s.born}–${s.died} · ${s.streak} streak</div><div class="share-card-id">${s.shareId}</div>${statusHtml}`; if(s.status!=='sold') card.onclick=()=>openSell(s); list.appendChild(card); }); updateShareBadge(); }
+function updateShareBadge(){ const badge=document.getElementById('shareCountBadge'); if(myShares.length>0){ badge.textContent=`(${myShares.length})`; badge.style.display='inline'; } else { badge.style.display='none'; } }
+async function openSell(share){ activeSellShare=share; selectedSlot=null; document.getElementById('sellSuccess').style.display='none'; document.getElementById('sellForm').style.display='block'; document.getElementById('sellEmail').value=''; document.getElementById('sellSubtitle').textContent=`Selling: ${share.painterName} · ${share.shareId}`; document.getElementById('sellSubmitBtn').disabled=true; const claims=await sbSelect('slot_claims',''); takenSlots=new Set(claims.map(c=>c.slot_name)); const slotList=document.getElementById('slotList'); slotList.innerHTML=''; SHAREHOLDER_SLOTS.forEach(slot=>{ const taken=takenSlots.has(slot); const btn=document.createElement('button'); btn.className='slot-btn'+(taken?' taken':''); btn.disabled=taken; btn.innerHTML=`${slot} <span class="slot-tag ${taken?'taken':'available'}">${taken?'Taken':'Available'}</span>`; if(!taken) btn.onclick=()=>{ document.querySelectorAll('.slot-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); selectedSlot=slot; checkSellReady(); }; slotList.appendChild(btn); }); document.getElementById('sellOverlay').classList.add('show'); }
+function checkSellReady(){ const email=document.getElementById('sellEmail').value; document.getElementById('sellSubmitBtn').disabled=!(selectedSlot&&email&&email.includes('@')); }
+document.addEventListener('DOMContentLoaded',()=>{ document.getElementById('sellEmail').addEventListener('input',checkSellReady); });
+async function submitSell(){ if(!selectedSlot||!activeSellShare) return; const email=document.getElementById('sellEmail').value; if(!email||!email.includes('@')) return; document.getElementById('sellSubmitBtn').disabled=true; document.getElementById('sellSubmitBtn').textContent='Reserving…'; await sbInsert('slot_claims',{ slot_name:selectedSlot, share_id:activeSellShare.shareId, painter_name:activeSellShare.painterName, user_email:email }); const s=myShares.find(x=>x.shareId===activeSellShare.shareId); if(s) s.status='sold'; document.getElementById('sellForm').style.display='none'; document.getElementById('sellSuccess').style.display='block'; renderCollection(); }
+function closeSell(){ document.getElementById('sellOverlay').classList.remove('show'); activeSellShare=null; selectedSlot=null; document.getElementById('sellSubmitBtn').textContent='Claim This Seat →'; }
+document.addEventListener('keydown', e=>{ if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key.toUpperCase()))||(e.ctrlKey&&e.key.toUpperCase()==='U')) e.preventDefault(); });
 
-function loadCollection() {
-  const saved = localStorage.getItem('artCult_collection');
-  if (saved) {
-    try {
-      userCollection = JSON.parse(saved);
-    } catch(e) { userCollection = []; }
-  }
-  const savedBest = localStorage.getItem('artCult_bestStreak');
-  if (savedBest) bestStreak = parseInt(savedBest) || 0;
-  updatePortfolioValue();
-  renderCollection();
-}
-
-function saveCollection() {
-  localStorage.setItem('artCult_collection', JSON.stringify(userCollection));
-  localStorage.setItem('artCult_bestStreak', bestStreak.toString());
-}
-
-function generateShareNumber() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789';
-  let result = '';
-  for (let i = 0; i < 12; i++) {
-    result += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return `ART-${result.slice(0,4)}-${result.slice(4,8)}-${result.slice(8,12)}`;
-}
-
-function addToCollection(painter, paintingUrl, paintingTitle) {
-  const share = {
-    id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),
-    painterId: painter.id,
-    painterName: painter.name,
-    painterNationality: painter.nationality || 'Unknown',
-    paintingUrl: paintingUrl,
-    paintingTitle: paintingTitle || 'Untitled Masterpiece',
-    shareNumber: generateShareNumber(),
-    dateAcquired: new Date().toISOString(),
-    estimatedValue: Math.floor(Math.random() * 5000) + 500
-  };
-  
-  const exists = userCollection.some(item => item.paintingUrl === paintingUrl);
-  if (!exists) {
-    userCollection.unshift(share);
-    saveCollection();
-    updatePortfolioValue();
-    renderCollection();
-    return true;
-  }
-  return false;
-}
-
-function updatePortfolioValue() {
-  portfolioValue = userCollection.reduce((sum, item) => sum + (item.estimatedValue || 500), 0);
-  const stats = getCollectionStats();
-  
-  const portfolioEl = document.getElementById('portfolioValue');
-  const sharesEl = document.getElementById('sharesCount');
-  const paintersEl = document.getElementById('statPainters');
-  const worksEl = document.getElementById('statWorks');
-  const streakEl = document.getElementById('statStreak');
-  
-  if (portfolioEl) portfolioEl.innerHTML = '$' + portfolioValue.toLocaleString();
-  if (sharesEl) sharesEl.innerHTML = userCollection.length + ' art share' + (userCollection.length !== 1 ? 's' : '') + ' owned';
-  if (paintersEl) paintersEl.innerHTML = stats.uniquePainters;
-  if (worksEl) worksEl.innerHTML = stats.totalWorks;
-  if (streakEl) streakEl.innerHTML = bestStreak;
-}
-
-function getCollectionStats() {
-  const uniquePainters = new Set(userCollection.map(item => item.painterId)).size;
-  return { uniquePainters, totalWorks: userCollection.length };
-}
-
-function renderCollection() {
-  const grid = document.getElementById('artworkGrid');
-  const emptyMsg = document.getElementById('emptyCollection');
-  
-  if (!userCollection.length) {
-    if (grid) grid.innerHTML = '';
-    if (emptyMsg) emptyMsg.style.display = 'block';
-    return;
-  }
-  if (emptyMsg) emptyMsg.style.display = 'none';
-  
-  if (grid) {
-    grid.innerHTML = userCollection.map(item => `
-      <div class="artwork-card" onclick="showShareCertificate('${item.id}')">
-        <img class="artwork-thumb" src="${item.paintingUrl}" alt="${escapeHtml(item.paintingTitle)}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'80\' viewBox=\'0 0 100 80\'%3E%3Crect width=\'100\' height=\'80\' fill=\'%23f0ede8\'/%3E%3Ctext x=\'50\' y=\'45\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'10\'%3E🎨%3C/text%3E%3C/svg%3E'">
-        <div class="artwork-info">
-          <div class="artwork-painter">${escapeHtml(item.painterName)}</div>
-          <div class="artwork-title">${escapeHtml(item.paintingTitle.substring(0, 25))}</div>
-          <div class="artwork-share">1 Share · $${(item.estimatedValue || 500).toLocaleString()}</div>
-        </div>
-      </div>
-    `).join('');
-  }
-}
-
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/[&<>]/g, function(m) {
-    if (m === '&') return '&amp;';
-    if (m === '<') return '&lt;';
-    if (m === '>') return '&gt;';
-    return m;
-  });
-}
-
-function showShareCertificate(shareId) {
-  const share = userCollection.find(s => s.id === shareId);
-  if (!share) return;
-  
-  document.getElementById('certOwner').textContent = 'Art Collector';
-  document.getElementById('certArtwork').textContent = share.paintingTitle;
-  document.getElementById('certPainter').textContent = share.painterName;
-  document.getElementById('certNumber').textContent = share.shareNumber;
-  
-  document.getElementById('shareModal').classList.add('active');
-}
-
-function closeShareModal() {
-  document.getElementById('shareModal').classList.remove('active');
-}
-
-// ============================================
-// PAINTERS MASTER LIST (80+ painters)
-// ============================================
-
+// ========== PAINTER DATABASE ==========
 const PAINTERS_MASTER = [
-  { id: "monet", name: "Claude Monet", category: "Paintings_by_Claude_Monet", tags: ["popular","french","impressionist"], nationality: "French", born: 1840, died: 1926 },
-  { id: "vangogh", name: "Vincent van Gogh", category: "Paintings_by_Vincent_van_Gogh", tags: ["popular","dutch","post-impressionist"], nationality: "Dutch", born: 1853, died: 1890 },
-  { id: "picasso", name: "Pablo Picasso", category: "Paintings_by_Pablo_Picasso", tags: ["popular","spanish","modern"], nationality: "Spanish", born: 1881, died: 1973 },
-  { id: "rembrandt", name: "Rembrandt", category: "Paintings_by_Rembrandt_van_Rijn", tags: ["popular","dutch","baroque"], nationality: "Dutch", born: 1606, died: 1669 },
-  { id: "vermeer", name: "Johannes Vermeer", category: "Paintings_by_Johannes_Vermeer", tags: ["popular","dutch","baroque"], nationality: "Dutch", born: 1632, died: 1675 },
-  { id: "manet", name: "Édouard Manet", category: "Paintings_by_Édouard_Manet", tags: ["popular","french","impressionist"], nationality: "French", born: 1832, died: 1883 },
-  { id: "cezanne", name: "Paul Cézanne", category: "Paintings_by_Paul_Cézanne", tags: ["popular","french","post-impressionist"], nationality: "French", born: 1839, died: 1906 },
-  { id: "renoir", name: "Pierre-Auguste Renoir", category: "Paintings_by_Pierre-Auguste_Renoir", tags: ["popular","french","impressionist"], nationality: "French", born: 1841, died: 1919 },
-  { id: "goya", name: "Francisco Goya", category: "Paintings_by_Francisco_de_Goya", tags: ["popular","spanish","romantic"], nationality: "Spanish", born: 1746, died: 1828 },
-  { id: "klimt", name: "Gustav Klimt", category: "Paintings_by_Gustav_Klimt", tags: ["popular","austrian","symbolist"], nationality: "Austrian", born: 1862, died: 1918 },
-  { id: "munch", name: "Edvard Munch", category: "Paintings_by_Edvard_Munch", tags: ["popular","norwegian","expressionist"], nationality: "Norwegian", born: 1863, died: 1944 },
-  { id: "dali", name: "Salvador Dalí", category: "Paintings_by_Salvador_Dalí", tags: ["popular","spanish","surrealist"], nationality: "Spanish", born: 1904, died: 1989 },
-  { id: "matisse", name: "Henri Matisse", category: "Paintings_by_Henri_Matisse", tags: ["popular","french","fauvist"], nationality: "French", born: 1869, died: 1954 },
-  { id: "kandinsky", name: "Wassily Kandinsky", category: "Paintings_by_Wassily_Kandinsky", tags: ["popular","russian","abstract"], nationality: "Russian", born: 1866, died: 1944 },
-  { id: "friedrich", name: "Caspar David Friedrich", category: "Paintings_by_Caspar_David_Friedrich", tags: ["popular","german","romantic"], nationality: "German", born: 1774, died: 1840 },
-  { id: "turner", name: "J.M.W. Turner", category: "Paintings_by_J._M._W._Turner", tags: ["popular","british","romantic"], nationality: "British", born: 1775, died: 1851 },
-  { id: "hopper", name: "Edward Hopper", category: "Paintings_by_Edward_Hopper", tags: ["popular","american","realist"], nationality: "American", born: 1882, died: 1967 },
-  { id: "rubens", name: "Peter Paul Rubens", category: "Paintings_by_Peter_Paul_Rubens", tags: ["popular","flemish","baroque"], nationality: "Flemish", born: 1577, died: 1640 },
-  { id: "bosch", name: "Hieronymus Bosch", category: "Paintings_by_Hieronymus_Bosch", tags: ["popular","dutch","renaissance"], nationality: "Dutch", born: 1450, died: 1516 },
-  { id: "courbet", name: "Gustave Courbet", category: "Paintings_by_Gustave_Courbet", tags: ["popular","french","realist"], nationality: "French", born: 1819, died: 1877 },
-  { id: "elgreco", name: "El Greco", category: "Paintings_by_El_Greco", tags: ["popular","spanish","renaissance"], nationality: "Greek-Spanish", born: 1541, died: 1614 },
-  { id: "velazquez", name: "Diego Velázquez", category: "Paintings_by_Diego_Velázquez", tags: ["popular","spanish","baroque"], nationality: "Spanish", born: 1599, died: 1660 },
-  { id: "gentileschi", name: "Artemisia Gentileschi", category: "Paintings_by_Artemisia_Gentileschi", tags: ["popular","italian","baroque"], nationality: "Italian", born: 1593, died: 1656 },
-  { id: "seurat", name: "Georges Seurat", category: "Paintings_by_Georges_Seurat", tags: ["popular","french","pointillist"], nationality: "French", born: 1859, died: 1891 },
-  { id: "gauguin", name: "Paul Gauguin", category: "Paintings_by_Paul_Gauguin", tags: ["popular","french","post-impressionist"], nationality: "French", born: 1848, died: 1903 },
-  { id: "durer", name: "Albrecht Dürer", category: "Paintings_by_Albrecht_Dürer", tags: ["popular","german","renaissance"], nationality: "German", born: 1471, died: 1528 },
-  { id: "schiele", name: "Egon Schiele", category: "Paintings_by_Egon_Schiele", tags: ["popular","austrian","expressionist"], nationality: "Austrian", born: 1890, died: 1918 },
-  { id: "sargent", name: "John Singer Sargent", category: "Paintings_by_John_Singer_Sargent", tags: ["popular","american","portrait"], nationality: "American", born: 1856, died: 1925 },
-  { id: "cassatt", name: "Mary Cassatt", category: "Paintings_by_Mary_Cassatt", tags: ["popular","american","impressionist"], nationality: "American", born: 1844, died: 1926 },
-  { id: "hals", name: "Frans Hals", category: "Paintings_by_Frans_Hals", tags: ["popular","dutch","baroque"], nationality: "Dutch", born: 1582, died: 1666 },
-  { id: "titian", name: "Titian", category: "Paintings_by_Titian", tags: ["popular","italian","renaissance"], nationality: "Italian", born: 1488, died: 1576 },
-  { id: "bruegel", name: "Pieter Bruegel", category: "Paintings_by_Pieter_Bruegel_the_Elder", tags: ["popular","flemish","renaissance"], nationality: "Flemish", born: 1525, died: 1569 },
-  { id: "vaneyck", name: "Jan van Eyck", category: "Paintings_by_Jan_van_Eyck", tags: ["popular","flemish","renaissance"], nationality: "Flemish", born: 1390, died: 1441 },
-  { id: "gainsborough", name: "Thomas Gainsborough", category: "Paintings_by_Thomas_Gainsborough", tags: ["popular","british","portrait"], nationality: "British", born: 1727, died: 1788 },
-  { id: "constable", name: "John Constable", category: "Paintings_by_John_Constable", tags: ["popular","british","landscape"], nationality: "British", born: 1776, died: 1837 },
-  { id: "homer", name: "Winslow Homer", category: "Paintings_by_Winslow_Homer", tags: ["popular","american","realist"], nationality: "American", born: 1836, died: 1910 },
-  { id: "delacroix", name: "Eugène Delacroix", category: "Paintings_by_Eugène_Delacroix", tags: ["popular","french","romantic"], nationality: "French", born: 1798, died: 1863 },
-  { id: "botticelli", name: "Sandro Botticelli", category: "Paintings_by_Sandro_Botticelli", tags: ["popular","italian","renaissance"], nationality: "Italian", born: 1445, died: 1510 },
-  { id: "leonardo", name: "Leonardo da Vinci", category: "Paintings_by_Leonardo_da_Vinci", tags: ["popular","italian","renaissance"], nationality: "Italian", born: 1452, died: 1519 },
-  { id: "caravaggio", name: "Caravaggio", category: "Paintings_by_Caravaggio", tags: ["popular","italian","baroque"], nationality: "Italian", born: 1571, died: 1610 },
-  { id: "raphael", name: "Raphael", category: "Paintings_by_Raphael", tags: ["popular","italian","renaissance"], nationality: "Italian", born: 1483, died: 1520 }
+  { id:"monet", name:"Claude Monet", category:"Paintings_by_Claude_Monet", tags:["full","popular","french","impressionist"], nationality:"French", born:1840, died:1926 },
+  { id:"vangogh", name:"Vincent van Gogh", category:"Paintings_by_Vincent_van_Gogh", tags:["full","popular","dutch","post-impressionist"], nationality:"Dutch", born:1853, died:1890 },
+  { id:"picasso", name:"Pablo Picasso", category:"Paintings_by_Pablo_Picasso", tags:["full","popular","spanish","modern"], nationality:"Spanish", born:1881, died:1973 },
+  { id:"rembrandt", name:"Rembrandt", category:"Paintings_by_Rembrandt_van_Rijn", tags:["full","popular","dutch","baroque"], nationality:"Dutch", born:1606, died:1669 },
+  { id:"vermeer", name:"Johannes Vermeer", category:"Paintings_by_Johannes_Vermeer", tags:["full","popular","dutch","baroque"], nationality:"Dutch", born:1632, died:1675 },
+  { id:"manet", name:"Édouard Manet", category:"Paintings_by_Édouard_Manet", tags:["full","popular","french","impressionist"], nationality:"French", born:1832, died:1883 },
+  { id:"cezanne", name:"Paul Cézanne", category:"Paintings_by_Paul_Cézanne", tags:["full","popular","french","post-impressionist"], nationality:"French", born:1839, died:1906 },
+  { id:"renoir", name:"Pierre-Auguste Renoir", category:"Paintings_by_Pierre-Auguste_Renoir", tags:["full","popular","french","impressionist"], nationality:"French", born:1841, died:1919 },
+  { id:"goya", name:"Francisco Goya", category:"Paintings_by_Francisco_de_Goya", tags:["full","popular","spanish","romantic"], nationality:"Spanish", born:1746, died:1828 },
+  { id:"klimt", name:"Gustav Klimt", category:"Paintings_by_Gustav_Klimt", tags:["full","popular","austrian","symbolist"], nationality:"Austrian", born:1862, died:1918 },
+  { id:"munch", name:"Edvard Munch", category:"Paintings_by_Edvard_Munch", tags:["full","popular","norwegian","expressionist"], nationality:"Norwegian", born:1863, died:1944 },
+  { id:"dali", name:"Salvador Dalí", category:"Paintings_by_Salvador_Dalí", tags:["full","popular","spanish","surrealist"], nationality:"Spanish", born:1904, died:1989 },
+  { id:"matisse", name:"Henri Matisse", category:"Paintings_by_Henri_Matisse", tags:["full","popular","french","fauvist"], nationality:"French", born:1869, died:1954 },
+  { id:"kandinsky", name:"Wassily Kandinsky", category:"Paintings_by_Wassily_Kandinsky", tags:["full","popular","russian","abstract"], nationality:"Russian", born:1866, died:1944 },
+  { id:"friedrich", name:"Caspar David Friedrich", category:"Paintings_by_Caspar_David_Friedrich", tags:["full","popular","german","romantic"], nationality:"German", born:1774, died:1840 },
+  { id:"turner", name:"J.M.W. Turner", category:"Paintings_by_J._M._W._Turner", tags:["full","popular","british","romantic"], nationality:"British", born:1775, died:1851 },
+  { id:"hopper", name:"Edward Hopper", category:"Paintings_by_Edward_Hopper", tags:["full","popular","american","realist"], nationality:"American", born:1882, died:1967 },
+  { id:"rubens", name:"Peter Paul Rubens", category:"Paintings_by_Peter_Paul_Rubens", tags:["full","popular","flemish","baroque"], nationality:"Flemish", born:1577, died:1640 },
+  { id:"bosch", name:"Hieronymus Bosch", category:"Paintings_by_Hieronymus_Bosch", tags:["full","popular","dutch","renaissance"], nationality:"Dutch", born:1450, died:1516 },
+  { id:"courbet", name:"Gustave Courbet", category:"Paintings_by_Gustave_Courbet", tags:["full","popular","french","realist"], nationality:"French", born:1819, died:1877 },
+  { id:"elgreco", name:"El Greco", category:"Paintings_by_El_Greco", tags:["full","popular","spanish","renaissance"], nationality:"Greek-Spanish", born:1541, died:1614 },
+  { id:"velazquez", name:"Diego Velázquez", category:"Paintings_by_Diego_Velázquez", tags:["full","popular","spanish","baroque"], nationality:"Spanish", born:1599, died:1660 },
+  { id:"gentileschi", name:"Artemisia Gentileschi", category:"Paintings_by_Artemisia_Gentileschi", tags:["full","popular","italian","baroque"], nationality:"Italian", born:1593, died:1656 },
+  { id:"seurat", name:"Georges Seurat", category:"Paintings_by_Georges_Seurat", tags:["full","popular","french","post-impressionist"], nationality:"French", born:1859, died:1891 },
+  { id:"gauguin", name:"Paul Gauguin", category:"Paintings_by_Paul_Gauguin", tags:["full","popular","french","post-impressionist"], nationality:"French", born:1848, died:1903 },
+  { id:"durer", name:"Albrecht Dürer", category:"Paintings_by_Albrecht_Dürer", tags:["full","popular","german","renaissance"], nationality:"German", born:1471, died:1528 },
+  { id:"schiele", name:"Egon Schiele", category:"Paintings_by_Egon_Schiele", tags:["full","popular","austrian","expressionist"], nationality:"Austrian", born:1890, died:1918 },
+  { id:"sargent", name:"John Singer Sargent", category:"Paintings_by_John_Singer_Sargent", tags:["full","popular","american","portrait"], nationality:"American", born:1856, died:1925 },
+  { id:"cassatt", name:"Mary Cassatt", category:"Paintings_by_Mary_Cassatt", tags:["full","popular","american","impressionist"], nationality:"American", born:1844, died:1926 },
+  { id:"hals", name:"Frans Hals", category:"Paintings_by_Frans_Hals", tags:["full","popular","dutch","baroque"], nationality:"Dutch", born:1582, died:1666 },
+  { id:"titian", name:"Titian", category:"Paintings_by_Titian", tags:["full","popular","italian","renaissance"], nationality:"Italian", born:1488, died:1576 },
+  { id:"bruegel", name:"Pieter Bruegel", category:"Paintings_by_Pieter_Bruegel_the_Elder", tags:["full","popular","flemish","renaissance"], nationality:"Flemish", born:1525, died:1569 },
+  { id:"vaneyck", name:"Jan van Eyck", category:"Paintings_by_Jan_van_Eyck", tags:["full","popular","flemish","renaissance"], nationality:"Flemish", born:1390, died:1441 },
+  { id:"gainsborough", name:"Thomas Gainsborough", category:"Paintings_by_Thomas_Gainsborough", tags:["full","popular","british","portrait"], nationality:"British", born:1727, died:1788 },
+  { id:"constable", name:"John Constable", category:"Paintings_by_John_Constable", tags:["full","popular","british","landscape"], nationality:"British", born:1776, died:1837 },
+  { id:"homer", name:"Winslow Homer", category:"Paintings_by_Winslow_Homer", tags:["full","popular","american","realist"], nationality:"American", born:1836, died:1910 },
+  { id:"delacroix", name:"Eugène Delacroix", category:"Paintings_by_Eugène_Delacroix", tags:["full","popular","french","romantic"], nationality:"French", born:1798, died:1863 },
+  { id:"botticelli", name:"Sandro Botticelli", category:"Paintings_by_Sandro_Botticelli", tags:["full","popular","italian","renaissance"], nationality:"Italian", born:1445, died:1510 },
+  { id:"leonardo", name:"Leonardo da Vinci", category:"Paintings_by_Leonardo_da_Vinci", tags:["full","popular","italian","renaissance"], nationality:"Italian", born:1452, died:1519 },
+  { id:"caravaggio", name:"Caravaggio", category:"Paintings_by_Caravaggio", tags:["full","popular","italian","baroque"], nationality:"Italian", born:1571, died:1610 },
+  { id:"raphael", name:"Raphael", category:"Paintings_by_Raphael", tags:["full","popular","italian","renaissance"], nationality:"Italian", born:1483, died:1520 },
+  { id:"michelangelo", name:"Michelangelo", category:"Paintings_by_Michelangelo", tags:["full","popular","italian","renaissance"], nationality:"Italian", born:1475, died:1564 }
 ];
 
-function getUniqueCollections() {
-  const set = new Set(['full', 'popular']);
-  PAINTERS_MASTER.forEach(p => p.tags.forEach(t => set.add(t)));
-  return Array.from(set).sort((a,b) => a==='full'?-1:b==='full'?1:a==='popular'?-1:b==='popular'?1:a.localeCompare(b));
+const ALLOWED_COLLECTIONS = ["full","popular","american","austrian","baroque","british","dutch","expressionist","french","german","impressionist","italian","portrait","post-impressionist","realist","renaissance","romantic","spanish"];
+
+// ========== DAILY THEME SYSTEM ==========
+let currentDailyTheme = "popular";
+let isDailyThemeActive = false;
+
+async function fetchDailyTheme() {
+  try {
+    const today = new Date().toISOString().slice(0,10);
+    const themes = await sbSelect('daily_themes', `theme_date=eq.${today}&select=theme_tag`);
+    if (themes && themes.length > 0 && ALLOWED_COLLECTIONS.includes(themes[0].theme_tag)) {
+      currentDailyTheme = themes[0].theme_tag;
+      isDailyThemeActive = true;
+      // Show badge
+      const badge = document.getElementById('dailyThemeBadge');
+      badge.textContent = `✦ Daily: ${currentDailyTheme.toUpperCase()}`;
+      badge.style.display = 'inline-block';
+      console.log(`[Daily Theme] Today's theme: ${currentDailyTheme}`);
+      return currentDailyTheme;
+    } else {
+      isDailyThemeActive = false;
+      document.getElementById('dailyThemeBadge').style.display = 'none';
+      return "popular";
+    }
+  } catch(e) {
+    console.warn("Could not fetch daily theme:", e);
+    isDailyThemeActive = false;
+    return "popular";
+  }
 }
 
+// ========== GAME STATE ==========
+let activePainters = [];
+let currentPainter = null;
+let streak = 0;
+let answered = false;
+let isLoading = false;
 let recentPainters = [];
 const MAX_RECENT_PAINTERS = 15;
 let paintingsCache = new Map();
 let perPainterArtHistory = new Map();
 const MAX_ART_HISTORY = 8;
-
 let currentPaintingUrl = '';
 let currentPaintingTitle = '';
-let currentPainter = null;
-let activePainters = [];
-let streak = 0;
-let answered = false;
-let isLoading = false;
-let popupWasWin = false;
 
-async function fetchPaintingsForPainter(painter) {
-  if (paintingsCache.has(painter.id)) return paintingsCache.get(painter.id);
-  const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category:${encodeURIComponent(painter.category)}&gcmtype=file&gcmlimit=45&prop=imageinfo&iiprop=url|dimensions&iiurlwidth=800&format=json&origin=*`;
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-    if (!data.query?.pages) return [];
-    const paintings = [];
-    for (const page of Object.values(data.query.pages)) {
-      if (page.imageinfo?.[0]?.thumburl) {
-        const info = page.imageinfo[0];
-        if (info.width > 220 && info.height > 160) {
-          paintings.push({
-            title: page.title.replace(/^File:/,'').replace(/\.(jpg|jpeg|png)$/i,'').replace(/_/g,' ').substring(0,80),
-            url: info.thumburl
-          });
-        }
-      }
-    }
-    for (let i = paintings.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [paintings[i], paintings[j]] = [paintings[j], paintings[i]];
-    }
-    paintingsCache.set(painter.id, paintings);
-    return paintings;
-  } catch(e) { return []; }
-}
-
-function getFreshPainting(painter, paintings) {
-  if (!paintings.length) return null;
-  const history = perPainterArtHistory.get(painter.id) || [];
-  const unseen = paintings.filter(p => !history.includes(p.url));
-  let chosen;
-  if (unseen.length === 0) {
-    perPainterArtHistory.set(painter.id, []);
-    chosen = paintings[Math.floor(Math.random() * paintings.length)];
-  } else {
-    chosen = unseen[Math.floor(Math.random() * unseen.length)];
-  }
-  let newHist = [...history, chosen.url];
-  if (newHist.length > MAX_ART_HISTORY) newHist = newHist.slice(-MAX_ART_HISTORY);
-  perPainterArtHistory.set(painter.id, newHist);
-  return chosen;
-}
-
-function getFreshPainter(availablePainters) {
-  const eligible = availablePainters.filter(p => !recentPainters.includes(p.id));
-  if (eligible.length === 0) {
-    recentPainters = [];
-    return availablePainters[Math.floor(Math.random() * availablePainters.length)];
-  }
-  return eligible[Math.floor(Math.random() * eligible.length)];
-}
-
-function getFreshWrongChoices(correctPainter, allPainters, count = 3) {
-  const recentSet = new Set(recentPainters);
-  recentSet.add(correctPainter.id);
-  let candidates = allPainters.filter(p => !recentSet.has(p.id) && p.id !== correctPainter.id);
-  if (candidates.length < count) {
-    candidates = allPainters.filter(p => p.id !== correctPainter.id);
-  }
-  for (let i = candidates.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
-  }
-  return candidates.slice(0, count);
-}
-
-function buildStreakDots() {
-  const el = document.getElementById('streakDots');
-  if (!el) return;
-  el.innerHTML = '';
-  for (let i = 0; i < 10; i++) {
-    const d = document.createElement('div'); d.className = 'dot'; d.id = 'dot-'+i; el.appendChild(d);
-  }
-}
-
-function updateDots() {
-  for (let i = 0; i < 10; i++) {
-    const dot = document.getElementById('dot-'+i);
-    if (dot) dot.className = 'dot' + (i < streak ? ' filled' : '');
-  }
-  if (streak > bestStreak) {
-    bestStreak = streak;
-    saveCollection();
-    updatePortfolioValue();
-  }
-}
-
-async function loadPainting(painter) {
-  const canvas = document.getElementById('paintingCanvas');
-  if (!canvas) return false;
-  const ctx = canvas.getContext('2d');
-  canvas.width = 700; canvas.height = 400;
-  ctx.fillStyle = '#f5f4f0'; ctx.fillRect(0,0,700,400);
-  ctx.fillStyle = '#ccc'; ctx.font = '300 11px Montserrat, sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText('Loading masterpiece...', 350, 200);
-  
-  const paintings = await fetchPaintingsForPainter(painter);
-  if (!paintings.length) return false;
-  const painting = getFreshPainting(painter, paintings);
-  if (!painting) return false;
-  
-  currentPaintingUrl = painting.url;
-  currentPaintingTitle = painting.title;
-  
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.onload = () => {
-      const col = document.getElementById('paintingCol');
-      const availW = col ? col.clientWidth - 20 : window.innerWidth - 360;
-      const availH = col ? col.clientHeight - 30 : window.innerHeight - 90;
-      let scale = Math.min(availW / img.width, availH / img.height, 1);
-      canvas.width = Math.max(180, Math.round(img.width * scale));
-      canvas.height = Math.max(140, Math.round(img.height * scale));
-      canvas.style.width = canvas.width + 'px';
-      canvas.style.height = canvas.height + 'px';
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      resolve(true);
-    };
-    img.onerror = () => { resolve(false); };
-    img.src = painting.url;
-  });
-}
-
-async function nextRound() {
-  if (answered || isLoading) return;
-  if (!activePainters.length) return;
-  isLoading = true;
-  
-  currentPainter = getFreshPainter(activePainters);
-  const success = await loadPainting(currentPainter);
-  if (!success) { isLoading = false; setTimeout(() => nextRound(), 400); return; }
-  
-  recentPainters.push(currentPainter.id);
-  if (recentPainters.length > MAX_RECENT_PAINTERS) recentPainters.shift();
-  
-  const wrongs = getFreshWrongChoices(currentPainter, activePainters, 3);
-  let options = [...wrongs, currentPainter];
-  for (let i = options.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [options[i], options[j]] = [options[j], options[i]];
-  }
-  
-  const choicesDiv = document.getElementById('choices');
-  if (choicesDiv) {
-    choicesDiv.innerHTML = '';
-    options.forEach((p, idx) => {
-      const btn = document.createElement('button');
-      btn.className = 'choice-btn';
-      btn.innerHTML = `<span class="btn-num">${idx+1}</span>${p.name}`;
-      btn.onclick = () => answer(btn, p);
-      choicesDiv.appendChild(btn);
-    });
-  }
-  isLoading = false;
-  answered = false;
-}
-
-function answer(btn, painter) {
-  if (answered) return;
-  answered = true;
-  const allBtns = document.querySelectorAll('.choice-btn');
-  allBtns.forEach(b => b.disabled = true);
-  const correct = (painter.id === currentPainter.id);
-  if (correct) {
-    btn.classList.add('correct');
-    streak++;
-    updateDots();
-    
-    addToCollection(currentPainter, currentPaintingUrl, currentPaintingTitle);
-    
-    if (streak >= 50) {
-      showAudiobookReward();
-    } else if (streak >= 10) {
-      setTimeout(() => showPopup(true), 500);
-    } else {
-      setTimeout(() => { answered = false; nextRound(); }, 750);
-    }
-  } else {
-    btn.classList.add('wrong');
-    allBtns.forEach(b => { if (b.textContent === currentPainter.name) b.classList.add('correct'); });
-    streak = 0; updateDots();
-    recentPainters = [];
-    setTimeout(() => showPopup(false), 500);
-  }
-}
-
-function showAudiobookReward() {
-  const title = document.getElementById('popupTitle');
-  const info  = document.getElementById('popupInfo');
-  const emoji = document.getElementById('popupEmoji');
-  if (emoji) emoji.textContent = '🎧';
-  if (title) title.textContent = 'You\'ve Earned It';
-  if (info) info.innerHTML = '50 paintings identified correctly.<br>Your audiobook awaits.';
-  const hint = document.getElementById('audiobookHint');
-  if (hint) hint.textContent = '';
-  const fill = document.getElementById('streakProgressFill');
-  if (fill) fill.style.width = '100%';
-  const form = document.getElementById('audiobookForm');
-  if (form) form.style.display = 'block';
-  const success = document.getElementById('abSuccess');
-  if (success) success.style.display = 'none';
-  const btn = document.getElementById('popupBtn');
-  if (btn) btn.style.display = 'none';
-  const enterHint = document.getElementById('popupEnterHint');
-  if (enterHint) enterHint.style.display = 'none';
-  const overlay = document.getElementById('overlay');
-  if (overlay) {
-    overlay.classList.add('show');
-    overlay.classList.remove('loss-overlay');
-  }
-  const popup = document.getElementById('popup');
-  if (popup) popup.className = 'audiobook';
-  popupWasWin = true;
-}
-
-function showPopup(won) {
-  popupWasWin = won;
-  const emoji   = document.getElementById('popupEmoji');
-  const title   = document.getElementById('popupTitle');
-  const info    = document.getElementById('popupInfo');
-  const overlay = document.getElementById('overlay');
-
-  const form = document.getElementById('audiobookForm');
-  if (form) form.style.display = 'none';
-  const popupBtn = document.getElementById('popupBtn');
-  if (popupBtn) popupBtn.style.display = '';
-  const enterHint = document.getElementById('popupEnterHint');
-  if (enterHint) enterHint.style.display = '';
-  const hint = document.getElementById('audiobookHint');
-  if (hint) hint.textContent = '';
-  const fill = document.getElementById('streakProgressFill');
-  if (fill) fill.style.width = '0%';
-
-  if (won) {
-    if (emoji) emoji.textContent = '✦';
-    if (title) title.textContent = '10 in a Row';
-    if (info) info.innerHTML = 'You correctly identified ten paintings in a row.<br>Exceptional.';
-    const pct = Math.min((streak / 50) * 100, 100);
-    setTimeout(() => { 
-      const f = document.getElementById('streakProgressFill');
-      if (f) f.style.width = pct + '%'; 
-    }, 80);
-    if (hint) hint.textContent = (50 - streak) + ' correct left to unlock your free audiobook';
-    if (overlay) {
-      overlay.classList.remove('loss-overlay');
-      overlay.classList.add('show');
-    }
-    const popup = document.getElementById('popup');
-    if (popup) popup.className = 'win';
-  } else {
-    if (emoji) emoji.textContent = '';
-    const line1 = [
-      currentPainter.nationality ? currentPainter.nationality + ' Painter' : '',
-      (currentPainter.born && currentPainter.died) ? currentPainter.born + ' – ' + currentPainter.died : ''
-    ].filter(Boolean).join('  ·  ');
-    if (info) info.innerHTML = line1;
-    const capPainter = document.getElementById('captionPainter');
-    const capTitle = document.getElementById('captionTitle');
-    if (capPainter) capPainter.textContent = currentPainter.name;
-    if (capTitle) capTitle.textContent = currentPaintingTitle || 'Artwork';
-    const img = document.getElementById('popupPaintingImg');
-    if (img) {
-      img.classList.remove('loaded');
-      img.classList.remove('error-load');
-      if (currentPaintingUrl) {
-        img.onload = () => { img.classList.add('loaded'); };
-        img.onerror = () => { img.classList.add('error-load'); img.classList.add('loaded'); };
-        img.src = currentPaintingUrl;
-      } else {
-        img.classList.add('error-load');
-        img.classList.add('loaded');
-      }
-    }
-    if (overlay) {
-      overlay.classList.add('loss-overlay');
-      overlay.classList.add('show');
-    }
-    const popup = document.getElementById('popup');
-    if (popup) popup.className = 'loss';
-  }
-}
-
-function closePopup() {
-  const overlay = document.getElementById('overlay');
-  if (overlay) {
-    overlay.classList.remove('show');
-    overlay.classList.remove('loss-overlay');
-  }
-  if (popupWasWin && streak >= 10) { 
-    streak = 0; 
-    updateDots(); 
-    recentPainters = [];
-  }
-  answered = false;
-  nextRound();
-}
-
-function pickChip(btn) {
-  document.querySelectorAll('.col-chip').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  streak = 0; updateDots();
-  recentPainters = [];
-  perPainterArtHistory.clear();
-  const key = btn.dataset.col;
-  if (key === 'full') activePainters = PAINTERS_MASTER;
-  else activePainters = PAINTERS_MASTER.filter(p => p.tags.includes(key));
-  if (activePainters.length < 2) {
-    const choices = document.getElementById('choices');
-    if (choices) choices.innerHTML = '<p style="padding:20px;color:#aaa;text-align:center;">Not enough painters.<br>Try "Full" collection.</p>';
-    return;
-  }
-  nextRound();
-}
-
-function buildCollectionButtons() {
-  const collections = getUniqueCollections();
-  const container = document.getElementById('collectionBtns');
-  if (!container) return;
-  container.innerHTML = '';
-  collections.forEach(col => {
-    const btn = document.createElement('button');
-    btn.className = 'col-chip';
-    if (col === 'popular') btn.classList.add('active');
-    btn.textContent = col.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    btn.dataset.col = col;
-    btn.onclick = () => pickChip(btn);
-    container.appendChild(btn);
-  });
-}
-
-function initTabs() {
-  const tabs = document.querySelectorAll('.panel-tab');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const targetTab = tab.dataset.tab;
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-      if (targetTab === 'game') {
-        document.getElementById('gameTab').classList.add('active');
-      } else if (targetTab === 'collection') {
-        document.getElementById('collectionTab').classList.add('active');
-      }
-    });
-  });
-}
-
-let keySelected = -1;
-document.addEventListener('keydown', e => {
-  const overlay = document.getElementById('overlay');
-  if (overlay && overlay.classList.contains('show')) { 
-    if (e.key === 'Enter') { e.preventDefault(); closePopup(); } 
-    return; 
-  }
-  if (answered) return;
-  const btns = Array.from(document.querySelectorAll('.choice-btn:not(:disabled)'));
-  if (!btns.length) return;
-  if (['1','2','3','4'].includes(e.key)) {
-    e.preventDefault();
-    const idx = parseInt(e.key)-1;
-    if (idx < btns.length) {
-      btns.forEach(b => b.classList.remove('key-flash'));
-      btns[idx].classList.add('key-flash');
-      keySelected = idx;
-      setTimeout(() => btns[idx]?.classList.remove('key-flash'), 180);
-    }
-  }
-  if (e.key === 'Enter') { 
-    e.preventDefault(); 
-    if (keySelected >=0 && keySelected < btns.length) { 
-      btns[keySelected].click(); 
-      keySelected=-1; 
-    } 
-  }
-});
-
-const switcher = document.getElementById('titleSwitcher');
-const dropdown = document.getElementById('titleDropdown');
-const wordArt = document.getElementById('wordArt');
-const wordThought = document.getElementById('wordThought');
-function openDrop() { 
-  if (dropdown) dropdown.classList.add('open'); 
-  if (wordArt) { wordArt.style.opacity='0'; wordArt.style.transform='translateY(-6px)'; }
-  if (wordThought) { wordThought.style.opacity='1'; wordThought.style.transform='translateY(0)'; }
-  if (switcher && wordThought) switcher.style.minWidth = wordThought.scrollWidth + 'px'; 
-}
-function closeDrop() { 
-  if (dropdown) dropdown.classList.remove('open'); 
-  if (wordArt) { wordArt.style.opacity='1'; wordArt.style.transform='translateY(0)'; }
-  if (wordThought) { wordThought.style.opacity='0'; wordThought.style.transform='translateY(6px)'; }
-  if (switcher) switcher.style.minWidth = ''; 
-}
-if (switcher) {
-  switcher.addEventListener('mouseenter', openDrop);
-  switcher.addEventListener('mouseleave', closeDrop);
-}
-function stayOnArt() { closeDrop(); }
-
-function submitAudiobook() {
-  const painter = document.getElementById('abPainter');
-  const email = document.getElementById('abEmail');
-  if (!painter || !email || !email.value.includes('@')) {
-    if (email) {
-      email.style.borderColor = '#8a2a2a';
-      setTimeout(() => { if (email) email.style.borderColor = ''; }, 1200);
-    }
-    return;
-  }
-  const form = document.getElementById('audiobookForm');
-  if (form) form.style.opacity = '0';
-  setTimeout(() => {
-    if (form) form.style.display = 'none';
-    const success = document.getElementById('abSuccess');
-    if (success) success.style.display = 'block';
-    const emoji = document.getElementById('popupEmoji');
-    if (emoji) emoji.textContent = '✦';
-    const title = document.getElementById('popupTitle');
-    if (title) title.textContent = 'On Its Way';
-    const info = document.getElementById('popupInfo');
-    if (info) info.innerHTML = 'Your audiobook is on its way.<br>Check your inbox within 24 hours.';
-    const btn = document.getElementById('popupBtn');
-    if (btn) btn.style.display = '';
-    const enterHint = document.getElementById('popupEnterHint');
-    if (enterHint) enterHint.style.display = '';
-  }, 300);
-}
-
-function init() {
-  buildStreakDots();
-  buildCollectionButtons();
-  initTabs();
-  loadCollection();
-  activePainters = PAINTERS_MASTER.filter(p => p.tags.includes('popular'));
-  nextRound();
-}
+async function fetchPaintingsForPainter(painter) { if(paintingsCache.has(painter.id)) return paintingsCache.get(painter.id); const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category:${encodeURIComponent(painter.category)}&gcmtype=file&gcmlimit=45&prop=imageinfo&iiprop=url|dimensions&iiurlwidth=800&format=json&origin=*`; try { const res = await fetch(url); const data = await res.json(); if(!data.query?.pages) return []; const paintings = []; for(const page of Object.values(data.query.pages)) { if(page.imageinfo?.[0]?.thumburl) { const info = page.imageinfo[0]; if(info.width > 220 && info.height > 160) paintings.push({ title: page.title.replace(/^File:/,'').replace(/\.(jpg|jpeg|png)$/i,'').replace(/_/g,' ').substring(0,80), url: info.thumburl }); } } for(let i=paintings.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [paintings[i],paintings[j]]=[paintings[j],paintings[i]]; } paintingsCache.set(painter.id,paintings); return paintings; } catch(e){ return []; } }
+function getFreshPainting(painter, paintings){ if(!paintings.length) return null; const history = perPainterArtHistory.get(painter.id)||[]; const unseen = paintings.filter(p=>!history.includes(p.url)); let chosen; if(unseen.length===0){ perPainterArtHistory.set(painter.id,[]); chosen = paintings[Math.floor(Math.random()*paintings.length)]; } else { chosen = unseen[Math.floor(Math.random()*unseen.length)]; } let newHist = [...history, chosen.url]; if(newHist.length>MAX_ART_HISTORY) newHist = newHist.slice(-MAX_ART_HISTORY); perPainterArtHistory.set(painter.id,newHist); return chosen; }
+function getFreshPainter(availablePainters){ const eligible = availablePainters.filter(p=>!recentPainters.includes(p.id)); if(eligible.length===0){ recentPainters=[]; return availablePainters[Math.floor(Math.random()*availablePainters.length)]; } return eligible[Math.floor(Math.random()*eligible.length)]; }
+function getFreshWrongChoices(correctPainter, allPainters, count=3){ const recentSet=new Set(recentPainters); recentSet.add(correctPainter.id); let candidates = allPainters.filter(p=>!recentSet.has(p.id) && p.id!==correctPainter.id); if(candidates.length<count) candidates = allPainters.filter(p=>p.id!==correctPainter.id); for(let i=candidates.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [candidates[i],candidates[j]]=[candidates[j],candidates[i]]; } return candidates.slice(0,count); }
+function buildStreakDots(){ const el=document.getElementById('streakDots'); el.innerHTML=''; for(let i=0;i<10;i++){ const d=document.createElement('div'); d.className='dot'; d.id='dot-'+i; el.appendChild(d); } }
+function updateDots(){ for(let i=0;i<10;i++){ const dot=document.getElementById('dot-'+i); if(dot) dot.className='dot'+(i<streak?' filled':''); } }
+async function loadPainting(painter){ const canvas=document.getElementById('paintingCanvas'); const ctx=canvas.getContext('2d'); canvas.width=700; canvas.height=400; ctx.fillStyle='#f5f4f0'; ctx.fillRect(0,0,700,400); ctx.fillStyle='#ccc'; ctx.font='300 11px Montserrat, sans-serif'; ctx.textAlign='center'; ctx.fillText('Loading masterpiece...',350,200); const paintings=await fetchPaintingsForPainter(painter); if(!paintings.length) return false; const painting=getFreshPainting(painter,paintings); if(!painting) return false; currentPaintingUrl=painting.url; currentPaintingTitle=painting.title; return new Promise((resolve)=>{ const img=new Image(); img.onload=()=>{ const col=document.getElementById('paintingCol'); const availW=col?col.clientWidth-20:window.innerWidth-340; const availH=col?col.clientHeight-30:window.innerHeight-90; let scale=Math.min(availW/img.width,availH/img.height,1); canvas.width=Math.max(180,Math.round(img.width*scale)); canvas.height=Math.max(140,Math.round(img.height*scale)); canvas.style.width=canvas.width+'px'; canvas.style.height=canvas.height+'px'; ctx.drawImage(img,0,0,canvas.width,canvas.height); resolve(true); }; img.onerror=()=>resolve(false); img.src=painting.url; }); }
+async function nextRound(){ if(answered||isLoading) return; if(!activePainters.length) return; isLoading=true; currentPainter=getFreshPainter(activePainters); const success=await loadPainting(currentPainter); if(!success){ isLoading=false; answered=false; setTimeout(()=>nextRound(),400); return; } recentPainters.push(currentPainter.id); if(recentPainters.length>MAX_RECENT_PAINTERS) recentPainters.shift(); const wrongs=getFreshWrongChoices(currentPainter,activePainters,3); let options=[...wrongs,currentPainter]; for(let i=options.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [options[i],options[j]]=[options[j],options[i]]; } const choicesDiv=document.getElementById('choices'); choicesDiv.innerHTML=''; options.forEach((p,idx)=>{ const btn=document.createElement('button'); btn.className='choice-btn'; btn.dataset.painterId=p.id; btn.innerHTML=`<span class="btn-num">${idx+1}</span>${p.name}`; btn.onclick=()=>answer(btn,p); choicesDiv.appendChild(btn); }); isLoading=false; answered=false; }
+function answer(btn,painter){ if(answered) return; answered=true; const allBtns=document.querySelectorAll('.choice-btn'); allBtns.forEach(b=>b.disabled=true); const correct=(painter.id===currentPainter.id); if(correct){ btn.classList.add('correct'); streak++; updateDots(); setTimeout(()=>showPopup(true),500); } else { btn.classList.add('wrong'); allBtns.forEach(b=>{ if(b.dataset.painterId===currentPainter.id) b.classList.add('correct'); }); streak=0; updateDots(); recentPainters=[]; setTimeout(()=>showPopup(false),500); } }
+function generateShareId(painterId){ const ts=Date.now().toString(36).toUpperCase(); const rand=Math.random().toString(36).substring(2,6).toUpperCase(); return `DAC-${painterId.substring(0,3).toUpperCase()}-${ts}-${rand}`; }
+function shareOwnership(){ const painter=document.getElementById('certPainter').textContent; const id=document.getElementById('certIdVal').textContent; const msg=`I just earned a share in ${painter} on The Daily Art Cult. 🎨\nShare ID: ${id}\nPlay at thedailyartcult.github.io`; navigator.clipboard.writeText(msg).then(()=>{ document.getElementById('shareCopied').style.display='block'; setTimeout(()=>{ document.getElementById('shareCopied').style.display='none'; },3000); }); }
+function showPopup(won){ const emoji=document.getElementById('popupEmoji'); const title=document.getElementById('popupTitle'); const info=document.getElementById('popupInfo'); const overlay=document.getElementById('overlay'); document.getElementById('certificate').style.display='none'; document.getElementById('shareBtn').style.display='none'; document.getElementById('shareCopied').style.display='none'; document.getElementById('popupBtn').style.display=''; document.getElementById('popupEnterHint').style.display=''; document.getElementById('streakProgressFill').style.width='0%'; if(won){ emoji.textContent='✦'; title.textContent=streak>1?streak+' in a Row':'Share Earned'; info.innerHTML='Added to your collection. Visit My Collection to sell.'; const shareId=generateShareId(currentPainter.id); const shareData={ shareId, painterId:currentPainter.id, painterName:currentPainter.name, paintingTitle:currentPaintingTitle, nationality:currentPainter.nationality, born:currentPainter.born, died:currentPainter.died, streak, status:'held' }; myShares.push(shareData); updateShareBadge(); sbInsert('shares',{ painter_id:shareData.painterId, painter_name:shareData.painterName, painting_title:shareData.paintingTitle, share_id:shareData.shareId, status:'held' }); document.getElementById('certPainter').textContent=currentPainter.name; document.getElementById('certMeta').innerHTML=`${currentPainter.nationality} · ${currentPainter.born}–${currentPainter.died}<br>${streak} correct identifications · 1 share earned`; document.getElementById('certIdVal').textContent=shareId; document.getElementById('certificate').style.display='block'; document.getElementById('shareBtn').style.display='block'; overlay.classList.remove('loss-overlay'); overlay.classList.add('show'); document.getElementById('popup').className='win'; } else { emoji.textContent=''; const line1=[currentPainter.nationality?currentPainter.nationality+' Painter':'', (currentPainter.born&&currentPainter.died)?currentPainter.born+' – '+currentPainter.died:''].filter(Boolean).join('  ·  '); info.innerHTML=line1; document.getElementById('captionPainter').textContent=currentPainter.name; document.getElementById('captionTitle').textContent=currentPaintingTitle||'Artwork'; const img=document.getElementById('popupPaintingImg'); img.classList.remove('loaded'); img.classList.remove('error-load'); if(currentPaintingUrl){ img.onload=()=>img.classList.add('loaded'); img.onerror=()=>{ img.classList.add('error-load'); img.classList.add('loaded'); }; img.src=currentPaintingUrl; } else { img.classList.add('error-load'); img.classList.add('loaded'); img.alt='Image temporarily unavailable'; } overlay.classList.add('loss-overlay'); overlay.classList.add('show'); document.getElementById('popup').className='loss'; } }
+function closePopup(){ document.getElementById('overlay').classList.remove('show'); document.getElementById('overlay').classList.remove('win-overlay'); document.getElementById('overlay').classList.remove('loss-overlay'); answered=false; nextRound(); }
+function pickChip(btn){ document.querySelectorAll('.col-chip').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); streak=0; updateDots(); recentPainters=[]; perPainterArtHistory.clear(); const key=btn.dataset.col; if(key==='full') activePainters=PAINTERS_MASTER; else activePainters=PAINTERS_MASTER.filter(p=>p.tags.includes(key)); if(activePainters.length<2){ document.getElementById('choices').innerHTML='<p style="padding:20px;color:#aaa;text-align:center;">Not enough painters.<br>Try "Full" collection.</p>'; return; } nextRound(); }
+function buildCollectionButtons(){ const collections=ALLOWED_COLLECTIONS; const container=document.getElementById('collectionBtns'); container.innerHTML=''; collections.forEach(col=>{ const btn=document.createElement('button'); btn.className='col-chip'; if(isDailyThemeActive && col===currentDailyTheme) btn.classList.add('active'); else if(col==='popular' && !isDailyThemeActive) btn.classList.add('active'); btn.textContent=col.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' '); btn.dataset.col=col; btn.onclick=()=>pickChip(btn); container.appendChild(btn); }); }
+async function init(){ buildStreakDots(); await fetchDailyTheme(); buildCollectionButtons(); if(isDailyThemeActive && ALLOWED_COLLECTIONS.includes(currentDailyTheme)){ activePainters=PAINTERS_MASTER.filter(p=>p.tags.includes(currentDailyTheme)); } else { activePainters=PAINTERS_MASTER.filter(p=>p.tags.includes('popular')); } if(activePainters.length<2) activePainters=PAINTERS_MASTER; nextRound(); }
+let keySelected=-1; document.addEventListener('keydown',e=>{ const overlay=document.getElementById('overlay'); if(overlay.classList.contains('show')){ if(e.key==='Enter'){ e.preventDefault(); closePopup(); } return; } if(answered) return; const btns=Array.from(document.querySelectorAll('.choice-btn:not(:disabled)')); if(!btns.length) return; if(['1','2','3','4'].includes(e.key)){ e.preventDefault(); const idx=parseInt(e.key)-1; if(idx<btns.length){ btns.forEach(b=>b.classList.remove('key-flash')); btns[idx].classList.add('key-flash'); keySelected=idx; setTimeout(()=>btns[idx]?.classList.remove('key-flash'),180); } } if(e.key==='Enter'){ e.preventDefault(); if(keySelected>=0&&keySelected<btns.length){ btns[keySelected].click(); keySelected=-1; } } });
+const switcher=document.getElementById('titleSwitcher'); const dropdown=document.getElementById('titleDropdown'); const wordArt=document.getElementById('wordArt'); const wordThought=document.getElementById('wordThought'); function openDrop(){ dropdown.classList.add('open'); wordArt.style.opacity='0'; wordArt.style.transform='translateY(-6px)'; wordThought.style.opacity='1'; wordThought.style.transform='translateY(0)'; switcher.style.minWidth=wordThought.scrollWidth+'px'; } function closeDrop(){ dropdown.classList.remove('open'); wordArt.style.opacity='1'; wordArt.style.transform='translateY(0)'; wordThought.style.opacity='0'; wordThought.style.transform='translateY(6px)'; switcher.style.minWidth=''; } switcher.addEventListener('mouseenter',openDrop); switcher.addEventListener('mouseleave',closeDrop); function stayOnArt(){ closeDrop(); }
 init();
 </script>
 </body>
