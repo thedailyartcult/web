@@ -15,37 +15,13 @@
 <meta property="og:site_name" content="The Daily Art Cult">
 <meta property="og:title" content="The Daily Art Cult — Can You Guess the Painter?">
 <meta property="og:description" content="A free daily painting guessing game. One artwork. Four painters. Streaks. Collections.">
-<meta property="og:url" content="https://thedailyartcult.lol/">
-<meta property="og:image" content="https://thedailyartcult.lol/og-image.png">
+<meta property="og:url" content="https://thedailyartcult.github.io/index.html">
+<meta property="og:image" content="https://thedailyartcult.github.io/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://upload.wikimedia.org">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
- #intro-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #121212; /* Match your website or animation theme */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
-}
-
-#lottie-container {
-  width: 250px;  /* Adjust size to fit your M & Crown nicely */
-  height: 250px;
-}
-
-.fade-out {
-  opacity: 0;
-  visibility: hidden;
-}
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; background: #fafaf8; color: #1a1a1a; font-family: 'Montserrat', sans-serif; font-weight: 300; overflow: hidden; }
   #pageShell { display: flex; flex-direction: column; height: 100vh; }
@@ -190,11 +166,6 @@
 </style>
 </head>
 <body>
- <div id="intro-screen">
-  <!-- This is the container where your Lottie animation will render -->
-  <div id="lottie-container"></div>
-</div>
-
 <div id="pageShell">
   <header><h1 id="siteTitle"><span>The Daily</span><span id="titleSwitcher" tabindex="0"><span id="wordArt">Art</span><span id="wordThought">Thought</span><div id="titleDropdown" role="menu"><button class="title-option active-option" onclick="stayOnArt()">Art<span class="opt-label">You are here · Paintings</span></button><a class="title-option" href="app.html">Thought<span class="opt-label">Philosophy · Daily Quotes</span></a></div></span><span>Cult</span></h1><p>Where art becomes ritual.</p></header>
   <div id="gameArea">
@@ -341,27 +312,6 @@ async function init(){ buildStreakDots(); await fetchDailyTheme(); buildCollecti
 let keySelected=-1; document.addEventListener('keydown',e=>{ const overlay=document.getElementById('overlay'); if(overlay.classList.contains('show')){ if(e.key==='Enter'){ e.preventDefault(); closePopup(); } return; } if(answered) return; const btns=Array.from(document.querySelectorAll('.choice-btn:not(:disabled)')); if(!btns.length) return; if(['1','2','3','4'].includes(e.key)){ e.preventDefault(); const idx=parseInt(e.key)-1; if(idx<btns.length){ btns.forEach(b=>b.classList.remove('key-flash')); btns[idx].classList.add('key-flash'); keySelected=idx; setTimeout(()=>btns[idx]?.classList.remove('key-flash'),180); } } if(e.key==='Enter'){ e.preventDefault(); if(keySelected>=0&&keySelected<btns.length){ btns[keySelected].click(); keySelected=-1; } } });
 const switcher=document.getElementById('titleSwitcher'); const dropdown=document.getElementById('titleDropdown'); const wordArt=document.getElementById('wordArt'); const wordThought=document.getElementById('wordThought'); function openDrop(){ dropdown.classList.add('open'); wordArt.style.opacity='0'; wordArt.style.transform='translateY(-6px)'; wordThought.style.opacity='1'; wordThought.style.transform='translateY(0)'; switcher.style.minWidth=wordThought.scrollWidth+'px'; } function closeDrop(){ dropdown.classList.remove('open'); wordArt.style.opacity='1'; wordArt.style.transform='translateY(0)'; wordThought.style.opacity='0'; wordThought.style.transform='translateY(6px)'; switcher.style.minWidth=''; } switcher.addEventListener('mouseenter',openDrop); switcher.addEventListener('mouseleave',closeDrop); function stayOnArt(){ closeDrop(); }
 init();
-</script>
- <!-- Load the Lottie script player -->
-<script src="https://cloudflare.com"></script>
-
-<script>
-  // Initialize and play your uploaded Lottie file
-  const animation = bodymovin.loadAnimation({
-    container: document.getElementById('lottie-container'),
-    path: 'logo-animation.json', // Match the EXACT filename you uploaded to GitHub
-    renderer: 'svg',
-    loop: true,
-    autoplay: true
-  });
-
-  // Handle fading out the intro screen once the site loads
-  window.addEventListener('load', () => {
-    const intro = document.getElementById('intro-screen');
-    setTimeout(() => {
-      intro.classList.add('fade-out');
-    }, 2000); // Keeps the animation visible for 2 seconds
-  });
 </script>
 </body>
 </html>
