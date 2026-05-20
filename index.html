@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-<script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.js"> </script>
-
+<!-- No external Lottie library needed any more -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Daily Art Cult — Daily Painting Guessing Game</title>
@@ -683,17 +682,29 @@ header{animation:sectionIn .8s cubic-bezier(.22,1,.36,1) both;}
 #choicesCol{animation:sectionIn .8s .16s cubic-bezier(.22,1,.36,1) both;}
 @keyframes sectionIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
-#preloader {position:fixed;inset:0;z-index:99999;background:var(--ink);display:flex;align-items:center;justify-content:center;transition:opacity .6s ease;}
+#preloader {
+  position:fixed;inset:0;z-index:99999;
+  background:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .6s ease;
+}
 #preloader.hide {opacity:0; pointer-events:none;}
 
- 
 </style>
 </head>
 
 <body>
 
- <div id="preloader">
-  <dotlottie-player id="lottiePlayer" src="animation.json" autoplay style="width:300px;height:300px;"></dotlottie-player>
+<!-- ═══ PRELOADER – inline SVG crown, no network request needed ═══ -->
+<div id="preloader">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="300" height="300" style="display:block;">
+    <!-- Black fill (crown body) -->
+    <path d="M148,384 L142,238 L182,240 L226,308 L256,138 L286,308 L330,240 L370,238 L364,384 L320,384 L314,284 L278,314 L278,384 L234,384 L234,314 L198,284 L192,384 Z" fill="#000000" />
+    <!-- Gold outline (same crown shape, stroke) -->
+    <path d="M138,392 L132,232 L176,234 L222,312 L256,130 L290,312 L336,234 L380,232 L374,392 L324,392 L318,290 L280,320 L280,392 L232,392 L232,320 L194,290 L188,392 Z" fill="none" stroke="#ffc736" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Ruby diamond (white outline) -->
+    <path d="M256,180 L272,206 L256,232 L240,206 Z" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
 </div>
 
 <div id="pageShell">
@@ -837,13 +848,6 @@ header{animation:sectionIn .8s cubic-bezier(.22,1,.36,1) both;}
 </div>
 
 <script>
-
- document.getElementById('lottiePlayer').addEventListener('complete', () => {
-  document.getElementById('preloader').classList.add('hide');
-});
-setTimeout(() => {
-  document.getElementById('preloader').classList.add('hide');
-}, 4000);
 
 /* ══════════════════════════════════════════════
    DARK MODE
@@ -1160,6 +1164,13 @@ function closeDrop(){dropdown.classList.remove('open');wordArt.style.opacity='1'
 function stayOnArt(){closeDrop();}
 switcher.addEventListener('mouseenter',openDrop);
 switcher.addEventListener('mouseleave',closeDrop);
+
+/* ══════════════════════════════════════════════
+   PRELOADER HIDE – same logic as before, but now using the inline SVG
+══════════════════════════════════════════════ */
+setTimeout(() => {
+  document.getElementById('preloader').classList.add('hide');
+}, 4000);
 
 init();
 </script>
