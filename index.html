@@ -783,14 +783,13 @@ header p{
 #certId{font-size:.32rem;letter-spacing:.2em;color:var(--cream-dim);border-top:1px solid var(--border-mid);padding-top:12px;margin-top:4px;}
 #certId strong{color:var(--gold);font-weight:400;}
 
-#shareBtn{
+#streakShareBtn{
   width:100%;padding:14px;border:none;background:var(--gold);
   font-family:'Montserrat',sans-serif;font-weight:300;
   font-size:.44rem;letter-spacing:.32em;text-transform:uppercase;
   color:var(--bg);cursor:pointer;transition:background .2s;margin-bottom:10px;display:none;
 }
-#shareBtn:hover{background:var(--gold-bright);}
-#shareCopied{font-size:.34rem;letter-spacing:.24em;text-transform:uppercase;color:var(--correct);text-align:center;display:none;margin-bottom:10px;}
+#streakShareBtn:hover{background:var(--gold-bright);}
 #popupBtn{
   padding:12px 36px;border:1px solid var(--border);background:transparent;
   font-family:'Montserrat',sans-serif;font-weight:300;
@@ -849,9 +848,75 @@ header{animation:sectionIn .8s cubic-bezier(.22,1,.36,1) both;}
   position:fixed;inset:0;z-index:99999;
   background:var(--ink);
   display:flex;align-items:center;justify-content:center;
-  transition:opacity .6s ease;
+  transition:opacity 1s ease;
 }
 #preloader.hide {opacity:0; pointer-events:none;}
+
+/* Logo fades + draws in, then a gentle gold glow pulses */
+#preloader-logo {
+  animation: pl-fadein 0.9s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes pl-fadein {
+  from { opacity:0; transform:scale(.94); }
+  to   { opacity:1; transform:scale(1); }
+}
+#preloader-logo .pl-stroke {
+  stroke-dasharray: 1600;
+  stroke-dashoffset: 1600;
+  animation: pl-draw 1.8s 0.3s cubic-bezier(.22,1,.36,1) forwards,
+             pl-glow 2.4s 2.4s ease-in-out infinite;
+}
+#preloader-logo .pl-inner {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: pl-draw 0.7s 1.4s cubic-bezier(.22,1,.36,1) forwards;
+}
+/* Small spark dots celebrate around the logo after it draws */
+#preloader-logo .pl-spark {
+  opacity:0;
+  animation: pl-spark 0.5s ease forwards;
+}
+#preloader-logo .pl-s1{animation-delay:2s;}
+#preloader-logo .pl-s2{animation-delay:2.1s;}
+#preloader-logo .pl-s3{animation-delay:2.2s;}
+#preloader-logo .pl-s4{animation-delay:2.05s;}
+#preloader-logo .pl-s5{animation-delay:2.15s;}
+#preloader-logo .pl-s6{animation-delay:2.25s;}
+/* Anniversary tag fades up after logo draws */
+#preloader-logo .pl-anniv {
+  opacity:0;
+  animation: pl-up 0.8s 2s cubic-bezier(.22,1,.36,1) forwards;
+}
+@keyframes pl-draw  { to{stroke-dashoffset:0;} }
+@keyframes pl-glow  { 0%,100%{filter:drop-shadow(0 0 3px rgba(212,168,78,.3));} 50%{filter:drop-shadow(0 0 10px rgba(212,168,78,.7));} }
+@keyframes pl-spark { 0%{opacity:0;transform:scale(0);} 60%{opacity:1;transform:scale(1.4);} 100%{opacity:.65;transform:scale(1);} }
+@keyframes pl-up    { from{opacity:0;transform:translateY(7px);} to{opacity:1;transform:translateY(0);} }
+
+/* Paint loader between rounds */
+#paintLoader {
+  position:absolute;inset:0;z-index:5;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  pointer-events:none;opacity:0;
+  transition:opacity .35s ease;
+}
+#paintLoader.visible { opacity:1; }
+#paintLoader .pll-stroke {
+  stroke-dasharray: 1600;
+  stroke-dashoffset: 1600;
+  animation: pl-draw 1.4s 0s cubic-bezier(.22,1,.36,1) forwards,
+             pl-glow 2.4s 1.8s ease-in-out infinite;
+}
+#paintLoader .pll-inner {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: pl-draw 0.6s 1.1s cubic-bezier(.22,1,.36,1) forwards;
+}
+#paintLoader .pll-label {
+  opacity:0;
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:.72rem;letter-spacing:.12em;color:#b8913a;
+  animation: pl-up 0.6s 1.5s ease forwards;
+}
 
 </style>
 </head>
@@ -859,10 +924,24 @@ header{animation:sectionIn .8s cubic-bezier(.22,1,.36,1) both;}
 <body>
 
 <div id="preloader">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="300" height="300" style="display:block;">
+  <svg id="preloader-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="300" height="300" style="display:block;overflow:visible;">
+    <!-- Original shadow path, unchanged -->
     <path d="M148,384 L142,238 L182,240 L226,308 L256,138 L286,308 L330,240 L370,238 L364,384 L320,384 L314,284 L278,314 L278,384 L234,384 L234,314 L198,284 L192,384 Z" fill="#000000" />
-    <path d="M138,392 L132,232 L176,234 L222,312 L256,130 L290,312 L336,234 L380,232 L374,392 L324,392 L318,290 L280,320 L280,392 L232,392 L232,320 L194,290 L188,392 Z" fill="none" stroke="#ffc736" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M256,180 L272,206 L256,232 L240,206 Z" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Original gold stroke — now draws itself in -->
+    <path class="pl-stroke" d="M138,392 L132,232 L176,234 L222,312 L256,130 L290,312 L336,234 L380,232 L374,392 L324,392 L318,290 L280,320 L280,392 L232,392 L232,320 L194,290 L188,392 Z" fill="none" stroke="#ffc736" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Original inner diamond — draws in after -->
+    <path class="pl-inner" d="M256,180 L272,206 L256,232 L240,206 Z" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Tiny celebration sparks that pop after the draw (6 small diamonds) -->
+    <polygon class="pl-spark pl-s1" points="256,100 259,107 256,114 253,107" fill="#ffc736" opacity="0"/>
+    <polygon class="pl-spark pl-s2" points="380,200 386,204 380,208 374,204" fill="#ffc736" opacity="0"/>
+    <polygon class="pl-spark pl-s3" points="132,200 138,204 132,208 126,204" fill="#ffc736" opacity="0"/>
+    <polygon class="pl-spark pl-s4" points="200,115 204,121 200,127 196,121" fill="#d4a84e" opacity="0"/>
+    <polygon class="pl-spark pl-s5" points="312,115 316,121 312,127 308,121" fill="#d4a84e" opacity="0"/>
+    <polygon class="pl-spark pl-s6" points="256,415 259,421 256,427 253,421" fill="#ffc736" opacity="0"/>
+    <!-- Subtle "Since 2016" tag beneath logo -->
+    <text class="pl-anniv" x="256" y="468" text-anchor="middle"
+      font-family="Montserrat,sans-serif" font-weight="300"
+      font-size="9" letter-spacing="5" fill="#b8913a" fill-opacity=".7">SINCE 2016</text>
   </svg>
 </div>
 
@@ -885,6 +964,14 @@ header{animation:sectionIn .8s cubic-bezier(.22,1,.36,1) both;}
 
   <div id="gameArea">
     <div id="paintingCol">
+      <div id="paintLoader">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="120" height="120" style="display:block;">
+          <path d="M148,384 L142,238 L182,240 L226,308 L256,138 L286,308 L330,240 L370,238 L364,384 L320,384 L314,284 L278,314 L278,384 L234,384 L234,314 L198,284 L192,384 Z" fill="#000000" fill-opacity=".4"/>
+          <path class="pll-stroke" d="M138,392 L132,232 L176,234 L222,312 L256,130 L290,312 L336,234 L380,232 L374,392 L324,392 L318,290 L280,320 L280,392 L232,392 L232,320 L194,290 L188,392 Z" fill="none" stroke="#ffc736" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".75"/>
+          <path class="pll-inner" d="M256,180 L272,206 L256,232 L240,206 Z" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".6"/>
+        </svg>
+        <span class="pll-label">Loading masterpiece…</span>
+      </div>
       <div id="paintingWrap">
         <canvas id="paintingCanvas"></canvas>
         <div id="paintingShield" oncontextmenu="return false" ondragstart="return false"></div>
@@ -966,8 +1053,7 @@ header{animation:sectionIn .8s cubic-bezier(.22,1,.36,1) both;}
         <div id="certMeta"></div>
         <div id="certId">Share ID: <strong id="certIdVal"></strong></div>
       </div>
-      <button id="shareBtn" onclick="shareOwnership()">Share My Ownership →</button>
-      <div id="shareCopied">✦ Copied — send it to a friend</div>
+      <button id="streakShareBtn" onclick="shareStreak()">✦ Share My Streak →</button>
       <button id="popupBtn" onclick="closePopup()">Continue</button>
       <div id="popupEnterHint">Press <span style="border:1px solid var(--border);padding:2px 6px;font-size:.3rem;">Enter</span> to continue</div>
     </div>
@@ -1308,188 +1394,9 @@ function getFreshPainter(availablePainters){const eligible=availablePainters.fil
 function getFreshWrongChoices(correctPainter,allPainters,count=3){const recentSet=new Set(recentPainters);recentSet.add(correctPainter.id);let candidates=allPainters.filter(p=>!recentSet.has(p.id)&&p.id!==correctPainter.id);if(candidates.length<count)candidates=allPainters.filter(p=>p.id!==correctPainter.id);for(let i=candidates.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[candidates[i],candidates[j]]=[candidates[j],candidates[i]];}return candidates.slice(0,count);}
 function buildStreakDots(){const el=document.getElementById('streakDots');el.innerHTML='';for(let i=0;i<10;i++){const d=document.createElement('div');d.className='dot';d.id='dot-'+i;el.appendChild(d);}}
 function updateDots(){for(let i=0;i<10;i++){const dot=document.getElementById('dot-'+i);if(dot)dot.className='dot'+(i<streak?' filled':'');}}
-async function loadPainting(painter){const canvas=document.getElementById('paintingCanvas');const ctx=canvas.getContext('2d');canvas.width=700;canvas.height=400;ctx.fillStyle='var(--paint-bg)';ctx.fillRect(0,0,700,400);ctx.fillStyle='#aaa';ctx.font='300 11px Montserrat,sans-serif';ctx.textAlign='center';ctx.fillText('Loading masterpiece…',350,200);const paintings=await fetchPaintingsForPainter(painter);if(!paintings.length)return false;const painting=getFreshPainting(painter,paintings);if(!painting)return false;currentPaintingUrl=painting.url;currentPaintingTitle=painting.title;return new Promise((resolve)=>{const img=new Image();img.onload=()=>{const col=document.getElementById('paintingCol');const availW=col?col.clientWidth-20:window.innerWidth-340;const availH=col?col.clientHeight-30:window.innerHeight-90;let scale=Math.min(availW/img.width,availH/img.height,1);canvas.width=Math.max(180,Math.round(img.width*scale));canvas.height=Math.max(140,Math.round(img.height*scale));canvas.style.width=canvas.width+'px';canvas.style.height=canvas.height+'px';ctx.drawImage(img,0,0,canvas.width,canvas.height);resolve(true);};img.onerror=()=>resolve(false);img.src=painting.url;});}
+async function loadPainting(painter){const canvas=document.getElementById('paintingCanvas');const ctx=canvas.getContext('2d');canvas.width=700;canvas.height=400;ctx.clearRect(0,0,700,400);const loader=document.getElementById('paintLoader');if(loader){loader.classList.add('visible');}const paintings=await fetchPaintingsForPainter(painter);if(!paintings.length){if(loader)loader.classList.remove('visible');return false;}const painting=getFreshPainting(painter,paintings);if(!painting){if(loader)loader.classList.remove('visible');return false;}currentPaintingUrl=painting.url;currentPaintingTitle=painting.title;return new Promise((resolve)=>{const img=new Image();img.onload=()=>{const col=document.getElementById('paintingCol');const availW=col?col.clientWidth-20:window.innerWidth-340;const availH=col?col.clientHeight-30:window.innerHeight-90;let scale=Math.min(availW/img.width,availH/img.height,1);canvas.width=Math.max(180,Math.round(img.width*scale));canvas.height=Math.max(140,Math.round(img.height*scale));canvas.style.width=canvas.width+'px';canvas.style.height=canvas.height+'px';ctx.drawImage(img,0,0,canvas.width,canvas.height);if(loader)loader.classList.remove('visible');resolve(true);};img.onerror=()=>{if(loader)loader.classList.remove('visible');resolve(false);};img.src=painting.url;});}
 async function nextRound(){if(answered||isLoading)return;if(!activePainters.length)return;isLoading=true;currentPainter=getFreshPainter(activePainters);const success=await loadPainting(currentPainter);if(!success){isLoading=false;answered=false;setTimeout(()=>nextRound(),400);return;}recentPainters.push(currentPainter.id);if(recentPainters.length>MAX_RECENT_PAINTERS)recentPainters.shift();const wrongs=getFreshWrongChoices(currentPainter,activePainters,3);let options=[...wrongs,currentPainter];for(let i=options.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[options[i],options[j]]=[options[j],options[i]];}const choicesDiv=document.getElementById('choices');choicesDiv.innerHTML='';options.forEach((p,idx)=>{const btn=document.createElement('button');btn.className='choice-btn';btn.dataset.painterId=p.id;btn.innerHTML=`<span class="btn-num">${idx+1}</span>${p.name}`;btn.onclick=()=>answer(btn,p);choicesDiv.appendChild(btn);});isLoading=false;answered=false;}
 function answer(btn,painter){if(answered)return;answered=true;const allBtns=document.querySelectorAll('.choice-btn');allBtns.forEach(b=>b.disabled=true);const correct=(painter.id===currentPainter.id);if(correct){btn.classList.add('correct');streak++;updateDots();setTimeout(()=>showPopup(true),500);}else{btn.classList.add('wrong');allBtns.forEach(b=>{if(b.dataset.painterId===currentPainter.id)b.classList.add('correct');});streak=0;updateDots();recentPainters=[];setTimeout(()=>showPopup(false),500);}}
 function generateShareId(painterId){const ts=Date.now().toString(36).toUpperCase();const rand=Math.random().toString(36).substring(2,6).toUpperCase();return`DAC-${painterId.substring(0,3).toUpperCase()}-${ts}-${rand}`;}
-function shareOwnership(){const painter=document.getElementById('certPainter').textContent;const id=document.getElementById('certIdVal').textContent;const msg=`I just earned a share in ${painter} on The Daily Art Cult. 🎨\nShare ID: ${id}\nPlay at thedailyartcult.github.io`;navigator.clipboard.writeText(msg).then(()=>{document.getElementById('shareCopied').style.display='block';setTimeout(()=>{document.getElementById('shareCopied').style.display='none';},3000);});}
-function showPopup(won){const emoji=document.getElementById('popupEmoji');const title=document.getElementById('popupTitle');const info=document.getElementById('popupInfo');const overlay=document.getElementById('overlay');document.getElementById('certificate').style.display='none';document.getElementById('shareBtn').style.display='none';document.getElementById('shareCopied').style.display='none';document.getElementById('popupBtn').style.display='';document.getElementById('popupEnterHint').style.display='';document.getElementById('streakProgressFill').style.width='0%';if(won){emoji.textContent='✦';title.textContent=streak>1?streak+' in a Row':'Share Earned';info.innerHTML='Added to your collection. Visit My Collection to sell.';const shareId=generateShareId(currentPainter.id);const shareData={shareId,painterId:currentPainter.id,painterName:currentPainter.name,paintingTitle:currentPaintingTitle,nationality:currentPainter.nationality,born:currentPainter.born,died:currentPainter.died,streak,status:'held'};myShares.push(shareData);sbInsert('shares',{painter_id:shareData.painterId,painter_name:shareData.painterName,painting_title:shareData.paintingTitle,share_id:shareData.shareId,status:'held'});document.getElementById('certPainter').textContent=currentPainter.name;document.getElementById('certMeta').innerHTML=`${currentPainter.nationality} · ${currentPainter.born}–${currentPainter.died}<br>${streak} correct identifications · 1 share earned`;document.getElementById('certIdVal').textContent=shareId;document.getElementById('certificate').style.display='block';document.getElementById('shareBtn').style.display='block';overlay.classList.remove('loss-overlay');overlay.classList.add('show');document.getElementById('popup').className='win';}else{emoji.textContent='';const line1=[currentPainter.nationality?currentPainter.nationality+' Painter':'',(currentPainter.born&&currentPainter.died)?currentPainter.born+' – '+currentPainter.died:''].filter(Boolean).join('  ·  ');info.innerHTML=line1;document.getElementById('captionPainter').textContent=currentPainter.name;document.getElementById('captionTitle').textContent=currentPaintingTitle||'Artwork';const img=document.getElementById('popupPaintingImg');img.classList.remove('loaded');img.classList.remove('error-load');if(currentPaintingUrl){img.onload=()=>img.classList.add('loaded');img.onerror=()=>{img.classList.add('error-load');img.classList.add('loaded');};img.src=currentPaintingUrl;}else{img.classList.add('error-load');img.classList.add('loaded');img.alt='Image temporarily unavailable';}overlay.classList.add('loss-overlay');overlay.classList.add('show');document.getElementById('popup').className='loss';}}
-function closePopup(){document.getElementById('overlay').classList.remove('show');document.getElementById('overlay').classList.remove('win-overlay');document.getElementById('overlay').classList.remove('loss-overlay');answered=false;nextRound();}
-function pickChip(btn){document.querySelectorAll('.col-chip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');streak=0;updateDots();recentPainters=[];perPainterArtHistory.clear();const key=btn.dataset.col;if(key==='full')activePainters=PAINTERS_MASTER;else activePainters=PAINTERS_MASTER.filter(p=>p.tags.includes(key));if(activePainters.length<2){document.getElementById('choices').innerHTML='<p style="padding:20px;color:var(--gold-dim);text-align:center;font-size:.44rem;letter-spacing:.2em;">Not enough painters.<br>Try "Full" collection.</p>';return;}nextRound();}
-function buildCollectionButtons(){const collections=ALLOWED_COLLECTIONS;const container=document.getElementById('collectionBtns');container.innerHTML='';collections.forEach(col=>{const btn=document.createElement('button');btn.className='col-chip';if(isDailyThemeActive&&col===currentDailyTheme)btn.classList.add('active');else if(col==='popular'&&!isDailyThemeActive)btn.classList.add('active');btn.textContent=col.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');btn.dataset.col=col;btn.onclick=()=>pickChip(btn);container.appendChild(btn);});}
-
-/* ══════════════════════════════════════════════
-   INVEST IN ART WAITLIST MODAL
-══════════════════════════════════════════════ */
-let investSalutation = null;
-let investName = '';
-
-function openInvestModal() {
-  // Reset step 1
-  investSalutation = null;
-  investName = '';
-  document.getElementById('investEmail').value = '';
-  document.getElementById('investStep1').style.display = 'block';
-  document.getElementById('investStep1').classList.add('invest-step');
-  document.getElementById('investStep3').style.display = 'none';
-  // Reset step 2
-  document.getElementById('investName').value = '';
-  document.querySelectorAll('.salutation-option').forEach(b => b.classList.remove('selected'));
-  document.getElementById('investNameBlock').style.opacity = '0';
-  document.getElementById('investNameBlock').style.transform = 'translateY(8px)';
-  document.getElementById('investNameBlock').style.pointerEvents = 'none';
-  document.getElementById('investSuccess').style.display = 'none';
-  const submitBtn = document.getElementById('investSubmitBtn');
-  submitBtn.disabled = false;
-  submitBtn.textContent = 'Secure My Place →';
-  submitBtn.style.display = '';
-  document.getElementById('investBack').style.display = '';
-  document.getElementById('investOverlay').classList.add('show');
-}
-
-function closeInvest() {
-  document.getElementById('investOverlay').classList.remove('show');
-}
-
-// Step 1 → Step 2: validate email, then show honorifics
-function nextInvestStep2() {
-  const email = document.getElementById('investEmail').value.trim();
-  if (!email || !email.includes('@')) {
-    document.getElementById('investEmail').focus();
-    document.getElementById('investEmail').style.borderColor = 'var(--gold-bright)';
-    setTimeout(() => { document.getElementById('investEmail').style.borderColor = ''; }, 1200);
-    return;
-  }
-  const step1 = document.getElementById('investStep1');
-  step1.style.opacity = '0';
-  step1.style.transform = 'translateY(-10px)';
-  step1.style.transition = 'opacity .22s ease, transform .22s ease';
-  setTimeout(() => {
-    step1.style.display = 'none';
-    step1.style.opacity = '';
-    step1.style.transform = '';
-    step1.style.transition = '';
-    const step2 = document.getElementById('investStep3');
-    step2.style.display = 'block';
-    step2.classList.add('invest-step');
-  }, 220);
-}
-
-// Step 2 → Step 1: go back
-function prevInvestStep() {
-  const step2 = document.getElementById('investStep3');
-  step2.style.opacity = '0';
-  step2.style.transform = 'translateY(10px)';
-  step2.style.transition = 'opacity .2s ease, transform .2s ease';
-  setTimeout(() => {
-    step2.style.display = 'none';
-    step2.style.opacity = '';
-    step2.style.transform = '';
-    step2.style.transition = '';
-    const step1 = document.getElementById('investStep1');
-    step1.style.display = 'block';
-    step1.classList.add('invest-step');
-  }, 200);
-}
-
-// Salutation click → reveal name field
-document.querySelectorAll('.salutation-option').forEach(btn => {
-  btn.addEventListener('click', () => {
-    investSalutation = btn.dataset.salutation;
-    document.querySelectorAll('.salutation-option').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    const nb = document.getElementById('investNameBlock');
-    nb.style.transition = 'opacity .28s ease, transform .28s ease';
-    nb.style.opacity = '1';
-    nb.style.transform = 'translateY(0)';
-    nb.style.pointerEvents = 'all';
-    setTimeout(() => document.getElementById('investName').focus(), 80);
-  });
-});
-
-async function submitInvest() {
-  const name = document.getElementById('investName').value.trim();
-  if (!investSalutation) {
-    document.getElementById('salutationOptions').style.outline = '1px solid var(--gold-dim)';
-    setTimeout(() => { document.getElementById('salutationOptions').style.outline = ''; }, 900);
-    return;
-  }
-  if (!name) {
-    document.getElementById('investName').focus();
-    return;
-  }
-  investName = name;
-  const email = document.getElementById('investEmail').value.trim();
-
-  const btn = document.getElementById('investSubmitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Submitting…';
-
-  await fetch(
-    'https://frwjaixxlgthkgjtafhz.supabase.co/functions/v1/send-welcome-email',
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, name: investName, salutation: investSalutation })
-    }
-  );
-
-  await sbInsert('waitlist_signups', {
-    salutation: investSalutation,
-    name: investName,
-    email
-  });
-
-  btn.style.display = 'none';
-  document.getElementById('investBack').style.display = 'none';
-  document.getElementById('investSuccess').style.display = 'block';
-}
-
-async function init(){
-  updateDmIcon();
-  buildStreakDots();
-  await fetchDailyTheme();
-  buildCollectionButtons();
-  if(isDailyThemeActive&&ALLOWED_COLLECTIONS.includes(currentDailyTheme)){
-    activePainters=PAINTERS_MASTER.filter(p=>p.tags.includes(currentDailyTheme));
-  }else{
-    activePainters=PAINTERS_MASTER.filter(p=>p.tags.includes('popular'));
-  }
-  if(activePainters.length<2)activePainters=PAINTERS_MASTER;
-  nextRound();
-}
-
-/* ── Keyboard nav ── */
-let keySelected=-1;
-document.addEventListener('keydown',e=>{
-  const overlay=document.getElementById('overlay');
-  if(overlay.classList.contains('show')){if(e.key==='Enter'){e.preventDefault();closePopup();}return;}
-  if(answered)return;
-  const btns=Array.from(document.querySelectorAll('.choice-btn:not(:disabled)'));
-  if(!btns.length)return;
-  if(['1','2','3','4'].includes(e.key)){e.preventDefault();const idx=parseInt(e.key)-1;if(idx<btns.length){btns.forEach(b=>b.classList.remove('key-flash'));btns[idx].classList.add('key-flash');keySelected=idx;setTimeout(()=>btns[idx]?.classList.remove('key-flash'),180);}}
-  if(e.key==='Enter'){e.preventDefault();if(keySelected>=0&&keySelected<btns.length){btns[keySelected].click();keySelected=-1;}}
-});
-
-/* ── Title switcher ── */
-const switcher=document.getElementById('titleSwitcher');
-const dropdown=document.getElementById('titleDropdown');
-const wordArt=document.getElementById('wordArt');
-const wordThought=document.getElementById('wordThought');
-function openDrop(){dropdown.classList.add('open');wordArt.style.opacity='0';wordArt.style.transform='translateY(-6px)';wordThought.style.opacity='1';wordThought.style.transform='translateY(0)';switcher.style.minWidth=wordThought.scrollWidth+'px';}
-function closeDrop(){dropdown.classList.remove('open');wordArt.style.opacity='1';wordArt.style.transform='translateY(0)';wordThought.style.opacity='0';wordThought.style.transform='translateY(6px)';switcher.style.minWidth='';}
-function stayOnArt(){closeDrop();}
-switcher.addEventListener('mouseenter',openDrop);
-switcher.addEventListener('mouseleave',closeDrop);
-
-/* ══════════════════════════════════════════════
-   PRELOADER HIDE
-══════════════════════════════════════════════ */
-setTimeout(() => {
-  document.getElementById('preloader').classList.add('hide');
-}, 4000);
-
-init();
-</script>
-</body>
-</html>
+function shareStreak(){const msg='I just identified 10 painters in a row on The Daily Art Cult 🎨\nCan you beat my streak?\nthedailyartcult.lol';if(navigator.share){navigator.share({title:'The Daily Art Cult — 10-Streak!',text:msg}).catch(()=>{});}else{navigator.clipboard.writeText(msg).then(()=>{const btn=document.getElementById('streakShareBtn');const orig=btn.textContent;btn.textContent='✦ Copied!';setTimeout(()=>{btn.textContent=orig;},2500);});}}
+function showPopup(won){const emoji=document.getElementById('popupEmoji');const title=document.getElementById('popupTitle');const info=document.getElementById('popupInfo');const overlay=document.getElementById('overlay');document.getElementById('certificate').style.display='none';document.getElementById('streakShareBtn').style.display='none';document.getElementById('popupBtn').style.display='';document.getElementById('popupEnterHint').style.display='';document.getElementById('streakProgressFill').style.width='0%';if(won){emoji.textContent='✦';title.textContent=streak===10?'Perfect Streak ✦':streak>1?streak+' in a Row':'Share Earned';info.innerHTML='Added to your collection. Visit My Collection to sell.';const shareId=generateShareId(currentPainter.id);const shareData={shareId,painterId:currentPainter.id,painterName:currentPainter.name,paintingTitle:currentPaintingTitle,nationality:currentPainter.nationality,born:currentPainter.born,died:currentPainter.died,streak,status:'held'};myShares.push(shareData);sbInsert('shares',{painter_id:shareData.painterId,painter_name:shareData.painterName,painting_title:shareData.paintingTitle,share_id:shareData.shareId,status:'held'});document.getElementById('certPainter').textContent=currentPainter.name;document.getElementById('certMeta').innerHTML=`${currentPainter.nationality} · ${currentPainter.born}–${currentPain
