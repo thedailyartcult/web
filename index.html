@@ -1399,4 +1399,183 @@ async function nextRound(){if(answered||isLoading)return;if(!activePainters.leng
 function answer(btn,painter){if(answered)return;answered=true;const allBtns=document.querySelectorAll('.choice-btn');allBtns.forEach(b=>b.disabled=true);const correct=(painter.id===currentPainter.id);if(correct){btn.classList.add('correct');streak++;updateDots();setTimeout(()=>showPopup(true),500);}else{btn.classList.add('wrong');allBtns.forEach(b=>{if(b.dataset.painterId===currentPainter.id)b.classList.add('correct');});streak=0;updateDots();recentPainters=[];setTimeout(()=>showPopup(false),500);}}
 function generateShareId(painterId){const ts=Date.now().toString(36).toUpperCase();const rand=Math.random().toString(36).substring(2,6).toUpperCase();return`DAC-${painterId.substring(0,3).toUpperCase()}-${ts}-${rand}`;}
 function shareStreak(){const msg='I just identified 10 painters in a row on The Daily Art Cult 🎨\nCan you beat my streak?\nthedailyartcult.lol';if(navigator.share){navigator.share({title:'The Daily Art Cult — 10-Streak!',text:msg}).catch(()=>{});}else{navigator.clipboard.writeText(msg).then(()=>{const btn=document.getElementById('streakShareBtn');const orig=btn.textContent;btn.textContent='✦ Copied!';setTimeout(()=>{btn.textContent=orig;},2500);});}}
-function showPopup(won){const emoji=document.getElementById('popupEmoji');const title=document.getElementById('popupTitle');const info=document.getElementById('popupInfo');const overlay=document.getElementById('overlay');document.getElementById('certificate').style.display='none';document.getElementById('streakShareBtn').style.display='none';document.getElementById('popupBtn').style.display='';document.getElementById('popupEnterHint').style.display='';document.getElementById('streakProgressFill').style.width='0%';if(won){emoji.textContent='✦';title.textContent=streak===10?'Perfect Streak ✦':streak>1?streak+' in a Row':'Share Earned';info.innerHTML='Added to your collection. Visit My Collection to sell.';const shareId=generateShareId(currentPainter.id);const shareData={shareId,painterId:currentPainter.id,painterName:currentPainter.name,paintingTitle:currentPaintingTitle,nationality:currentPainter.nationality,born:currentPainter.born,died:currentPainter.died,streak,status:'held'};myShares.push(shareData);sbInsert('shares',{painter_id:shareData.painterId,painter_name:shareData.painterName,painting_title:shareData.paintingTitle,share_id:shareData.shareId,status:'held'});document.getElementById('certPainter').textContent=currentPainter.name;document.getElementById('certMeta').innerHTML=`${currentPainter.nationality} · ${currentPainter.born}–${currentPain
+function showPopup(won){const emoji=document.getElementById('popupEmoji');const title=document.getElementById('popupTitle');const info=document.getElementById('popupInfo');const overlay=document.getElementById('overlay');document.getElementById('certificate').style.display='none';document.getElementById('streakShareBtn').style.display='none';document.getElementById('popupBtn').style.display='';document.getElementById('popupEnterHint').style.display='';document.getElementById('streakProgressFill').style.width='0%';if(won){emoji.textContent='✦';title.textContent=streak===10?'Perfect Streak ✦':streak>1?streak+' in a Row':'Share Earned';info.innerHTML='Added to your collection. Visit My Collection to sell.';const shareId=generateShareId(currentPainter.id);const shareData={shareId,painterId:currentPainter.id,painterName:currentPainter.name,paintingTitle:currentPaintingTitle,nationality:currentPainter.nationality,born:currentPainter.born,died:currentPainter.died,streak,status:'held'};myShares.push(shareData);sbInsert('shares',{painter_id:shareData.painterId,painter_name:shareData.painterName,painting_title:shareData.paintingTitle,share_id:shareData.shareId,status:'held'});document.getElementById('certPainter').textContent=currentPainter.name;document.getElementById('certMeta').innerHTML=`${currentPainter.nationality} · ${currentPainter.born}–${currentPainter.died}<br>${streak} correct identifications · 1 share earned`;document.getElementById('certIdVal').textContent=shareId;document.getElementById('certificate').style.display='block';if(streak===10)document.getElementById('streakShareBtn').style.display='block';overlay.classList.remove('loss-overlay');overlay.classList.add('show');document.getElementById('popup').className='win';}else{emoji.textContent='';const line1=[currentPainter.nationality?currentPainter.nationality+' Painter':'',(currentPainter.born&&currentPainter.died)?currentPainter.born+' – '+currentPainter.died:''].filter(Boolean).join('  ·  ');info.innerHTML=line1;document.getElementById('captionPainter').textContent=currentPainter.name;document.getElementById('captionTitle').textContent=currentPaintingTitle||'Artwork';const img=document.getElementById('popupPaintingImg');img.classList.remove('loaded');img.classList.remove('error-load');if(currentPaintingUrl){img.onload=()=>img.classList.add('loaded');img.onerror=()=>{img.classList.add('error-load');img.classList.add('loaded');};img.src=currentPaintingUrl;}else{img.classList.add('error-load');img.classList.add('loaded');img.alt='Image temporarily unavailable';}overlay.classList.add('loss-overlay');overlay.classList.add('show');document.getElementById('popup').className='loss';}}
+function closePopup(){document.getElementById('overlay').classList.remove('show');document.getElementById('overlay').classList.remove('win-overlay');document.getElementById('overlay').classList.remove('loss-overlay');answered=false;nextRound();}
+function pickChip(btn){document.querySelectorAll('.col-chip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');streak=0;updateDots();recentPainters=[];perPainterArtHistory.clear();const key=btn.dataset.col;if(key==='full')activePainters=PAINTERS_MASTER;else activePainters=PAINTERS_MASTER.filter(p=>p.tags.includes(key));if(activePainters.length<2){document.getElementById('choices').innerHTML='<p style="padding:20px;color:var(--gold-dim);text-align:center;font-size:.44rem;letter-spacing:.2em;">Not enough painters.<br>Try "Full" collection.</p>';return;}nextRound();}
+function buildCollectionButtons(){const collections=ALLOWED_COLLECTIONS;const container=document.getElementById('collectionBtns');container.innerHTML='';collections.forEach(col=>{const btn=document.createElement('button');btn.className='col-chip';if(isDailyThemeActive&&col===currentDailyTheme)btn.classList.add('active');else if(col==='popular'&&!isDailyThemeActive)btn.classList.add('active');btn.textContent=col.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');btn.dataset.col=col;btn.onclick=()=>pickChip(btn);container.appendChild(btn);});}
+
+/* ══════════════════════════════════════════════
+   INVEST IN ART WAITLIST MODAL
+══════════════════════════════════════════════ */
+let investSalutation = null;
+let investName = '';
+
+function openInvestModal() {
+  // Reset step 1
+  investSalutation = null;
+  investName = '';
+  document.getElementById('investEmail').value = '';
+  document.getElementById('investStep1').style.display = 'block';
+  document.getElementById('investStep1').classList.add('invest-step');
+  document.getElementById('investStep3').style.display = 'none';
+  // Reset step 2
+  document.getElementById('investName').value = '';
+  document.querySelectorAll('.salutation-option').forEach(b => b.classList.remove('selected'));
+  document.getElementById('investNameBlock').style.opacity = '0';
+  document.getElementById('investNameBlock').style.transform = 'translateY(8px)';
+  document.getElementById('investNameBlock').style.pointerEvents = 'none';
+  document.getElementById('investSuccess').style.display = 'none';
+  const submitBtn = document.getElementById('investSubmitBtn');
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Secure My Place →';
+  submitBtn.style.display = '';
+  document.getElementById('investBack').style.display = '';
+  document.getElementById('investOverlay').classList.add('show');
+}
+
+function closeInvest() {
+  document.getElementById('investOverlay').classList.remove('show');
+}
+
+// Step 1 → Step 2: validate email, then show honorifics
+function nextInvestStep2() {
+  const email = document.getElementById('investEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('investEmail').focus();
+    document.getElementById('investEmail').style.borderColor = 'var(--gold-bright)';
+    setTimeout(() => { document.getElementById('investEmail').style.borderColor = ''; }, 1200);
+    return;
+  }
+  const step1 = document.getElementById('investStep1');
+  step1.style.opacity = '0';
+  step1.style.transform = 'translateY(-10px)';
+  step1.style.transition = 'opacity .22s ease, transform .22s ease';
+  setTimeout(() => {
+    step1.style.display = 'none';
+    step1.style.opacity = '';
+    step1.style.transform = '';
+    step1.style.transition = '';
+    const step2 = document.getElementById('investStep3');
+    step2.style.display = 'block';
+    step2.classList.add('invest-step');
+  }, 220);
+}
+
+// Step 2 → Step 1: go back
+function prevInvestStep() {
+  const step2 = document.getElementById('investStep3');
+  step2.style.opacity = '0';
+  step2.style.transform = 'translateY(10px)';
+  step2.style.transition = 'opacity .2s ease, transform .2s ease';
+  setTimeout(() => {
+    step2.style.display = 'none';
+    step2.style.opacity = '';
+    step2.style.transform = '';
+    step2.style.transition = '';
+    const step1 = document.getElementById('investStep1');
+    step1.style.display = 'block';
+    step1.classList.add('invest-step');
+  }, 200);
+}
+
+// Salutation click → reveal name field
+document.querySelectorAll('.salutation-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    investSalutation = btn.dataset.salutation;
+    document.querySelectorAll('.salutation-option').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const nb = document.getElementById('investNameBlock');
+    nb.style.transition = 'opacity .28s ease, transform .28s ease';
+    nb.style.opacity = '1';
+    nb.style.transform = 'translateY(0)';
+    nb.style.pointerEvents = 'all';
+    setTimeout(() => document.getElementById('investName').focus(), 80);
+  });
+});
+
+async function submitInvest() {
+  const name = document.getElementById('investName').value.trim();
+  if (!investSalutation) {
+    document.getElementById('salutationOptions').style.outline = '1px solid var(--gold-dim)';
+    setTimeout(() => { document.getElementById('salutationOptions').style.outline = ''; }, 900);
+    return;
+  }
+  if (!name) {
+    document.getElementById('investName').focus();
+    return;
+  }
+  investName = name;
+  const email = document.getElementById('investEmail').value.trim();
+
+  const btn = document.getElementById('investSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  await fetch(
+    'https://frwjaixxlgthkgjtafhz.supabase.co/functions/v1/send-welcome-email',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, name: investName, salutation: investSalutation })
+    }
+  );
+
+  await sbInsert('waitlist_signups', {
+    salutation: investSalutation,
+    name: investName,
+    email
+  });
+
+  btn.style.display = 'none';
+  document.getElementById('investBack').style.display = 'none';
+  document.getElementById('investSuccess').style.display = 'block';
+}
+
+async function init(){
+  updateDmIcon();
+  buildStreakDots();
+  await fetchDailyTheme();
+  buildCollectionButtons();
+  if(isDailyThemeActive&&ALLOWED_COLLECTIONS.includes(currentDailyTheme)){
+    activePainters=PAINTERS_MASTER.filter(p=>p.tags.includes(currentDailyTheme));
+  }else{
+    activePainters=PAINTERS_MASTER.filter(p=>p.tags.includes('popular'));
+  }
+  if(activePainters.length<2)activePainters=PAINTERS_MASTER;
+  nextRound();
+}
+
+/* ── Keyboard nav ── */
+let keySelected=-1;
+document.addEventListener('keydown',e=>{
+  const overlay=document.getElementById('overlay');
+  if(overlay.classList.contains('show')){if(e.key==='Enter'){e.preventDefault();closePopup();}return;}
+  if(answered)return;
+  const btns=Array.from(document.querySelectorAll('.choice-btn:not(:disabled)'));
+  if(!btns.length)return;
+  if(['1','2','3','4'].includes(e.key)){e.preventDefault();const idx=parseInt(e.key)-1;if(idx<btns.length){btns.forEach(b=>b.classList.remove('key-flash'));btns[idx].classList.add('key-flash');keySelected=idx;setTimeout(()=>btns[idx]?.classList.remove('key-flash'),180);}}
+  if(e.key==='Enter'){e.preventDefault();if(keySelected>=0&&keySelected<btns.length){btns[keySelected].click();keySelected=-1;}}
+});
+
+/* ── Title switcher ── */
+const switcher=document.getElementById('titleSwitcher');
+const dropdown=document.getElementById('titleDropdown');
+const wordArt=document.getElementById('wordArt');
+const wordThought=document.getElementById('wordThought');
+function openDrop(){dropdown.classList.add('open');wordArt.style.opacity='0';wordArt.style.transform='translateY(-6px)';wordThought.style.opacity='1';wordThought.style.transform='translateY(0)';switcher.style.minWidth=wordThought.scrollWidth+'px';}
+function closeDrop(){dropdown.classList.remove('open');wordArt.style.opacity='1';wordArt.style.transform='translateY(0)';wordThought.style.opacity='0';wordThought.style.transform='translateY(6px)';switcher.style.minWidth='';}
+function stayOnArt(){closeDrop();}
+switcher.addEventListener('mouseenter',openDrop);
+switcher.addEventListener('mouseleave',closeDrop);
+
+/* ══════════════════════════════════════════════
+   PRELOADER HIDE
+══════════════════════════════════════════════ */
+setTimeout(() => {
+  document.getElementById('preloader').classList.add('hide');
+}, 4000);
+
+init();
+</script>
+</body>
+</html>
