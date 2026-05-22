@@ -1468,18 +1468,20 @@ async function submitInvest() {
     setTimeout(() => { document.getElementById('investEmail').style.borderColor = ''; }, 1200);
     return;
   }
+
+  await fetch(
+  'https://frwjaixxlgthkgjtafhz.supabase.co/functions/v1/send-welcome-email',
+  {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: email,
+      name: investName,
+      salutation: investSalutation   // "Madame", "Monsieur", etc.
+    })
+  }
+);
   
-    await fetch(
-  'https://frwjaixxlgthkgjtafhz.supabase.co/functions/v1/send-welcome-email', 
-    {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    email: email,
-    name: investName,           // ← Add this
-    salutation: investSalutation // ← Add this
-  })
-});
 
   const btn = document.getElementById('investSubmitBtn');
   btn.disabled = true;
