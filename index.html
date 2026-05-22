@@ -1005,65 +1005,45 @@ header{animation:sectionIn .8s cubic-bezier(.22,1,.36,1) both;}
     <div id="investAccent"></div>
     <div id="investBody">
 
-      <!-- STEP 1+2 COMBINED: Honorific + Name -->
+      <!-- STEP 1: Image preview + email -->
       <div id="investStep1" class="invest-step">
         <span class="invest-eyebrow">Founding Membership</span>
-        <div class="investTitle">How shall we address you?</div>
-        <div class="investSubtitle">Select your honorific, then enter your name</div>
-        <div id="salutationOptions">
-          <button class="salutation-option" data-salutation="Madame">Madame</button>
-          <button class="salutation-option" data-salutation="Monsieur">Monsieur</button>
-          <button class="salutation-option" data-salutation="Mx">Mx</button>
-          <button class="salutation-option" data-salutation="Dr">Dr</button>
-        </div>
-        <div id="investNameBlock">
-          <label class="investNameLabel" for="investName">Your name</label>
-          <input type="text" id="investName" placeholder="Enter your name…" maxlength="100" autocomplete="given-name">
-          <button id="investNameNext" onclick="nextInvestStep2()">Continue →</button>
-        </div>
-      </div>
+        <div class="investTitle">Join the Waitlist</div>
+        <div class="investSubtitle">A glimpse of what lands in your inbox as a founding member.</div>
 
-      <!-- STEP 3: Personalized Email + Preview -->
-      <div id="investStep3" style="display:none;">
-        <div id="investGreetingText" class="investGreeting"></div>
-        <div class="investMessage" id="investMessageText"></div>
-
-        <!-- Email preview: primary -->
-        <div id="investEmailPreview">
-          <div class="preview-header">
-            <div class="preview-sender-dot">✦</div>
-            <div class="preview-sender-info">
-              <div class="preview-sender-name">The Daily Art Cult &nbsp;·&nbsp; <span style="color:var(--gold-dim)">Investor Intelligence</span></div>
-            </div>
-            <span class="preview-date">May 2026</span>
-          </div>
-          <div class="preview-subject" id="previewSubject">The Rothko Effect — Why Emotion Drives Blue-Chip Returns</div>
-          <div class="preview-snippet">Inside: how affect and scarcity converge in the secondary market, and the three artists our analysts are quietly watching this season.</div>
-          <div class="preview-image-strip">
-            <div class="preview-image-swatch"></div>
-            <div class="preview-image-swatch"></div>
-            <div class="preview-image-swatch"></div>
-          </div>
-          <div class="preview-sub-label">Art Market Intelligence · Founding Member Edition</div>
-        </div>
-
-        <!-- Email preview: secondary teaser -->
-        <div id="investEmailPreview2">
-          <div class="preview-header">
-            <div class="preview-sender-dot" style="font-size:.4rem;letter-spacing:.08em;">DAC</div>
-            <div class="preview-sender-info">
-              <div class="preview-sender-name">Acquisition Brief &nbsp;·&nbsp; <span style="color:var(--gold-dim)">Private</span></div>
-            </div>
-            <span class="preview-date">Coming soon</span>
-          </div>
-          <div class="preview-subject" style="font-size:.7rem;opacity:.7;">The Collector's Quarter — Q3 Portfolio Outlook</div>
-          <div class="preview-snippet" style="opacity:.6;">Exclusive quarterly analysis of emerging acquisition targets, secondary market momentum, and the artists redefining institutional collecting.</div>
+        <div id="investEmailPreview" style="margin-bottom:20px;border:1px solid var(--border);overflow:hidden;line-height:0;">
+          <img src="email-preview.png" alt="Sample newsletter preview" style="width:100%;height:auto;display:block;opacity:.92;">
         </div>
 
         <div id="investEmailWrap">
           <label for="investEmail">Your email address</label>
           <input type="email" id="investEmail" placeholder="your@email.com" autocomplete="email">
         </div>
+        <button id="investNameNext" onclick="nextInvestStep2()">Continue →</button>
+      </div>
+
+      <!-- STEP 2: Honorifics + name, then submit -->
+      <div id="investStep3" style="display:none;">
+        <span class="invest-eyebrow">One last thing</span>
+        <div class="investTitle">How shall we address you?</div>
+        <div class="investSubtitle">Your welcome email will be addressed to you personally.</div>
+
+        <div id="salutationOptions">
+          <button class="salutation-option" data-salutation="Madame">Madame</button>
+          <button class="salutation-option" data-salutation="Monsieur">Monsieur</button>
+          <button class="salutation-option" data-salutation="Mx">Mx</button>
+          <button class="salutation-option" data-salutation="Dr">Dr</button>
+        </div>
+
+        <div id="investNameBlock">
+          <label id="investNameLabel" for="investName">Your name</label>
+          <input type="text" id="investName" placeholder="Enter your name…" maxlength="100" autocomplete="given-name">
+        </div>
+
+        <div id="investGreetingText" class="investGreeting" style="display:none;"></div>
+        <div class="investMessage" id="investMessageText" style="display:none;"></div>
+        <div id="investEmailPreview2" style="display:none;"></div>
+
         <button id="investSubmitBtn" onclick="submitInvest()">Secure My Place →</button>
         <div id="investSuccess" style="display:none;">
           <p>✦ &nbsp;You're on the list.<br>Welcome to the inner circle.</p>
@@ -1344,36 +1324,26 @@ function buildCollectionButtons(){const collections=ALLOWED_COLLECTIONS;const co
 let investSalutation = null;
 let investName = '';
 
-// Rotating preview subjects for variety
-const previewSubjects = [
-  'The Rothko Effect — Why Emotion Drives Blue-Chip Returns',
-  'Basquiat at Auction — Reading the Signals',
-  'After the Boom: The Artists Collectors Are Quietly Accumulating',
-  'On Scarcity — The Invisible Currency of the Art Market'
-];
-
 function openInvestModal() {
+  // Reset step 1
   investSalutation = null;
   investName = '';
-  document.getElementById('investName').value = '';
   document.getElementById('investEmail').value = '';
   document.getElementById('investStep1').style.display = 'block';
   document.getElementById('investStep1').classList.add('invest-step');
   document.getElementById('investStep3').style.display = 'none';
+  // Reset step 2
+  document.getElementById('investName').value = '';
+  document.querySelectorAll('.salutation-option').forEach(b => b.classList.remove('selected'));
+  document.getElementById('investNameBlock').style.opacity = '0';
+  document.getElementById('investNameBlock').style.transform = 'translateY(8px)';
+  document.getElementById('investNameBlock').style.pointerEvents = 'none';
   document.getElementById('investSuccess').style.display = 'none';
-  document.getElementById('investSubmitBtn').style.display = '';
-  document.getElementById('investBack').style.display = '';
-  document.getElementById('investEmailWrap').style.display = '';
   const submitBtn = document.getElementById('investSubmitBtn');
   submitBtn.disabled = false;
   submitBtn.textContent = 'Secure My Place →';
-  document.querySelectorAll('.salutation-option').forEach(b => b.classList.remove('selected'));
-  // Reset name block
-  document.getElementById('investNameBlock').classList.remove('visible');
-  // Rotate subject line
-  const subj = previewSubjects[Math.floor(Math.random() * previewSubjects.length)];
-  const subjEl = document.getElementById('previewSubject');
-  if (subjEl) subjEl.textContent = subj;
+  submitBtn.style.display = '';
+  document.getElementById('investBack').style.display = '';
   document.getElementById('investOverlay').classList.add('show');
 }
 
@@ -1381,55 +1351,16 @@ function closeInvest() {
   document.getElementById('investOverlay').classList.remove('show');
 }
 
-// Salutation click: select + reveal name block
-document.querySelectorAll('.salutation-option').forEach(btn => {
-  btn.addEventListener('click', () => {
-    investSalutation = btn.dataset.salutation;
-    document.querySelectorAll('.salutation-option').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    document.getElementById('investNameBlock').classList.add('visible');
-    // Focus the name input after short delay for smoothness
-    setTimeout(() => document.getElementById('investName').focus(), 80);
-  });
-});
-
+// Step 1 → Step 2: validate email, then show honorifics
 function nextInvestStep2() {
-  const name = document.getElementById('investName').value.trim();
-  if (!investSalutation || !name) {
-    if (!investSalutation) {
-      document.getElementById('salutationOptions').style.animation = 'none';
-      setTimeout(() => {
-        document.getElementById('salutationOptions').style.animation = '';
-        document.getElementById('salutationOptions').style.outline = '1px solid var(--gold-dim)';
-        setTimeout(() => { document.getElementById('salutationOptions').style.outline = ''; }, 900);
-      }, 10);
-    }
-    if (!name) {
-      document.getElementById('investName').focus();
-    }
+  const email = document.getElementById('investEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('investEmail').focus();
+    document.getElementById('investEmail').style.borderColor = 'var(--gold-bright)';
+    setTimeout(() => { document.getElementById('investEmail').style.borderColor = ''; }, 1200);
     return;
   }
-  investName = name;
-
-  // Build personalised greeting
-  const greetings = [
-    `Wonderful to meet you, ${investSalutation} ${investName}.`,
-    `${investSalutation} ${investName} — a pleasure.`,
-    `Welcome, ${investSalutation} ${investName}.`,
-  ];
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  const messages = [
-    `As a founding member, you'll receive curated investor intelligence — art market analysis, acquisition briefs, and private insights — while the platform is built around you.`,
-    `Here's a glimpse of what arrives in your inbox as a founding member of the inner circle.`,
-  ];
-
-  document.getElementById('investGreetingText').textContent = greeting;
-  document.getElementById('investMessageText').textContent = messages[Math.floor(Math.random() * messages.length)];
-
-  // Transition
   const step1 = document.getElementById('investStep1');
-  step1.style.animation = 'none';
   step1.style.opacity = '0';
   step1.style.transform = 'translateY(-10px)';
   step1.style.transition = 'opacity .22s ease, transform .22s ease';
@@ -1438,68 +1369,79 @@ function nextInvestStep2() {
     step1.style.opacity = '';
     step1.style.transform = '';
     step1.style.transition = '';
-    const step3 = document.getElementById('investStep3');
-    step3.style.display = 'block';
-    step3.classList.add('invest-step');
+    const step2 = document.getElementById('investStep3');
+    step2.style.display = 'block';
+    step2.classList.add('invest-step');
   }, 220);
 }
 
+// Step 2 → Step 1: go back
 function prevInvestStep() {
-  const step3 = document.getElementById('investStep3');
-  step3.style.opacity = '0';
-  step3.style.transform = 'translateY(10px)';
-  step3.style.transition = 'opacity .2s ease, transform .2s ease';
+  const step2 = document.getElementById('investStep3');
+  step2.style.opacity = '0';
+  step2.style.transform = 'translateY(10px)';
+  step2.style.transition = 'opacity .2s ease, transform .2s ease';
   setTimeout(() => {
-    step3.style.display = 'none';
-    step3.style.opacity = '';
-    step3.style.transform = '';
-    step3.style.transition = '';
+    step2.style.display = 'none';
+    step2.style.opacity = '';
+    step2.style.transform = '';
+    step2.style.transition = '';
     const step1 = document.getElementById('investStep1');
     step1.style.display = 'block';
     step1.classList.add('invest-step');
   }, 200);
 }
 
+// Salutation click → reveal name field
+document.querySelectorAll('.salutation-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    investSalutation = btn.dataset.salutation;
+    document.querySelectorAll('.salutation-option').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const nb = document.getElementById('investNameBlock');
+    nb.style.transition = 'opacity .28s ease, transform .28s ease';
+    nb.style.opacity = '1';
+    nb.style.transform = 'translateY(0)';
+    nb.style.pointerEvents = 'all';
+    setTimeout(() => document.getElementById('investName').focus(), 80);
+  });
+});
+
 async function submitInvest() {
-  const email = document.getElementById('investEmail').value.trim();
-  if (!email || !email.includes('@')) {
-    document.getElementById('investEmail').focus();
-    document.getElementById('investEmail').style.borderColor = 'var(--gold-bright)';
-    setTimeout(() => { document.getElementById('investEmail').style.borderColor = ''; }, 1200);
+  const name = document.getElementById('investName').value.trim();
+  if (!investSalutation) {
+    document.getElementById('salutationOptions').style.outline = '1px solid var(--gold-dim)';
+    setTimeout(() => { document.getElementById('salutationOptions').style.outline = ''; }, 900);
     return;
   }
-
-  await fetch(
-  'https://frwjaixxlgthkgjtafhz.supabase.co/functions/v1/send-welcome-email',
-  {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: email,
-      name: investName,
-      salutation: investSalutation   // "Madame", "Monsieur", etc.
-    })
+  if (!name) {
+    document.getElementById('investName').focus();
+    return;
   }
-);
-  
+  investName = name;
+  const email = document.getElementById('investEmail').value.trim();
 
   const btn = document.getElementById('investSubmitBtn');
   btn.disabled = true;
   btn.textContent = 'Submitting…';
+
+  await fetch(
+    'https://frwjaixxlgthkgjtafhz.supabase.co/functions/v1/send-welcome-email',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, name: investName, salutation: investSalutation })
+    }
+  );
+
   await sbInsert('waitlist_signups', {
     salutation: investSalutation,
     name: investName,
-    email: email
+    email
   });
-  document.getElementById('investStep3').querySelector('.investMessage') &&
-    (document.getElementById('investStep3').querySelector('.investMessage').style.display = 'none');
-  document.getElementById('investEmailWrap').style.display = 'none';
+
   btn.style.display = 'none';
   document.getElementById('investBack').style.display = 'none';
-  document.getElementById('investEmailPreview').style.display = 'none';
-  document.getElementById('investEmailPreview2').style.display = 'none';
-  document.getElementById('investGreetingText').textContent = `✦ You're on the list, ${investSalutation} ${investName}.`;
-  document.getElementById('investMessageText').textContent = '';
   document.getElementById('investSuccess').style.display = 'block';
 }
 
