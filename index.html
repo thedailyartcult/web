@@ -1469,18 +1469,6 @@ async function submitInvest() {
     return;
   }
   
-  await fetch(
-  'https://frwjaixxlgthkgjtafhz.supabase.co/functions/v1/send-welcome-email',
-  {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      email: emailValue
-    })
-  }
-)
   const btn = document.getElementById('investSubmitBtn');
   btn.disabled = true;
   btn.textContent = 'Submitting…';
@@ -1500,6 +1488,19 @@ async function submitInvest() {
   document.getElementById('investMessageText').textContent = '';
   document.getElementById('investSuccess').style.display = 'block';
 }
+
+    await fetch(
+  'https://frwjaixxlgthkgjtafhz.supabase.co/functions/v1/send-welcome-email',
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      email: emailValue
+    })
+  }
+)
 
 async function init(){
   updateDmIcon();
