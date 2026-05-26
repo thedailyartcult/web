@@ -247,6 +247,36 @@
       transform: translateY(-1px);
     }
 
+    @media (max-width: 639px) {
+      .floating-audio {
+        right: 0.75rem;
+        top: 0.75rem;
+        max-width: calc(100vw - 1.5rem);
+        overflow: hidden;
+      }
+
+      .floating-audio .intro-audio-label,
+      .floating-audio .intro-audio-duration,
+      .floating-audio .compact-divider,
+      .floating-audio [data-share-intro] {
+        display: none;
+      }
+
+      .floating-audio.is-expanded .intro-audio-label,
+      .floating-audio.is-expanded .intro-audio-duration {
+        display: block;
+      }
+
+      .floating-audio.is-expanded [data-share-intro] {
+        display: flex;
+      }
+
+      .site-logo {
+        max-width: calc(100vw - 5rem);
+        line-height: 1.15;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       html {
         scroll-behavior: auto;
@@ -284,7 +314,7 @@
       <button type="button" id="play-now-close" class="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full border border-linen/15 text-lg leading-none text-linen/70 transition hover:border-linen/35 hover:text-cream focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" aria-label="Dismiss Play Now badge">
         ×
       </button>
-      <a href="#sample" class="group block pr-2">
+      <a class="group block pr-2">
         <div class="flex items-center justify-center gap-3">
           <svg class="h-16 w-10 shrink-0 text-antique/60 sm:h-20 sm:w-12" viewBox="0 0 96 160" fill="none" aria-hidden="true">
             <path d="M68 12C38 34 24 66 25 101c.6 20 8.3 36.2 22 48" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
@@ -299,7 +329,7 @@
           </svg>
 
           <div class="min-w-0">
-            <h2 href="https://thedailyartcult.lol/play" class="font-serif text-base font-semibold leading-tight text-cream sm:text-lg">
+            <h2 class="font-serif text-base font-semibold leading-tight text-cream sm:text-lg">
               Play Now — Art Guessing Game
             </h2>
             <p class="mx-auto mt-2 max-w-xs text-xs leading-5 text-linen/82">
@@ -329,9 +359,9 @@
     </audio>
     <div class="flex min-w-0 items-center gap-3">
       <button type="button" data-audio-toggle="intro-audio" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cream text-xs font-bold text-ink transition hover:bg-linen focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" aria-label="Play introduction audio">▶</button>
-      <p class="truncate text-sm font-semibold text-cream">Listen to article</p>
+      <p class="intro-audio-label truncate text-sm font-semibold text-cream">Listen to article</p>
       <span class="compact-divider hidden sm:block" aria-hidden="true"></span>
-      <p class="shrink-0 text-sm font-semibold text-linen" data-audio-time="intro-audio" data-audio-duration-only>2:11</p>
+      <p class="intro-audio-duration shrink-0 text-sm font-semibold text-linen" data-audio-time="intro-audio" data-audio-duration-only>2:11</p>
     </div>
     <button type="button" data-share-intro class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cream transition hover:bg-cream/10 focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" aria-label="Share introduction audio">
       <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -344,7 +374,7 @@
 
   <header class="relative min-h-screen px-5">
     <nav class="mx-auto flex max-w-7xl flex-col gap-4 py-6 text-sm text-linen/80 sm:flex-row sm:items-center sm:justify-between">
-      <a href="#" class="font-serif text-xl font-semibold tracking-wide text-cream">The Daily Art Cult</a>
+      <a href="#" class="site-logo font-serif text-xl font-semibold tracking-wide text-cream">The Daily Art Cult</a>
     </nav>
 
     <section class="mx-auto flex min-h-[calc(100vh-84px)] max-w-7xl items-center pb-24 pt-10">
@@ -849,6 +879,17 @@
           }
         }
       });
+    }
+
+    const floatingAudio = document.querySelector("#floating-audio");
+
+    if (floatingAudio) {
+      const updateFloatingAudio = () => {
+        floatingAudio.classList.toggle("is-expanded", window.scrollY > 72);
+      };
+
+      updateFloatingAudio();
+      window.addEventListener("scroll", updateFloatingAudio, { passive: true });
     }
 
     const playNowBadge = document.querySelector("#play-now-badge");
