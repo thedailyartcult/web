@@ -247,6 +247,42 @@
       transform: translateY(-1px);
     }
 
+    .site-footer {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(198, 167, 102, 0.10), transparent 32%),
+        linear-gradient(180deg, rgba(7, 5, 4, 0.68), rgba(7, 5, 4, 0.92));
+    }
+
+    .social-link,
+    .language-select-wrap {
+      border: 1px solid rgba(216, 203, 184, 0.16);
+      background: rgba(242, 234, 220, 0.05);
+      color: rgba(242, 234, 220, 0.82);
+      transition: border-color 180ms ease, background 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .social-link:hover,
+    .language-select-wrap:focus-within,
+    .language-select-wrap:hover {
+      border-color: rgba(198, 167, 102, 0.58);
+      background: rgba(198, 167, 102, 0.10);
+      color: #f2eadc;
+      transform: translateY(-1px);
+    }
+
+    .language-select {
+      appearance: none;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .language-select option {
+      background: #0d0907;
+      color: #f2eadc;
+    }
+
     @media (max-width: 639px) {
       .floating-audio {
         right: 0.75rem;
@@ -311,10 +347,10 @@
 
   <aside id="play-now-badge" class="fixed bottom-4 left-1/2 z-30 w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 translate-y-4 opacity-0 transition duration-700 hover:opacity-100 focus-within:opacity-100 sm:bottom-8 sm:left-auto sm:right-8 sm:w-[22rem] sm:translate-x-0">
     <div class="relative rounded-md border border-antique/25 bg-ink/70 px-4 py-4 text-center shadow-glow backdrop-blur-md sm:px-5">
-      <button type="button" id="play-now-close" class="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full border border-linen/15 text-lg leading-none text-linen/70 transition hover:border-linen/35 hover:text-cream focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" aria-label="Dismiss Play Now badge">
+      <button type="button" id="play-now-close" class="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full border border-linen/15 text-lg leading-none text-linen/70 transition hover:border-linen/35 hover:text-cream focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" aria-label="Dismiss Play Now badge" data-i18n-aria-label="playNow.dismiss">
         ×
       </button>
-      <a class="group block pr-2">
+      <a href="#sample" class="group block pr-2">
         <div class="flex items-center justify-center gap-3">
           <svg class="h-16 w-10 shrink-0 text-antique/60 sm:h-20 sm:w-12" viewBox="0 0 96 160" fill="none" aria-hidden="true">
             <path d="M68 12C38 34 24 66 25 101c.6 20 8.3 36.2 22 48" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
@@ -329,10 +365,10 @@
           </svg>
 
           <div class="min-w-0">
-            <h2 class="font-serif text-base font-semibold leading-tight text-cream sm:text-lg">
+            <h2 class="font-serif text-base font-semibold leading-tight text-cream sm:text-lg" data-i18n="playNow.title">
               Play Now — Art Guessing Game
             </h2>
-            <p class="mx-auto mt-2 max-w-xs text-xs leading-5 text-linen/82">
+            <p class="mx-auto mt-2 max-w-xs text-xs leading-5 text-linen/82" data-i18n="playNow.subtitle">
               A labor of love I've curated for over ten years
             </p>
           </div>
@@ -354,16 +390,16 @@
   </aside>
 
   <aside id="floating-audio" class="floating-audio intro-compact-player fixed right-4 top-4 z-40 flex w-fit max-w-[calc(100vw-2rem)] items-center justify-start gap-2 rounded-full px-2.5 py-1.5 text-cream sm:right-6 sm:top-6 sm:px-3">
-    <audio id="intro-audio" preload="none" aria-label="Introduction audio">
+    <audio id="intro-audio" preload="none" aria-label="Introduction audio" data-i18n-aria-label="audio.introLabel">
       <source src="introduction.mp3" type="audio/mpeg">
     </audio>
     <div class="flex min-w-0 items-center gap-3">
       <button type="button" data-audio-toggle="intro-audio" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cream text-xs font-bold text-ink transition hover:bg-linen focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" aria-label="Play introduction audio">▶</button>
-      <p class="intro-audio-label truncate text-sm font-semibold text-cream">Listen to article</p>
+      <p class="intro-audio-label truncate text-sm font-semibold text-cream" data-i18n="audio.listenArticle">Listen to article</p>
       <span class="compact-divider hidden sm:block" aria-hidden="true"></span>
       <p class="intro-audio-duration shrink-0 text-sm font-semibold text-linen" data-audio-time="intro-audio" data-audio-duration-only>2:11</p>
     </div>
-    <button type="button" data-share-intro class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cream transition hover:bg-cream/10 focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" aria-label="Share introduction audio">
+    <button type="button" data-share-intro class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cream transition hover:bg-cream/10 focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" aria-label="Share introduction audio" data-i18n-aria-label="audio.shareIntro">
       <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M10 13.5 14 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         <path d="M8.5 10.5 6.9 12.1a3.2 3.2 0 0 0 4.5 4.5l2-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -374,31 +410,31 @@
 
   <header class="relative min-h-screen px-5">
     <nav class="mx-auto flex max-w-7xl flex-col gap-4 py-6 text-sm text-linen/80 sm:flex-row sm:items-center sm:justify-between">
-      <a href="#" class="site-logo font-serif text-xl font-semibold tracking-wide text-cream">The Daily Art Cult</a>
+	      <a href="#" class="site-logo font-serif text-xl font-semibold tracking-wide text-cream" data-i18n="brand.name">The Daily Art Cult</a>
     </nav>
 
     <section class="mx-auto flex min-h-[calc(100vh-84px)] max-w-7xl items-center pb-24 pt-10">
       <div class="max-w-6xl">
-        <p class="hero-swipe hero-swipe-delay mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-linen/90">You read less than you'd like. You think more than most.
+	        <p class="hero-swipe hero-swipe-delay mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-linen/90" data-i18n="hero.kicker">You read less than you'd like. You think more than most.
 </p>
         <div class="grid gap-7 lg:grid-cols-[minmax(0,1fr)] lg:items-end">
-          <h1 class="hero-swipe max-w-5xl font-serif text-5xl font-semibold leading-[1.03] text-cream sm:text-6xl lg:text-7xl">
+	          <h1 class="hero-swipe max-w-5xl font-serif text-5xl font-semibold leading-[1.03] text-cream sm:text-6xl lg:text-7xl" data-i18n="hero.title">
             2 Minutes That Might Change How You See the World
           </h1>
         </div>
-        <p class="hero-swipe hero-swipe-delay mt-7 max-w-2xl text-lg leading-8 text-linen sm:text-xl">
+	        <p class="hero-swipe hero-swipe-delay mt-7 max-w-2xl text-lg leading-8 text-linen sm:text-xl" data-i18n="hero.copy">
          A daily dose of philosophy and art — spoken, and made for the life you're actually living.
 
         </p>
 
         <form id="newsletter-form" class="reveal mt-10 grid max-w-2xl gap-3 rounded-md border border-linen/18 bg-ink/55 p-2 shadow-soft backdrop-blur-md sm:grid-cols-[1fr_auto]" action="#" method="post">
-          <label for="hero-email" class="sr-only">Email address</label>
-          <input id="hero-email" name="email" type="email" autocomplete="email" required placeholder="Enter your email to begin" class="min-h-14 rounded-sm border border-transparent bg-transparent px-4 text-base text-cream outline-none transition placeholder:text-linen/55 focus:border-linen/35">
-          <button type="submit" class="rounded-sm bg-cream px-7 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition hover:bg-linen focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink">
+	          <label for="hero-email" class="sr-only" data-i18n="form.emailLabel">Email address</label>
+	          <input id="hero-email" name="email" type="email" autocomplete="email" required placeholder="Enter your email to begin" data-i18n-placeholder="form.emailPlaceholder" class="min-h-14 rounded-sm border border-transparent bg-transparent px-4 text-base text-cream outline-none transition placeholder:text-linen/55 focus:border-linen/35">
+	          <button type="submit" class="rounded-sm bg-cream px-7 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition hover:bg-linen focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" data-i18n="form.begin">
             Begin
           </button>
         </form>
-        <p id="newsletter-success" class="hidden reveal mt-5 max-w-2xl rounded-md border border-antique/25 bg-ink/50 px-5 py-4 font-serif text-xl leading-8 text-cream shadow-glow backdrop-blur-md" role="status" aria-live="polite">
+	        <p id="newsletter-success" class="hidden reveal mt-5 max-w-2xl rounded-md border border-antique/25 bg-ink/50 px-5 py-4 font-serif text-xl leading-8 text-cream shadow-glow backdrop-blur-md" role="status" aria-live="polite" data-i18n="form.success">
           Thank you. Your first quiet reflection will arrive soon.
         </p>
       </div>
@@ -409,61 +445,61 @@
     <section id="offerings" class="px-5 py-24 sm:py-28">
       <div class="mx-auto max-w-7xl">
         <div class="max-w-3xl reveal">
-          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75">Offerings</p>
-          <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl">A slower rhythm for sharper attention.</h2>
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="offerings.kicker">Offerings</p>
+          <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl" data-i18n="offerings.title">A slower rhythm for sharper attention.</h2>
         </div>
 
         <div class="mt-12 grid gap-5 lg:grid-cols-3">
           <article class="quiet-panel reveal rounded-md p-7 shadow-soft">
-            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-linen/70">Free Tier</p>
-            <h3 class="mt-4 font-serif text-3xl font-semibold text-cream">Quiet Beginnings</h3>
-            <p class="mt-5 leading-7 text-linen">A weekly audio piece from the public domain — hand-picked for the curious mind. No card required, no catch. Just a taste of what depth sounds like.
+            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-linen/70" data-i18n="offerings.freeTier">Free Tier</p>
+            <h3 class="mt-4 font-serif text-3xl font-semibold text-cream" data-i18n="offerings.quietBeginnings">Quiet Beginnings</h3>
+            <p class="mt-5 leading-7 text-linen" data-i18n="offerings.freeCopy">A weekly audio piece from the public domain — hand-picked for the curious mind. No card required, no catch. Just a taste of what depth sounds like.
 </p>
-            <a href="#hero-email" class="mt-8 inline-flex rounded-sm border border-linen/22 px-5 py-3 text-sm font-medium text-cream transition hover:border-linen/45 hover:bg-cream/5">Start Listening Free →
+            <a href="#hero-email" class="mt-8 inline-flex rounded-sm border border-linen/22 px-5 py-3 text-sm font-medium text-cream transition hover:border-linen/45 hover:bg-cream/5" data-i18n="offerings.startFree">Start Listening Free →
 </a>
           </article>
 
         <article class="quiet-panel-strong reveal rounded-md p-7 shadow-soft lg:-mt-5">
-  <p class="text-sm font-semibold uppercase tracking-[0.2em] text-linen/78">Main Subscription</p>
-  <h3 class="mt-4 font-serif text-3xl font-semibold text-cream">The Weekly Collective</h3>
+  <p class="text-sm font-semibold uppercase tracking-[0.2em] text-linen/78" data-i18n="offerings.mainSubscription">Main Subscription</p>
+  <h3 class="mt-4 font-serif text-3xl font-semibold text-cream" data-i18n="offerings.weeklyCollective">The Weekly Collective</h3>
   <p class="mt-4 font-serif text-6xl font-semibold leading-none text-cream"><span class="price-underline">$12</span></p>
-  <p class="mt-4 text-sm leading-6 text-linen/78">every 4 weeks</p>
+  <p class="mt-4 text-sm leading-6 text-linen/78" data-i18n="offerings.everyFourWeeks">every 4 weeks</p>
   <ul class="mt-6 space-y-3 text-linen">
-    <li class="leading-7">• One timeless classic revisited</li>
-    <li class="leading-7">• One modern insight reframed</li>
-    <li class="leading-7">• One clear lens on the world right now</li>
+    <li class="leading-7" data-i18n="offerings.bulletClassic">• One timeless classic revisited</li>
+    <li class="leading-7" data-i18n="offerings.bulletModern">• One modern insight reframed</li>
+    <li class="leading-7" data-i18n="offerings.bulletWorld">• One clear lens on the world right now</li>
   </ul>
-  <p class="mt-5 text-sm leading-6 text-linen/78">Each piece is 2–4 minutes.</p>
-  <p class="mt-5 font-semibold text-cream">No fluff. No hype. No daily spam.</p>
-  <p class="mt-3 text-sm text-linen/78">You have full control to Cancel anytime.</p>
-  <a href="#hero-email" class="mt-8 inline-flex rounded-sm bg-cream px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition hover:bg-linen">Subscribe</a>
+  <p class="mt-5 text-sm leading-6 text-linen/78" data-i18n="offerings.pieceLength">Each piece is 2–4 minutes.</p>
+  <p class="mt-5 font-semibold text-cream" data-i18n="offerings.noFluff">No fluff. No hype. No daily spam.</p>
+  <p class="mt-3 text-sm text-linen/78" data-i18n="offerings.cancel">You have full control to Cancel anytime.</p>
+  <a href="#hero-email" class="mt-8 inline-flex rounded-sm bg-cream px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition hover:bg-linen" data-i18n="offerings.subscribe">Subscribe</a>
 </article>
 
           <article class="quiet-panel reveal rounded-md p-7 shadow-soft">
-            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-linen/70">One-Time</p>
-            <h3 class="mt-4 font-serif text-3xl font-semibold text-cream">The Personal Reflection</h3>
+            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-linen/70" data-i18n="offerings.oneTime">One-Time</p>
+            <h3 class="mt-4 font-serif text-3xl font-semibold text-cream" data-i18n="offerings.personalReflection">The Personal Reflection</h3>
             <p class="mt-3 font-serif text-4xl font-semibold text-cream">$47</p>
-            <p class="mt-5 leading-7 text-linen">You fill out a short form. You tell us something real — a chapter of your life, a question you keep returning to, a version of yourself you're working toward. You choose a book you've always wanted to understand.
+            <p class="mt-5 leading-7 text-linen" data-i18n="offerings.personalCopyOne">You fill out a short form. You tell us something real — a chapter of your life, a question you keep returning to, a version of yourself you're working toward. You choose a book you've always wanted to understand.
 </p>
-<p class="mt-5 leading-7 text-linen">We build it into an original audiobook written around you. </p>
-<p class="mt-5 leading-7 text-linen">One piece. Made for one person. Yours to keep.
+<p class="mt-5 leading-7 text-linen" data-i18n="offerings.personalCopyTwo">We build it into an original audiobook written around you. </p>
+<p class="mt-5 leading-7 text-linen" data-i18n="offerings.personalCopyThree">One piece. Made for one person. Yours to keep.
 </p>
-            <a href="#hero-email" class="mt-8 inline-flex rounded-sm border border-linen/22 px-5 py-3 text-sm font-medium text-cream transition hover:border-linen/45 hover:bg-cream/5">Request Yours →</a>
+            <a href="#hero-email" class="mt-8 inline-flex rounded-sm border border-linen/22 px-5 py-3 text-sm font-medium text-cream transition hover:border-linen/45 hover:bg-cream/5" data-i18n="offerings.requestYours">Request Yours →</a>
           </article>
         </div>
 
         <div class="quiet-panel reveal mt-6 grid gap-5 rounded-md p-6 shadow-soft lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
-            <h3 class="font-serif text-2xl font-semibold text-cream">Support Your Curator</h3>
-            <p class="mt-2 text-linen">Become a monthly member on Patreon or send a one-time contribution via Ko-fi.</p>
-            <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-antique/80">Membership hosted securely on Patreon</p>
+            <h3 class="font-serif text-2xl font-semibold text-cream" data-i18n="support.title">Support Your Curator</h3>
+            <p class="mt-2 text-linen" data-i18n="support.copy">Become a monthly member on Patreon or send a one-time contribution via Ko-fi.</p>
+            <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-antique/80" data-i18n="support.hosted">Membership hosted securely on Patreon</p>
           </div>
           <div class="grid w-full gap-3 sm:w-auto sm:grid-cols-2">
             <a href="https://www.patreon.com/YOURUSERNAME" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center rounded-sm bg-cream px-6 py-3 text-center text-sm font-semibold uppercase tracking-[0.12em] text-ink transition hover:bg-linen focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink">
-              Support Monthly on Patreon
+              <span data-i18n="support.patreon">Support Monthly on Patreon</span>
             </a>
             <a href="https://ko-fi.com/" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center rounded-sm border border-linen/24 px-6 py-3 text-center text-sm font-semibold uppercase tracking-[0.12em] text-cream transition hover:border-linen/45 hover:bg-cream/5 focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink">
-              One-time via Ko-fi
+              <span data-i18n="support.kofi">One-time via Ko-fi</span>
             </a>
           </div>
         </div>
@@ -473,19 +509,19 @@
     <section id="sample" class="px-5 py-20 sm:py-24">
       <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div class="reveal">
-          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75">Listen In</p>
-          <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl">This Is What It Sounds Like.</h2>
-          <p class="mt-6 max-w-xl leading-8 text-linen">A sample piece from our collection. No signup. Just listen.</p>
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="sample.kicker">Listen In</p>
+          <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl" data-i18n="sample.title">This Is What It Sounds Like.</h2>
+          <p class="mt-6 max-w-xl leading-8 text-linen" data-i18n="sample.copy">A sample piece from our collection. No signup. Just listen.</p>
         </div>
         <div class="premium-audio reveal rounded-md p-5 sm:p-6">
-          <audio id="sample-audio" preload="none" aria-label="Sample audio: Attention as Generosity">
+          <audio id="sample-audio" preload="none" aria-label="Sample audio: Attention as Generosity" data-i18n-aria-label="audio.sampleLabel">
             <source src="sample.mp3" type="audio/mpeg">
           </audio>
           <div class="flex flex-col gap-5">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.26em] text-antique/80">Featured Reflection</p>
-                <h3 class="font-serif text-2xl font-semibold text-cream sm:text-3xl">A personal reflection for Monsieur Neil — Nietzsche's On the Genealogy of Morality</h3>
+                <p class="text-xs font-semibold uppercase tracking-[0.26em] text-antique/80" data-i18n="sample.featured">Featured Reflection</p>
+                <h3 class="font-serif text-2xl font-semibold text-cream sm:text-3xl" data-i18n="sample.reflectionTitle">Attention as Generosity</h3>
               </div>
               <p class="text-sm text-linen/70" data-audio-time="sample-audio">0:00 / 0:00</p>
             </div>
@@ -493,29 +529,29 @@
             <div class="grid gap-4 sm:grid-cols-[auto_1fr_auto] sm:items-center">
               <div class="flex items-center gap-3">
                 <button type="button" data-audio-toggle="sample-audio" class="audio-play flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" aria-label="Play sample audio">▶</button>
-                <button type="button" data-skip="-15" data-audio-target="sample-audio" class="audio-control flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold" aria-label="Rewind audio 15 seconds">-15</button>
-                <button type="button" data-skip="15" data-audio-target="sample-audio" class="audio-control flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold" aria-label="Fast forward audio 15 seconds">+15</button>
+                <button type="button" data-skip="-15" data-audio-target="sample-audio" class="audio-control flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold" aria-label="Rewind audio 15 seconds" data-i18n-aria-label="audio.rewind">-15</button>
+                <button type="button" data-skip="15" data-audio-target="sample-audio" class="audio-control flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold" aria-label="Fast forward audio 15 seconds" data-i18n-aria-label="audio.forward">+15</button>
               </div>
               <label class="block min-w-0">
-                <span class="sr-only">Sample audio progress</span>
+                <span class="sr-only" data-i18n="audio.progress">Sample audio progress</span>
                 <input class="audio-progress h-1.5 w-full cursor-pointer" type="range" min="0" max="100" value="0" step="0.1" data-progress-for="sample-audio">
               </label>
-              <button type="button" data-speed-for="sample-audio" class="audio-control min-w-12 rounded-[10px] px-3 py-2 text-center text-sm font-semibold" aria-label="Playback speed">1x</button>
+              <button type="button" data-speed-for="sample-audio" class="audio-control min-w-12 rounded-[10px] px-3 py-2 text-center text-sm font-semibold" aria-label="Playback speed" data-i18n-aria-label="audio.speed">1x</button>
             </div>
           </div>
 
           <div class="mt-8 grid gap-4 border-t border-linen/14 pt-6 md:grid-cols-3">
             <blockquote class="rounded-sm border border-linen/12 bg-ink/28 p-4">
-              <p class="font-serif text-lg leading-7 text-cream">"I never felt so home in a book"</p>
-              <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/64">Private Member</p>
+              <p class="font-serif text-lg leading-7 text-cream" data-i18n="testimonial.one">"I never felt so home in a book"</p>
+              <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/64" data-i18n="testimonial.oneAuthor">Private Member</p>
             </blockquote>
             <blockquote class="rounded-sm border border-linen/12 bg-ink/28 p-4">
-              <p class="font-serif text-lg leading-7 text-cream">"गीता का वो हिस्सा सुनकर आँखें भर आईं। शुक्रिया, सच में।"</p>
-              <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/64">Arjun, Mumbai (Bespoke Audio Client)</p>
+              <p class="font-serif text-lg leading-7 text-cream" data-i18n="testimonial.two">"गीता का वो हिस्सा सुनकर आँखें भर आईं। शुक्रिया, सच में।"</p>
+              <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/64" data-i18n="testimonial.twoAuthor">Arjun, Mumbai (Bespoke Audio Client)</p>
             </blockquote>
             <blockquote class="rounded-sm border border-linen/12 bg-ink/28 p-4">
-              <p class="font-serif text-lg leading-7 text-cream">"I closed my eyes halfway through and didn't open them until it was over."</p>
-              <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/64">Founding Listener</p>
+              <p class="font-serif text-lg leading-7 text-cream" data-i18n="testimonial.three">"I closed my eyes halfway through and didn't open them until it was over."</p>
+              <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/64" data-i18n="testimonial.threeAuthor">Founding Listener</p>
             </blockquote>
           </div>
         </div>
@@ -525,104 +561,104 @@
     <section class="px-5 py-24 sm:py-28">
       <div class="mx-auto max-w-7xl">
         <div class="reveal max-w-3xl">
-          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75">Explore</p>
-          <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl">Choose the door you want to open.</h2>
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="explore.kicker">Explore</p>
+          <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl" data-i18n="explore.title">Choose the door you want to open.</h2>
         </div>
 
         <div class="mt-12">
-          <h3 class="reveal text-sm font-semibold uppercase tracking-[0.28em] text-antique/80">Explore by Worldview</h3>
+          <h3 class="reveal text-sm font-semibold uppercase tracking-[0.28em] text-antique/80" data-i18n="explore.worldview">Explore by Worldview</h3>
           <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
             <a href="#" class="explore-tile quiet-panel reveal relative flex rounded-md p-5 transition hover:-translate-y-1 hover:border-antique/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-linen">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sartre_1967_crop.jpg" alt="Portrait of Jean-Paul Sartre" class="absolute inset-0 z-0 h-full w-full object-cover">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sartre_1967_crop.jpg" alt="Portrait of Jean-Paul Sartre" data-i18n-alt="alt.sartre" class="absolute inset-0 z-0 h-full w-full object-cover">
               <span class="mt-auto block">
-                <span class="block font-serif text-2xl font-semibold text-cream">Existentialism</span>
-                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique">Jean-Paul Sartre</span>
+                <span class="block font-serif text-2xl font-semibold text-cream" data-i18n="explore.existentialism">Existentialism</span>
+                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique" data-i18n="thinker.sartre">Jean-Paul Sartre</span>
               </span>
             </a>
             <a href="#" class="explore-tile quiet-panel reveal relative flex rounded-md p-5 transition hover:-translate-y-1 hover:border-antique/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-linen">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Marcus_Aurelius_Glyptothek_Munich.jpg" alt="Portrait bust of Marcus Aurelius" class="absolute inset-0 z-0 h-full w-full object-cover">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Marcus_Aurelius_Glyptothek_Munich.jpg" alt="Portrait bust of Marcus Aurelius" data-i18n-alt="alt.marcus" class="absolute inset-0 z-0 h-full w-full object-cover">
               <span class="mt-auto block">
-                <span class="block font-serif text-2xl font-semibold text-cream">Stoicism</span>
-                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique">Marcus Aurelius</span>
+                <span class="block font-serif text-2xl font-semibold text-cream" data-i18n="explore.stoicism">Stoicism</span>
+                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique" data-i18n="thinker.marcus">Marcus Aurelius</span>
               </span>
             </a>
             <a href="#" class="explore-tile quiet-panel reveal relative flex rounded-md p-5 transition hover:-translate-y-1 hover:border-antique/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-linen">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Byron_1813_by_Phillips.jpg" alt="Portrait of Lord Byron" class="absolute inset-0 z-0 h-full w-full object-cover">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Byron_1813_by_Phillips.jpg" alt="Portrait of Lord Byron" data-i18n-alt="alt.byron" class="absolute inset-0 z-0 h-full w-full object-cover">
               <span class="mt-auto block">
-                <span class="block font-serif text-2xl font-semibold text-cream">Romanticism</span>
-                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique">Lord Byron</span>
+                <span class="block font-serif text-2xl font-semibold text-cream" data-i18n="explore.romanticism">Romanticism</span>
+                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique" data-i18n="thinker.byron">Lord Byron</span>
               </span>
             </a>
             <a href="#" class="explore-tile quiet-panel reveal relative flex rounded-md p-5 transition hover:-translate-y-1 hover:border-antique/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-linen">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jean_Baudrillard_2004.jpg" alt="Portrait of Jean Baudrillard" class="absolute inset-0 z-0 h-full w-full object-cover">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jean_Baudrillard_2004.jpg" alt="Portrait of Jean Baudrillard" data-i18n-alt="alt.baudrillard" class="absolute inset-0 z-0 h-full w-full object-cover">
               <span class="mt-auto block">
-                <span class="block font-serif text-2xl font-semibold text-cream">Postmodernism</span>
-                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique">Jean Baudrillard</span>
+                <span class="block font-serif text-2xl font-semibold text-cream" data-i18n="explore.postmodernism">Postmodernism</span>
+                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique" data-i18n="thinker.baudrillard">Jean Baudrillard</span>
               </span>
             </a>
             <a href="#" class="explore-tile quiet-panel reveal relative flex rounded-md p-5 transition hover:-translate-y-1 hover:border-antique/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-linen">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lao_Tzu_-_Project_Gutenberg_eText_15250.jpg" alt="Portrait of Lao Tzu" class="absolute inset-0 z-0 h-full w-full object-cover">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lao_Tzu_-_Project_Gutenberg_eText_15250.jpg" alt="Portrait of Lao Tzu" data-i18n-alt="alt.laoTzu" class="absolute inset-0 z-0 h-full w-full object-cover">
               <span class="mt-auto block">
-                <span class="block font-serif text-2xl font-semibold text-cream">Eastern Wisdom</span>
-                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique">Lao Tzu</span>
+                <span class="block font-serif text-2xl font-semibold text-cream" data-i18n="explore.easternWisdom">Eastern Wisdom</span>
+                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique" data-i18n="thinker.laoTzu">Lao Tzu</span>
               </span>
             </a>
             <a href="#" class="explore-tile quiet-panel reveal relative flex rounded-md p-5 transition hover:-translate-y-1 hover:border-antique/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-linen">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Rumi_portrait.jpg" alt="Portrait of Rumi" class="absolute inset-0 z-0 h-full w-full object-cover">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Rumi_portrait.jpg" alt="Portrait of Rumi" data-i18n-alt="alt.rumi" class="absolute inset-0 z-0 h-full w-full object-cover">
               <span class="mt-auto block">
-                <span class="block font-serif text-2xl font-semibold text-cream">Mysticism</span>
-                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique">Rumi</span>
+                <span class="block font-serif text-2xl font-semibold text-cream" data-i18n="explore.mysticism">Mysticism</span>
+                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique" data-i18n="thinker.rumi">Rumi</span>
               </span>
             </a>
           </div>
         </div>
 
         <div class="mt-14">
-          <h3 class="reveal text-sm font-semibold uppercase tracking-[0.28em] text-antique/80">Explore Power & Society</h3>
+          <h3 class="reveal text-sm font-semibold uppercase tracking-[0.28em] text-antique/80" data-i18n="explore.powerSociety">Explore Power & Society</h3>
           <div class="mt-5 grid gap-4 lg:grid-cols-[0.85fr_1.15fr] lg:items-stretch">
             <div class="quiet-panel reveal rounded-md border-emerald/35 p-6 shadow-soft">
-              <p class="text-xs font-semibold uppercase tracking-[0.24em] text-linen/68">Anti-capitalist exception</p>
-              <h4 class="mt-4 font-serif text-3xl font-semibold leading-tight text-cream">Karl Marx is the free door in a paid library.</h4>
-              <p class="mt-5 leading-7 text-linen">Most Daily Art Cult audiobooks sit behind paid access. Marx opens differently: a free library for the thinker who made capital itself the question.</p>
-              <p class="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-antique/80">All other power and society selections remain part of the paid collection.</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.24em] text-linen/68" data-i18n="marx.kicker">Anti-capitalist exception</p>
+              <h4 class="mt-4 font-serif text-3xl font-semibold leading-tight text-cream" data-i18n="marx.title">Karl Marx is the free door in a paid library.</h4>
+              <p class="mt-5 leading-7 text-linen" data-i18n="marx.copy">Most Daily Art Cult audiobooks sit behind paid access. Marx opens differently: a free library for the thinker who made capital itself the question.</p>
+              <p class="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-antique/80" data-i18n="marx.note">All other power and society selections remain part of the paid collection.</p>
             </div>
             <a href="https://library.thedailyartcult.lol" target="_blank" rel="noopener" class="explore-tile marx-free-tile quiet-panel reveal relative flex rounded-md border border-emerald p-6 transition hover:-translate-y-1 hover:border-linen/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Karl_Marx_001.jpg" alt="Portrait of Karl Marx" class="absolute inset-0 z-0 h-full w-full object-cover">
-              <span class="absolute right-4 top-4 z-10 rounded-sm border border-emerald/70 bg-cream px-3 py-1 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-emerald">Free</span>
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Karl_Marx_001.jpg" alt="Portrait of Karl Marx" data-i18n-alt="alt.marx" class="absolute inset-0 z-0 h-full w-full object-cover">
+              <span class="absolute right-4 top-4 z-10 rounded-sm border border-emerald/70 bg-cream px-3 py-1 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-emerald" data-i18n="marx.free">Free</span>
               <span class="mt-auto block max-w-md">
-                <span class="block text-xs font-semibold uppercase tracking-[0.24em] text-linen/78">Open Library</span>
-                <span class="mt-3 block font-serif text-4xl font-semibold text-cream sm:text-5xl">Capital</span>
-                <span class="thinker-name mt-3 block text-xs font-semibold uppercase tracking-[0.18em] text-linen">Karl Marx — Free Library</span>
+                <span class="block text-xs font-semibold uppercase tracking-[0.24em] text-linen/78" data-i18n="marx.openLibrary">Open Library</span>
+                <span class="mt-3 block font-serif text-4xl font-semibold text-cream sm:text-5xl" data-i18n="marx.capital">Capital</span>
+                <span class="thinker-name mt-3 block text-xs font-semibold uppercase tracking-[0.18em] text-linen" data-i18n="marx.freeLibrary">Karl Marx — Free Library</span>
               </span>
             </a>
           </div>
           <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <a href="#" class="explore-tile quiet-panel reveal relative flex rounded-md p-5 transition hover:-translate-y-1 hover:border-antique/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-linen">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Michel_Foucault_1974_Brasil.jpg" alt="Portrait of Michel Foucault" class="absolute inset-0 z-0 h-full w-full object-cover">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Michel_Foucault_1974_Brasil.jpg" alt="Portrait of Michel Foucault" data-i18n-alt="alt.foucault" class="absolute inset-0 z-0 h-full w-full object-cover">
               <span class="mt-auto block">
-                <span class="block font-serif text-2xl font-semibold text-cream">Power</span>
-                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique">Michel Foucault</span>
+                <span class="block font-serif text-2xl font-semibold text-cream" data-i18n="explore.power">Power</span>
+                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique" data-i18n="thinker.foucault">Michel Foucault</span>
               </span>
             </a>
             <a href="#" class="explore-tile quiet-panel reveal relative flex rounded-md p-5 transition hover:-translate-y-1 hover:border-antique/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-linen">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hannah_Arendt_1975.jpg" alt="Portrait of Hannah Arendt" class="absolute inset-0 z-0 h-full w-full object-cover">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hannah_Arendt_1975.jpg" alt="Portrait of Hannah Arendt" data-i18n-alt="alt.arendt" class="absolute inset-0 z-0 h-full w-full object-cover">
               <span class="mt-auto block">
-                <span class="block font-serif text-2xl font-semibold text-cream">Politics</span>
-                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique">Hannah Arendt</span>
+                <span class="block font-serif text-2xl font-semibold text-cream" data-i18n="explore.politics">Politics</span>
+                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique" data-i18n="thinker.arendt">Hannah Arendt</span>
               </span>
             </a>
             <a href="#" class="explore-tile quiet-panel reveal relative flex rounded-md p-5 transition hover:-translate-y-1 hover:border-antique/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-linen">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/WEB_DuBois_1918.jpg" alt="Portrait of W. E. B. Du Bois" class="absolute inset-0 z-0 h-full w-full object-cover">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/WEB_DuBois_1918.jpg" alt="Portrait of W. E. B. Du Bois" data-i18n-alt="alt.dubois" class="absolute inset-0 z-0 h-full w-full object-cover">
               <span class="mt-auto block">
-                <span class="block font-serif text-2xl font-semibold text-cream">Society</span>
-                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique">W. E. B. Du Bois</span>
+                <span class="block font-serif text-2xl font-semibold text-cream" data-i18n="explore.society">Society</span>
+                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique" data-i18n="thinker.dubois">W. E. B. Du Bois</span>
               </span>
             </a>
             <a href="#" class="explore-tile quiet-panel reveal relative flex rounded-md p-5 transition hover:-translate-y-1 hover:border-antique/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-linen">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Simone_Weil_1921.jpg" alt="Portrait of Simone Weil" class="absolute inset-0 z-0 h-full w-full object-cover">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Simone_Weil_1921.jpg" alt="Portrait of Simone Weil" data-i18n-alt="alt.weil" class="absolute inset-0 z-0 h-full w-full object-cover">
               <span class="mt-auto block">
-                <span class="block font-serif text-2xl font-semibold text-cream">Justice</span>
-                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique">Simone Weil</span>
+                <span class="block font-serif text-2xl font-semibold text-cream" data-i18n="explore.justice">Justice</span>
+                <span class="thinker-name mt-2 block text-xs font-semibold uppercase tracking-[0.18em] text-antique" data-i18n="thinker.weil">Simone Weil</span>
               </span>
             </a>
           </div>
@@ -633,14 +669,14 @@
 <section class="px-5 py-24 sm:py-28">
   <div class="quiet-panel mx-auto grid max-w-6xl gap-8 rounded-md p-6 shadow-soft md:grid-cols-[0.9fr_1.1fr] md:items-center md:p-8">
     <div class="portrait-frame reveal rounded-md p-2">
-      <img src="portrait.jpeg" alt="Portrait of the curator" class="h-full min-h-[22rem] w-full rounded-sm object-cover">
+      <img src="portrait.jpeg" alt="Portrait of the curator" data-i18n-alt="alt.curator" class="h-full min-h-[22rem] w-full rounded-sm object-cover">
     </div>
     <div class="reveal">
-      <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75">Trust & Story</p>
-      <p class="mt-6 font-serif text-3xl leading-[1.35] text-cream sm:text-4xl">
+      <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="story.kicker">Trust & Story</p>
+      <p class="mt-6 font-serif text-3xl leading-[1.35] text-cream sm:text-4xl" data-i18n="story.title">
         For over a decade, I've been creating spaces where people feel something real — no algorithms, no trends. The Daily Art Cult is that same spirit, just quieter.
       </p>
-      <p class="mt-6 leading-8 text-linen">
+      <p class="mt-6 leading-8 text-linen" data-i18n="story.copy">
         Every piece is chosen slowly and personally — one person sitting with ideas, asking whether it's worth your two minutes. I think it is.
       </p>
     </div>
@@ -649,37 +685,726 @@
 
     <section class="px-5 py-24 sm:py-28">
       <div class="mx-auto max-w-5xl text-center reveal">
-        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75">The Experiment</p>
-        <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl">The Experiment — Immortality Projects</h2>
-        <p class="mx-auto mt-6 max-w-3xl text-lg leading-8 text-linen">
+        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="experiment.kicker">The Experiment</p>
+        <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl" data-i18n="experiment.title">The Experiment — Immortality Projects</h2>
+        <p class="mx-auto mt-6 max-w-3xl text-lg leading-8 text-linen" data-i18n="experiment.copyOne">
           Inspired by Ernest Becker's work, we explore how we can live on through the values and wisdom we leave behind.
         </p>
-        <p class="mx-auto mt-5 max-w-3xl leading-8 text-linen">
+        <p class="mx-auto mt-5 max-w-3xl leading-8 text-linen" data-i18n="experiment.copyTwo">
           Members can input situations and receive responses in their loved one's voice, shaped by personal messages, remembered principles, and the particular phrases that made that person feel unmistakably present.
         </p>
-        <a href="immortality-project.html" class="mt-9 inline-flex rounded-sm bg-cream px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-ink transition hover:bg-linen focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink">
+        <a href="immortality-project.html" class="mt-9 inline-flex rounded-sm bg-cream px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-ink transition hover:bg-linen focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" data-i18n="experiment.cta">
           Learn More About The Immortality Project
         </a>
       </div>
     </section>
   </main>
 
-  <footer class="border-t border-linen/12 px-5 py-10">
-    <div class="mx-auto flex max-w-7xl flex-col gap-4 text-sm text-linen sm:flex-row sm:items-center sm:justify-between">
+  <footer class="site-footer border-t border-linen/12 px-5 py-10">
+    <div class="mx-auto grid max-w-7xl gap-8 text-sm text-linen md:grid-cols-[1fr_auto_1fr] md:items-center">
       <div>
-        <p class="font-serif text-lg text-cream">The Daily Art Cult</p>
-        <p class="mt-2 text-linen/70">&copy; 2026 The Daily Art Cult. All rights reserved.</p>
+        <p class="font-serif text-xl font-semibold tracking-wide text-cream" data-i18n="brand.name">The Daily Art Cult</p>
+        <p class="mt-2 text-linen/70" data-i18n="footer.copyright">&copy; 2026 The Daily Art Cult. All rights reserved.</p>
       </div>
-      <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer navigation">
-        <a href="#" class="transition hover:text-cream">About</a>
-        <a href="#" class="transition hover:text-cream">Privacy</a>
-        <a href="#" class="transition hover:text-cream">Contact</a>
+
+      <nav class="flex flex-wrap items-center justify-start gap-3 md:justify-center" aria-label="Social media" data-i18n-aria-label="footer.socialLabel">
+        <a href="#" class="social-link flex h-10 w-10 items-center justify-center rounded-full" aria-label="X" title="X">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M13.6 10.4 21.1 2h-1.8l-6.5 7.3L7.6 2H2l7.9 11.1L2 22h1.8l6.9-7.8 5.6 7.8H22l-8.4-11.6Zm-2.4 2.7-.8-1.1L4 3.3h2.8l5.1 7.1.8 1.1 6.8 9.3h-2.8l-5.5-7.7Z"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link flex h-10 w-10 items-center justify-center rounded-full" aria-label="YouTube" title="YouTube">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4L15.8 12l-6.2 3.6Z"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link flex h-10 w-10 items-center justify-center rounded-full" aria-label="LinkedIn" title="LinkedIn">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5ZM.3 8.1h4.4V23H.3V8.1Zm7.2 0h4.2v2h.1c.6-1.1 2-2.3 4.1-2.3 4.4 0 5.2 2.9 5.2 6.7V23h-4.4v-7.6c0-1.8 0-4.2-2.5-4.2s-2.9 2-2.9 4V23H7.5V8.1Z"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link flex h-10 w-10 items-center justify-center rounded-full" aria-label="Discord" title="Discord">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.3 4.4A18.8 18.8 0 0 0 15.7 3l-.2.4c1.6.4 2.4 1 2.4 1a15 15 0 0 0-11.8 0s.8-.6 2.5-1L8.3 3c-1.6.3-3.1.8-4.6 1.4C.8 8.7.1 12.9.5 17c1.9 1.4 3.8 2.2 5.6 2.7l.7-1.2c-1.2-.4-2.3-1-3.3-1.7l.8.4c4.7 2.2 9.8 2.2 14.4 0l.8-.4c-1 .8-2.1 1.4-3.3 1.8l.7 1.1c1.8-.5 3.7-1.3 5.6-2.7.5-4.7-.8-8.9-2.7-12.6ZM8 14.5c-.9 0-1.7-.8-1.7-1.8S7 11 8 11s1.7.8 1.7 1.7S8.9 14.5 8 14.5Zm8 0c-.9 0-1.7-.8-1.7-1.8S15 11 16 11s1.7.8 1.7 1.7-.8 1.8-1.7 1.8Z"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link flex h-10 w-10 items-center justify-center rounded-full" aria-label="Instagram" title="Instagram">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+            <circle cx="17.5" cy="6.5" r="1.4" fill="currentColor"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link flex h-10 w-10 items-center justify-center rounded-full" aria-label="TikTok" title="TikTok">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M16.6 2c.4 3 2 4.8 4.9 5v3.4c-1.7.2-3.2-.4-4.8-1.4v6.3c0 8-8.7 10.5-12.2 4.8-2.3-3.7-.9-10.1 6.4-10.4v3.6c-.6.1-1.3.2-1.9.5-1.8.6-2.8 2.3-2.3 3.8 1 3 6 3.9 6-2V2h3.9Z"/>
+          </svg>
+        </a>
       </nav>
-      <p>Quiet audio reflections for clear, beautiful thinking.</p>
+
+      <div class="flex items-center justify-start md:justify-end">
+        <label class="language-select-wrap inline-flex items-center gap-2 rounded-full px-4 py-2">
+          <svg class="h-4 w-4 text-antique" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M3.6 9h16.8M3.6 15h16.8M12 3c2.1 2.4 3.2 5.4 3.2 9S14.1 18.6 12 21M12 3C9.9 5.4 8.8 8.4 8.8 12s1.1 6.6 3.2 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span class="sr-only" data-i18n="footer.languageLabel">Select language</span>
+          <select id="language-select" class="language-select min-w-[8.5rem] pr-5 text-sm font-semibold" aria-label="Select language" data-i18n-aria-label="footer.languageLabel">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+          </select>
+        </label>
+      </div>
     </div>
   </footer>
 
   <script>
+    const languageNames = {
+      en: "English",
+      hi: "हिंदी",
+      es: "Español",
+      fr: "Français",
+      de: "Deutsch"
+    };
+
+    const commonNames = {
+      "brand.name": "The Daily Art Cult",
+      "thinker.sartre": "Jean-Paul Sartre",
+      "thinker.marcus": "Marcus Aurelius",
+      "thinker.byron": "Lord Byron",
+      "thinker.baudrillard": "Jean Baudrillard",
+      "thinker.laoTzu": "Lao Tzu",
+      "thinker.rumi": "Rumi",
+      "thinker.foucault": "Michel Foucault",
+      "thinker.arendt": "Hannah Arendt",
+      "thinker.dubois": "W. E. B. Du Bois",
+      "thinker.weil": "Simone Weil"
+    };
+
+    const translations = {
+      en: {
+        ...commonNames,
+        "meta.title": "The Daily Art Cult | Quiet Philosophy Audio",
+        "meta.description": "Curated philosophical audio reflections for thoughtful minds who appreciate quiet luxury.",
+        "playNow.dismiss": "Dismiss Play Now badge",
+        "playNow.title": "Play Now — Art Guessing Game",
+        "playNow.subtitle": "A labor of love I've curated for over ten years",
+        "audio.introLabel": "Introduction audio",
+        "audio.listenArticle": "Listen to article",
+        "audio.shareIntro": "Share introduction audio",
+        "audio.sampleLabel": "Sample audio: Attention as Generosity",
+        "audio.rewind": "Rewind audio 15 seconds",
+        "audio.forward": "Fast forward audio 15 seconds",
+        "audio.progress": "Sample audio progress",
+        "audio.speed": "Playback speed",
+        "audio.playIntro": "Play introduction audio",
+        "audio.pauseIntro": "Pause introduction audio",
+        "audio.playSample": "Play sample audio",
+        "audio.pauseSample": "Pause sample audio",
+        "share.text": "Listen to the introduction from The Daily Art Cult.",
+        "hero.kicker": "You read less than you'd like. You think more than most.",
+        "hero.title": "2 Minutes That Might Change How You See the World",
+        "hero.copy": "A daily dose of philosophy and art — spoken, and made for the life you're actually living.",
+        "form.emailLabel": "Email address",
+        "form.emailPlaceholder": "Enter your email to begin",
+        "form.begin": "Begin",
+        "form.success": "Thank you. Your first quiet reflection will arrive soon.",
+        "offerings.kicker": "Offerings",
+        "offerings.title": "A slower rhythm for sharper attention.",
+        "offerings.freeTier": "Free Tier",
+        "offerings.quietBeginnings": "Quiet Beginnings",
+        "offerings.freeCopy": "A weekly audio piece from the public domain — hand-picked for the curious mind. No card required, no catch. Just a taste of what depth sounds like.",
+        "offerings.startFree": "Start Listening Free →",
+        "offerings.mainSubscription": "Main Subscription",
+        "offerings.weeklyCollective": "The Weekly Collective",
+        "offerings.everyFourWeeks": "every 4 weeks",
+        "offerings.bulletClassic": "• One timeless classic revisited",
+        "offerings.bulletModern": "• One modern insight reframed",
+        "offerings.bulletWorld": "• One clear lens on the world right now",
+        "offerings.pieceLength": "Each piece is 2–4 minutes.",
+        "offerings.noFluff": "No fluff. No hype. No daily spam.",
+        "offerings.cancel": "You have full control to Cancel anytime.",
+        "offerings.subscribe": "Subscribe",
+        "offerings.oneTime": "One-Time",
+        "offerings.personalReflection": "The Personal Reflection",
+        "offerings.personalCopyOne": "You fill out a short form. You tell us something real — a chapter of your life, a question you keep returning to, a version of yourself you're working toward. You choose a book you've always wanted to understand.",
+        "offerings.personalCopyTwo": "We build it into an original audiobook written around you.",
+        "offerings.personalCopyThree": "One piece. Made for one person. Yours to keep.",
+        "offerings.requestYours": "Request Yours →",
+        "support.title": "Support Your Curator",
+        "support.copy": "Become a monthly member on Patreon or send a one-time contribution via Ko-fi.",
+        "support.hosted": "Membership hosted securely on Patreon",
+        "support.patreon": "Support Monthly on Patreon",
+        "support.kofi": "One-time via Ko-fi",
+        "sample.kicker": "Listen In",
+        "sample.title": "This Is What It Sounds Like.",
+        "sample.copy": "A sample piece from our collection. No signup. Just listen.",
+        "sample.featured": "Featured Reflection",
+        "sample.reflectionTitle": "Attention as Generosity",
+        "testimonial.one": "\"I never felt so home in a book\"",
+        "testimonial.oneAuthor": "Private Member",
+        "testimonial.two": "\"गीता का वो हिस्सा सुनकर आँखें भर आईं। शुक्रिया, सच में।\"",
+        "testimonial.twoAuthor": "Arjun, Mumbai (Bespoke Audio Client)",
+        "testimonial.three": "\"I closed my eyes halfway through and didn't open them until it was over.\"",
+        "testimonial.threeAuthor": "Founding Listener",
+        "explore.kicker": "Explore",
+        "explore.title": "Choose the door you want to open.",
+        "explore.worldview": "Explore by Worldview",
+        "explore.existentialism": "Existentialism",
+        "explore.stoicism": "Stoicism",
+        "explore.romanticism": "Romanticism",
+        "explore.postmodernism": "Postmodernism",
+        "explore.easternWisdom": "Eastern Wisdom",
+        "explore.mysticism": "Mysticism",
+        "explore.powerSociety": "Explore Power & Society",
+        "explore.power": "Power",
+        "explore.politics": "Politics",
+        "explore.society": "Society",
+        "explore.justice": "Justice",
+        "marx.kicker": "Anti-capitalist exception",
+        "marx.title": "Karl Marx is the free door in a paid library.",
+        "marx.copy": "Most Daily Art Cult audiobooks sit behind paid access. Marx opens differently: a free library for the thinker who made capital itself the question.",
+        "marx.note": "All other power and society selections remain part of the paid collection.",
+        "marx.free": "Free",
+        "marx.openLibrary": "Open Library",
+        "marx.capital": "Capital",
+        "marx.freeLibrary": "Karl Marx — Free Library",
+        "story.kicker": "Trust & Story",
+        "story.title": "For over a decade, I've been creating spaces where people feel something real — no algorithms, no trends. The Daily Art Cult is that same spirit, just quieter.",
+        "story.copy": "Every piece is chosen slowly and personally — one person sitting with ideas, asking whether it's worth your two minutes. I think it is.",
+        "experiment.kicker": "The Experiment",
+        "experiment.title": "The Experiment — Immortality Projects",
+        "experiment.copyOne": "Inspired by Ernest Becker's work, we explore how we can live on through the values and wisdom we leave behind.",
+        "experiment.copyTwo": "Members can input situations and receive responses in their loved one's voice, shaped by personal messages, remembered principles, and the particular phrases that made that person feel unmistakably present.",
+        "experiment.cta": "Learn More About The Immortality Project",
+        "footer.copyright": "© 2026 The Daily Art Cult. All rights reserved.",
+        "footer.socialLabel": "Social media",
+        "footer.languageLabel": "Select language",
+        "alt.sartre": "Portrait of Jean-Paul Sartre",
+        "alt.marcus": "Portrait bust of Marcus Aurelius",
+        "alt.byron": "Portrait of Lord Byron",
+        "alt.baudrillard": "Portrait of Jean Baudrillard",
+        "alt.laoTzu": "Portrait of Lao Tzu",
+        "alt.rumi": "Portrait of Rumi",
+        "alt.marx": "Portrait of Karl Marx",
+        "alt.foucault": "Portrait of Michel Foucault",
+        "alt.arendt": "Portrait of Hannah Arendt",
+        "alt.dubois": "Portrait of W. E. B. Du Bois",
+        "alt.weil": "Portrait of Simone Weil",
+        "alt.curator": "Portrait of the curator"
+      },
+      hi: {
+        ...commonNames,
+        "meta.title": "द डेली आर्ट कल्ट | शांत दर्शन ऑडियो",
+        "meta.description": "विचारशील मनों के लिए चुनी हुई दार्शनिक ऑडियो चिंतन, शांत वैभव के स्वाद के साथ।",
+        "playNow.dismiss": "Play Now बैज बंद करें",
+        "playNow.title": "अभी खेलें — कला अनुमान खेल",
+        "playNow.subtitle": "दस वर्षों से अधिक समय से प्रेम से सहेजा गया एक श्रम",
+        "audio.introLabel": "परिचय ऑडियो",
+        "audio.listenArticle": "लेख सुनें",
+        "audio.shareIntro": "परिचय ऑडियो साझा करें",
+        "audio.sampleLabel": "नमूना ऑडियो: उदारता के रूप में ध्यान",
+        "audio.rewind": "ऑडियो 15 सेकंड पीछे करें",
+        "audio.forward": "ऑडियो 15 सेकंड आगे करें",
+        "audio.progress": "नमूना ऑडियो प्रगति",
+        "audio.speed": "प्लेबैक गति",
+        "audio.playIntro": "परिचय ऑडियो चलाएँ",
+        "audio.pauseIntro": "परिचय ऑडियो रोकें",
+        "audio.playSample": "नमूना ऑडियो चलाएँ",
+        "audio.pauseSample": "नमूना ऑडियो रोकें",
+        "share.text": "The Daily Art Cult का परिचय सुनें।",
+        "hero.kicker": "आप जितना चाहें उतना कम पढ़ते हैं। पर अधिकतर लोगों से अधिक सोचते हैं।",
+        "hero.title": "2 मिनट जो दुनिया देखने का आपका ढंग बदल सकते हैं",
+        "hero.copy": "दर्शन और कला की दैनिक खुराक — आवाज़ में, और आपकी असली जीवन-लय के लिए बनी।",
+        "form.emailLabel": "ईमेल पता",
+        "form.emailPlaceholder": "आरंभ करने के लिए अपना ईमेल लिखें",
+        "form.begin": "आरंभ करें",
+        "form.success": "धन्यवाद। आपका पहला शांत चिंतन शीघ्र पहुँचेगा।",
+        "offerings.kicker": "प्रस्ताव",
+        "offerings.title": "तेज़ ध्यान के लिए धीमी लय।",
+        "offerings.freeTier": "मुफ़्त स्तर",
+        "offerings.quietBeginnings": "शांत आरंभ",
+        "offerings.freeCopy": "पब्लिक डोमेन से एक साप्ताहिक ऑडियो रचना — जिज्ञासु मन के लिए हाथ से चुनी हुई। कोई कार्ड नहीं, कोई चाल नहीं। बस गहराई कैसी सुनाई देती है, उसकी एक झलक।",
+        "offerings.startFree": "मुफ़्त सुनना शुरू करें →",
+        "offerings.mainSubscription": "मुख्य सदस्यता",
+        "offerings.weeklyCollective": "द वीकली कलेक्टिव",
+        "offerings.everyFourWeeks": "हर 4 सप्ताह",
+        "offerings.bulletClassic": "• एक कालजयी क्लासिक की पुनर्यात्रा",
+        "offerings.bulletModern": "• एक आधुनिक अंतर्दृष्टि का नया रूप",
+        "offerings.bulletWorld": "• अभी की दुनिया पर एक साफ़ दृष्टि",
+        "offerings.pieceLength": "हर रचना 2–4 मिनट की है।",
+        "offerings.noFluff": "न शोर। न प्रचार। न रोज़ का स्पैम।",
+        "offerings.cancel": "आप कभी भी रद्द करने का पूरा नियंत्रण रखते हैं।",
+        "offerings.subscribe": "सदस्यता लें",
+        "offerings.oneTime": "एक बार",
+        "offerings.personalReflection": "निजी चिंतन",
+        "offerings.personalCopyOne": "आप एक छोटा फ़ॉर्म भरते हैं। आप हमें कुछ सच्चा बताते हैं — जीवन का एक अध्याय, लौटता हुआ कोई प्रश्न, वह रूप जिसकी ओर आप बढ़ रहे हैं। आप वह किताब चुनते हैं जिसे हमेशा समझना चाहते थे।",
+        "offerings.personalCopyTwo": "हम उसे आपके इर्द-गिर्द लिखे गए एक मौलिक ऑडियोबुक में बदलते हैं।",
+        "offerings.personalCopyThree": "एक रचना। एक व्यक्ति के लिए। सदा आपकी।",
+        "offerings.requestYours": "अपना अनुरोध भेजें →",
+        "support.title": "अपने क्यूरेटर का साथ दें",
+        "support.copy": "Patreon पर मासिक सदस्य बनें या Ko-fi के ज़रिए एक बार योगदान दें।",
+        "support.hosted": "सदस्यता सुरक्षित रूप से Patreon पर होस्ट की गई है",
+        "support.patreon": "Patreon पर मासिक सहयोग",
+        "support.kofi": "Ko-fi से एक बार",
+        "sample.kicker": "सुनकर देखें",
+        "sample.title": "यह ऐसा सुनाई देता है।",
+        "sample.copy": "हमारे संग्रह से एक नमूना। कोई साइनअप नहीं। बस सुनिए।",
+        "sample.featured": "विशेष चिंतन",
+        "sample.reflectionTitle": "उदारता के रूप में ध्यान",
+        "testimonial.one": "\"किसी किताब में मैं कभी इतना घर जैसा महसूस नहीं कर पाया\"",
+        "testimonial.oneAuthor": "निजी सदस्य",
+        "testimonial.two": "\"गीता का वो हिस्सा सुनकर आँखें भर आईं। शुक्रिया, सच में।\"",
+        "testimonial.twoAuthor": "अर्जुन, मुंबई (विशेष ऑडियो क्लाइंट)",
+        "testimonial.three": "\"आधे में मैंने आँखें बंद कीं और अंत तक खोली ही नहीं।\"",
+        "testimonial.threeAuthor": "संस्थापक श्रोता",
+        "explore.kicker": "अन्वेषण",
+        "explore.title": "वह द्वार चुनें जिसे आप खोलना चाहते हैं।",
+        "explore.worldview": "विश्वदृष्टि से खोजें",
+        "explore.existentialism": "अस्तित्ववाद",
+        "explore.stoicism": "स्टोइकवाद",
+        "explore.romanticism": "रोमांटिकवाद",
+        "explore.postmodernism": "उत्तर आधुनिकता",
+        "explore.easternWisdom": "पूर्वी प्रज्ञा",
+        "explore.mysticism": "रहस्यवाद",
+        "explore.powerSociety": "शक्ति और समाज खोजें",
+        "explore.power": "शक्ति",
+        "explore.politics": "राजनीति",
+        "explore.society": "समाज",
+        "explore.justice": "न्याय",
+        "marx.kicker": "पूंजीवाद-विरोधी अपवाद",
+        "marx.title": "Karl Marx एक सशुल्क पुस्तकालय में मुफ़्त द्वार हैं।",
+        "marx.copy": "अधिकतर Daily Art Cult ऑडियोबुक सशुल्क पहुँच के पीछे हैं। Marx अलग तरह से खुलते हैं: उस चिंतक के लिए मुफ़्त पुस्तकालय जिसने पूँजी को ही प्रश्न बना दिया।",
+        "marx.note": "शक्ति और समाज की अन्य सभी चुनिंदा सामग्री सशुल्क संग्रह का हिस्सा रहती है।",
+        "marx.free": "मुफ़्त",
+        "marx.openLibrary": "खुला पुस्तकालय",
+        "marx.capital": "Capital",
+        "marx.freeLibrary": "Karl Marx — मुफ़्त पुस्तकालय",
+        "story.kicker": "विश्वास और कहानी",
+        "story.title": "एक दशक से अधिक समय से मैं ऐसे स्थान बना रहा हूँ जहाँ लोग कुछ सच्चा महसूस करें — बिना एल्गोरिद्म, बिना रुझानों के। The Daily Art Cult वही आत्मा है, बस और शांत।",
+        "story.copy": "हर रचना धीरे और निजी रूप से चुनी जाती है — एक व्यक्ति विचारों के साथ बैठकर पूछता है कि क्या यह आपके दो मिनटों के योग्य है। मुझे लगता है, है।",
+        "experiment.kicker": "प्रयोग",
+        "experiment.title": "प्रयोग — अमरता परियोजनाएँ",
+        "experiment.copyOne": "Ernest Becker के कार्य से प्रेरित होकर हम देखते हैं कि अपने पीछे छोड़े मूल्यों और ज्ञान के माध्यम से हम कैसे जीवित रह सकते हैं।",
+        "experiment.copyTwo": "सदस्य परिस्थितियाँ लिख सकते हैं और अपने प्रियजन की आवाज़ में उत्तर पा सकते हैं, जिन्हें निजी संदेशों, याद रखे सिद्धांतों और उन खास वाक्यों से आकार दिया जाता है जो उस व्यक्ति को unmistakably उपस्थित बना देते थे।",
+        "experiment.cta": "अमरता परियोजना के बारे में और जानें",
+        "footer.copyright": "© 2026 The Daily Art Cult. सर्वाधिकार सुरक्षित।",
+        "footer.socialLabel": "सोशल मीडिया",
+        "footer.languageLabel": "भाषा चुनें",
+        "alt.sartre": "Jean-Paul Sartre का चित्र",
+        "alt.marcus": "Marcus Aurelius की प्रतिमा का चित्र",
+        "alt.byron": "Lord Byron का चित्र",
+        "alt.baudrillard": "Jean Baudrillard का चित्र",
+        "alt.laoTzu": "Lao Tzu का चित्र",
+        "alt.rumi": "Rumi का चित्र",
+        "alt.marx": "Karl Marx का चित्र",
+        "alt.foucault": "Michel Foucault का चित्र",
+        "alt.arendt": "Hannah Arendt का चित्र",
+        "alt.dubois": "W. E. B. Du Bois का चित्र",
+        "alt.weil": "Simone Weil का चित्र",
+        "alt.curator": "क्यूरेटर का चित्र"
+      },
+      es: {
+        ...commonNames,
+        "meta.title": "The Daily Art Cult | Audio filosófico sereno",
+        "meta.description": "Reflexiones filosóficas en audio, curadas para mentes contemplativas que aprecian el lujo silencioso.",
+        "playNow.dismiss": "Cerrar la insignia de Play Now",
+        "playNow.title": "Jugar ahora — Juego de adivinar arte",
+        "playNow.subtitle": "Un trabajo de amor curado durante más de diez años",
+        "audio.introLabel": "Audio de introducción",
+        "audio.listenArticle": "Escuchar el artículo",
+        "audio.shareIntro": "Compartir audio de introducción",
+        "audio.sampleLabel": "Audio de muestra: La atención como generosidad",
+        "audio.rewind": "Retroceder audio 15 segundos",
+        "audio.forward": "Avanzar audio 15 segundos",
+        "audio.progress": "Progreso del audio de muestra",
+        "audio.speed": "Velocidad de reproducción",
+        "audio.playIntro": "Reproducir audio de introducción",
+        "audio.pauseIntro": "Pausar audio de introducción",
+        "audio.playSample": "Reproducir audio de muestra",
+        "audio.pauseSample": "Pausar audio de muestra",
+        "share.text": "Escucha la introducción de The Daily Art Cult.",
+        "hero.kicker": "Lees menos de lo que quisieras. Piensas más que la mayoría.",
+        "hero.title": "2 minutos que podrían cambiar cómo ves el mundo",
+        "hero.copy": "Una dosis diaria de filosofía y arte — hablada, y hecha para la vida que realmente vives.",
+        "form.emailLabel": "Correo electrónico",
+        "form.emailPlaceholder": "Escribe tu correo para comenzar",
+        "form.begin": "Comenzar",
+        "form.success": "Gracias. Tu primera reflexión serena llegará pronto.",
+        "offerings.kicker": "Ofertas",
+        "offerings.title": "Un ritmo más lento para una atención más afilada.",
+        "offerings.freeTier": "Nivel gratuito",
+        "offerings.quietBeginnings": "Comienzos serenos",
+        "offerings.freeCopy": "Una pieza semanal de audio del dominio público — elegida a mano para la mente curiosa. Sin tarjeta, sin trampa. Solo una muestra de cómo suena la profundidad.",
+        "offerings.startFree": "Empezar gratis →",
+        "offerings.mainSubscription": "Suscripción principal",
+        "offerings.weeklyCollective": "El Colectivo Semanal",
+        "offerings.everyFourWeeks": "cada 4 semanas",
+        "offerings.bulletClassic": "• Un clásico atemporal revisitado",
+        "offerings.bulletModern": "• Una intuición moderna replanteada",
+        "offerings.bulletWorld": "• Una lente clara sobre el mundo actual",
+        "offerings.pieceLength": "Cada pieza dura 2–4 minutos.",
+        "offerings.noFluff": "Sin relleno. Sin exageración. Sin spam diario.",
+        "offerings.cancel": "Tienes control total para cancelar cuando quieras.",
+        "offerings.subscribe": "Suscribirse",
+        "offerings.oneTime": "Una vez",
+        "offerings.personalReflection": "La reflexión personal",
+        "offerings.personalCopyOne": "Completas un breve formulario. Nos cuentas algo real — un capítulo de tu vida, una pregunta a la que vuelves, una versión de ti hacia la que caminas. Eliges un libro que siempre quisiste comprender.",
+        "offerings.personalCopyTwo": "Lo convertimos en un audiolibro original escrito alrededor de ti.",
+        "offerings.personalCopyThree": "Una pieza. Hecha para una persona. Tuya para conservar.",
+        "offerings.requestYours": "Solicitar la tuya →",
+        "support.title": "Apoya a tu curador",
+        "support.copy": "Hazte miembro mensual en Patreon o envía una contribución única por Ko-fi.",
+        "support.hosted": "Membresía alojada de forma segura en Patreon",
+        "support.patreon": "Apoyar mensualmente en Patreon",
+        "support.kofi": "Una vez por Ko-fi",
+        "sample.kicker": "Escucha",
+        "sample.title": "Así es como suena.",
+        "sample.copy": "Una pieza de muestra de nuestra colección. Sin registro. Solo escucha.",
+        "sample.featured": "Reflexión destacada",
+        "sample.reflectionTitle": "La atención como generosidad",
+        "testimonial.one": "\"Nunca me sentí tan en casa dentro de un libro\"",
+        "testimonial.oneAuthor": "Miembro privado",
+        "testimonial.two": "\"Al escuchar esa parte del Gita se me llenaron los ojos. Gracias, de verdad.\"",
+        "testimonial.twoAuthor": "Arjun, Mumbai (cliente de audio a medida)",
+        "testimonial.three": "\"Cerré los ojos a mitad de camino y no los abrí hasta que terminó.\"",
+        "testimonial.threeAuthor": "Oyente fundador",
+        "explore.kicker": "Explorar",
+        "explore.title": "Elige la puerta que quieres abrir.",
+        "explore.worldview": "Explorar por visión del mundo",
+        "explore.existentialism": "Existencialismo",
+        "explore.stoicism": "Estoicismo",
+        "explore.romanticism": "Romanticismo",
+        "explore.postmodernism": "Posmodernismo",
+        "explore.easternWisdom": "Sabiduría oriental",
+        "explore.mysticism": "Misticismo",
+        "explore.powerSociety": "Explorar poder y sociedad",
+        "explore.power": "Poder",
+        "explore.politics": "Política",
+        "explore.society": "Sociedad",
+        "explore.justice": "Justicia",
+        "marx.kicker": "Excepción anticapitalista",
+        "marx.title": "Karl Marx es la puerta gratuita en una biblioteca de pago.",
+        "marx.copy": "La mayoría de los audiolibros de Daily Art Cult están detrás de acceso pago. Marx se abre de otro modo: una biblioteca gratuita para el pensador que convirtió el capital mismo en pregunta.",
+        "marx.note": "Todas las demás selecciones de poder y sociedad siguen siendo parte de la colección de pago.",
+        "marx.free": "Gratis",
+        "marx.openLibrary": "Biblioteca abierta",
+        "marx.capital": "Capital",
+        "marx.freeLibrary": "Karl Marx — Biblioteca gratuita",
+        "story.kicker": "Confianza e historia",
+        "story.title": "Durante más de una década he creado espacios donde las personas sienten algo real — sin algoritmos, sin tendencias. The Daily Art Cult es ese mismo espíritu, solo más silencioso.",
+        "story.copy": "Cada pieza se elige despacio y personalmente — una persona sentada con ideas, preguntando si merece tus dos minutos. Creo que sí.",
+        "experiment.kicker": "El experimento",
+        "experiment.title": "El experimento — Proyectos de inmortalidad",
+        "experiment.copyOne": "Inspirados por la obra de Ernest Becker, exploramos cómo podemos seguir viviendo a través de los valores y la sabiduría que dejamos atrás.",
+        "experiment.copyTwo": "Los miembros pueden introducir situaciones y recibir respuestas en la voz de un ser querido, moldeadas por mensajes personales, principios recordados y las frases particulares que hacían que esa persona se sintiera inconfundiblemente presente.",
+        "experiment.cta": "Conoce más sobre el Proyecto de Inmortalidad",
+        "footer.copyright": "© 2026 The Daily Art Cult. Todos los derechos reservados.",
+        "footer.socialLabel": "Redes sociales",
+        "footer.languageLabel": "Seleccionar idioma",
+        "alt.sartre": "Retrato de Jean-Paul Sartre",
+        "alt.marcus": "Busto retrato de Marcus Aurelius",
+        "alt.byron": "Retrato de Lord Byron",
+        "alt.baudrillard": "Retrato de Jean Baudrillard",
+        "alt.laoTzu": "Retrato de Lao Tzu",
+        "alt.rumi": "Retrato de Rumi",
+        "alt.marx": "Retrato de Karl Marx",
+        "alt.foucault": "Retrato de Michel Foucault",
+        "alt.arendt": "Retrato de Hannah Arendt",
+        "alt.dubois": "Retrato de W. E. B. Du Bois",
+        "alt.weil": "Retrato de Simone Weil",
+        "alt.curator": "Retrato del curador"
+      },
+      fr: {
+        ...commonNames,
+        "meta.title": "The Daily Art Cult | Audio philosophique discret",
+        "meta.description": "Réflexions philosophiques audio, soigneusement choisies pour les esprits attentifs qui aiment le luxe silencieux.",
+        "playNow.dismiss": "Fermer le badge Play Now",
+        "playNow.title": "Jouer maintenant — Jeu de devinette artistique",
+        "playNow.subtitle": "Un travail d'amour que je cultive depuis plus de dix ans",
+        "audio.introLabel": "Audio d'introduction",
+        "audio.listenArticle": "Écouter l'article",
+        "audio.shareIntro": "Partager l'audio d'introduction",
+        "audio.sampleLabel": "Extrait audio : L'attention comme générosité",
+        "audio.rewind": "Reculer l'audio de 15 secondes",
+        "audio.forward": "Avancer l'audio de 15 secondes",
+        "audio.progress": "Progression de l'extrait audio",
+        "audio.speed": "Vitesse de lecture",
+        "audio.playIntro": "Lire l'audio d'introduction",
+        "audio.pauseIntro": "Mettre l'audio d'introduction en pause",
+        "audio.playSample": "Lire l'extrait audio",
+        "audio.pauseSample": "Mettre l'extrait audio en pause",
+        "share.text": "Écoutez l'introduction de The Daily Art Cult.",
+        "hero.kicker": "Vous lisez moins que vous ne le voudriez. Vous pensez plus que la plupart.",
+        "hero.title": "2 minutes qui pourraient changer votre façon de voir le monde",
+        "hero.copy": "Une dose quotidienne de philosophie et d'art — parlée, et pensée pour la vie que vous vivez vraiment.",
+        "form.emailLabel": "Adresse e-mail",
+        "form.emailPlaceholder": "Entrez votre e-mail pour commencer",
+        "form.begin": "Commencer",
+        "form.success": "Merci. Votre première réflexion paisible arrivera bientôt.",
+        "offerings.kicker": "Offres",
+        "offerings.title": "Un rythme plus lent pour une attention plus vive.",
+        "offerings.freeTier": "Niveau gratuit",
+        "offerings.quietBeginnings": "Commencements silencieux",
+        "offerings.freeCopy": "Une pièce audio hebdomadaire du domaine public — choisie à la main pour l'esprit curieux. Pas de carte, pas de piège. Seulement un aperçu de ce que la profondeur peut faire entendre.",
+        "offerings.startFree": "Écouter gratuitement →",
+        "offerings.mainSubscription": "Abonnement principal",
+        "offerings.weeklyCollective": "Le Collectif Hebdomadaire",
+        "offerings.everyFourWeeks": "toutes les 4 semaines",
+        "offerings.bulletClassic": "• Un classique intemporel revisité",
+        "offerings.bulletModern": "• Une intuition moderne reformulée",
+        "offerings.bulletWorld": "• Une lentille claire sur le monde actuel",
+        "offerings.pieceLength": "Chaque pièce dure 2 à 4 minutes.",
+        "offerings.noFluff": "Pas de remplissage. Pas de tapage. Pas de spam quotidien.",
+        "offerings.cancel": "Vous gardez le contrôle total pour annuler à tout moment.",
+        "offerings.subscribe": "S'abonner",
+        "offerings.oneTime": "Une fois",
+        "offerings.personalReflection": "La réflexion personnelle",
+        "offerings.personalCopyOne": "Vous remplissez un court formulaire. Vous nous confiez quelque chose de vrai — un chapitre de votre vie, une question qui revient, une version de vous-même vers laquelle vous avancez. Vous choisissez un livre que vous avez toujours voulu comprendre.",
+        "offerings.personalCopyTwo": "Nous en faisons un livre audio original écrit autour de vous.",
+        "offerings.personalCopyThree": "Une pièce. Faite pour une seule personne. À vous de la garder.",
+        "offerings.requestYours": "Demander la vôtre →",
+        "support.title": "Soutenir votre curateur",
+        "support.copy": "Devenez membre mensuel sur Patreon ou envoyez une contribution ponctuelle via Ko-fi.",
+        "support.hosted": "Adhésion hébergée en toute sécurité sur Patreon",
+        "support.patreon": "Soutenir chaque mois sur Patreon",
+        "support.kofi": "Une fois via Ko-fi",
+        "sample.kicker": "Écouter",
+        "sample.title": "Voilà ce que cela donne.",
+        "sample.copy": "Un extrait de notre collection. Pas d'inscription. Écoutez simplement.",
+        "sample.featured": "Réflexion à l'honneur",
+        "sample.reflectionTitle": "L'attention comme générosité",
+        "testimonial.one": "\"Je ne me suis jamais senti autant chez moi dans un livre\"",
+        "testimonial.oneAuthor": "Membre privé",
+        "testimonial.two": "\"En entendant ce passage de la Gita, j'ai eu les larmes aux yeux. Merci, vraiment.\"",
+        "testimonial.twoAuthor": "Arjun, Mumbai (client audio sur mesure)",
+        "testimonial.three": "\"J'ai fermé les yeux à mi-chemin et je ne les ai rouverts qu'à la fin.\"",
+        "testimonial.threeAuthor": "Auditeur fondateur",
+        "explore.kicker": "Explorer",
+        "explore.title": "Choisissez la porte que vous voulez ouvrir.",
+        "explore.worldview": "Explorer par vision du monde",
+        "explore.existentialism": "Existentialisme",
+        "explore.stoicism": "Stoïcisme",
+        "explore.romanticism": "Romantisme",
+        "explore.postmodernism": "Postmodernisme",
+        "explore.easternWisdom": "Sagesse orientale",
+        "explore.mysticism": "Mysticisme",
+        "explore.powerSociety": "Explorer le pouvoir et la société",
+        "explore.power": "Pouvoir",
+        "explore.politics": "Politique",
+        "explore.society": "Société",
+        "explore.justice": "Justice",
+        "marx.kicker": "Exception anticapitaliste",
+        "marx.title": "Karl Marx est la porte gratuite d'une bibliothèque payante.",
+        "marx.copy": "La plupart des livres audio Daily Art Cult sont derrière un accès payant. Marx s'ouvre autrement : une bibliothèque gratuite pour le penseur qui a fait du capital lui-même la question.",
+        "marx.note": "Toutes les autres sélections sur le pouvoir et la société restent dans la collection payante.",
+        "marx.free": "Gratuit",
+        "marx.openLibrary": "Bibliothèque ouverte",
+        "marx.capital": "Le Capital",
+        "marx.freeLibrary": "Karl Marx — Bibliothèque gratuite",
+        "story.kicker": "Confiance et récit",
+        "story.title": "Depuis plus de dix ans, je crée des espaces où les gens ressentent quelque chose de réel — sans algorithmes, sans tendances. The Daily Art Cult porte ce même esprit, simplement plus calme.",
+        "story.copy": "Chaque pièce est choisie lentement et personnellement — une personne assise avec des idées, se demandant si elles valent vos deux minutes. Je crois que oui.",
+        "experiment.kicker": "L'expérience",
+        "experiment.title": "L'expérience — Projets d'immortalité",
+        "experiment.copyOne": "Inspirés par l'œuvre d'Ernest Becker, nous explorons comment nous pouvons survivre à travers les valeurs et la sagesse que nous laissons derrière nous.",
+        "experiment.copyTwo": "Les membres peuvent entrer des situations et recevoir des réponses dans la voix d'un être aimé, façonnées par des messages personnels, des principes mémorisés et les tournures particulières qui rendaient cette personne indéniablement présente.",
+        "experiment.cta": "En savoir plus sur le projet d'immortalité",
+        "footer.copyright": "© 2026 The Daily Art Cult. Tous droits réservés.",
+        "footer.socialLabel": "Réseaux sociaux",
+        "footer.languageLabel": "Choisir la langue",
+        "alt.sartre": "Portrait de Jean-Paul Sartre",
+        "alt.marcus": "Buste de Marcus Aurelius",
+        "alt.byron": "Portrait de Lord Byron",
+        "alt.baudrillard": "Portrait de Jean Baudrillard",
+        "alt.laoTzu": "Portrait de Lao Tzu",
+        "alt.rumi": "Portrait de Rumi",
+        "alt.marx": "Portrait de Karl Marx",
+        "alt.foucault": "Portrait de Michel Foucault",
+        "alt.arendt": "Portrait de Hannah Arendt",
+        "alt.dubois": "Portrait de W. E. B. Du Bois",
+        "alt.weil": "Portrait de Simone Weil",
+        "alt.curator": "Portrait du curateur"
+      },
+      de: {
+        ...commonNames,
+        "meta.title": "The Daily Art Cult | Stille Philosophie als Audio",
+        "meta.description": "Kuratierte philosophische Audio-Reflexionen für nachdenkliche Menschen mit Sinn für leisen Luxus.",
+        "playNow.dismiss": "Play-Now-Hinweis schließen",
+        "playNow.title": "Jetzt spielen — Kunst-Ratespiel",
+        "playNow.subtitle": "Eine Herzensarbeit, die ich seit über zehn Jahren kuratiere",
+        "audio.introLabel": "Einführungs-Audio",
+        "audio.listenArticle": "Artikel anhören",
+        "audio.shareIntro": "Einführungs-Audio teilen",
+        "audio.sampleLabel": "Hörprobe: Aufmerksamkeit als Großzügigkeit",
+        "audio.rewind": "Audio 15 Sekunden zurückspulen",
+        "audio.forward": "Audio 15 Sekunden vorspulen",
+        "audio.progress": "Fortschritt der Hörprobe",
+        "audio.speed": "Wiedergabegeschwindigkeit",
+        "audio.playIntro": "Einführungs-Audio abspielen",
+        "audio.pauseIntro": "Einführungs-Audio pausieren",
+        "audio.playSample": "Hörprobe abspielen",
+        "audio.pauseSample": "Hörprobe pausieren",
+        "share.text": "Höre die Einführung von The Daily Art Cult.",
+        "hero.kicker": "Du liest weniger, als du möchtest. Du denkst mehr als die meisten.",
+        "hero.title": "2 Minuten, die verändern könnten, wie du die Welt siehst",
+        "hero.copy": "Eine tägliche Dosis Philosophie und Kunst — gesprochen und gemacht für das Leben, das du wirklich führst.",
+        "form.emailLabel": "E-Mail-Adresse",
+        "form.emailPlaceholder": "Gib deine E-Mail ein, um zu beginnen",
+        "form.begin": "Beginnen",
+        "form.success": "Danke. Deine erste stille Reflexion kommt bald.",
+        "offerings.kicker": "Angebote",
+        "offerings.title": "Ein langsamerer Rhythmus für schärfere Aufmerksamkeit.",
+        "offerings.freeTier": "Kostenlose Stufe",
+        "offerings.quietBeginnings": "Stille Anfänge",
+        "offerings.freeCopy": "Ein wöchentliches Audio-Stück aus der Gemeinfreiheit — handverlesen für neugierige Geister. Keine Karte, kein Haken. Nur ein Vorgeschmack darauf, wie Tiefe klingt.",
+        "offerings.startFree": "Kostenlos hören →",
+        "offerings.mainSubscription": "Hauptabonnement",
+        "offerings.weeklyCollective": "Das wöchentliche Kollektiv",
+        "offerings.everyFourWeeks": "alle 4 Wochen",
+        "offerings.bulletClassic": "• Ein zeitloser Klassiker neu besucht",
+        "offerings.bulletModern": "• Eine moderne Einsicht neu gerahmt",
+        "offerings.bulletWorld": "• Ein klarer Blick auf die Welt von jetzt",
+        "offerings.pieceLength": "Jedes Stück dauert 2–4 Minuten.",
+        "offerings.noFluff": "Kein Füllmaterial. Kein Hype. Kein täglicher Spam.",
+        "offerings.cancel": "Du hast jederzeit volle Kontrolle zum Kündigen.",
+        "offerings.subscribe": "Abonnieren",
+        "offerings.oneTime": "Einmalig",
+        "offerings.personalReflection": "Die persönliche Reflexion",
+        "offerings.personalCopyOne": "Du füllst ein kurzes Formular aus. Du erzählst uns etwas Echtes — ein Kapitel deines Lebens, eine Frage, zu der du immer wieder zurückkehrst, eine Version deiner selbst, auf die du hinarbeitest. Du wählst ein Buch, das du immer verstehen wolltest.",
+        "offerings.personalCopyTwo": "Wir machen daraus ein originelles Hörbuch, das um dich herum geschrieben ist.",
+        "offerings.personalCopyThree": "Ein Stück. Für eine Person gemacht. Für dich zum Behalten.",
+        "offerings.requestYours": "Deins anfragen →",
+        "support.title": "Unterstütze deinen Kurator",
+        "support.copy": "Werde monatliches Mitglied auf Patreon oder sende einen einmaligen Beitrag über Ko-fi.",
+        "support.hosted": "Mitgliedschaft sicher über Patreon gehostet",
+        "support.patreon": "Monatlich auf Patreon unterstützen",
+        "support.kofi": "Einmalig über Ko-fi",
+        "sample.kicker": "Hineinhören",
+        "sample.title": "So klingt es.",
+        "sample.copy": "Ein Beispielstück aus unserer Sammlung. Keine Anmeldung. Einfach zuhören.",
+        "sample.featured": "Ausgewählte Reflexion",
+        "sample.reflectionTitle": "Aufmerksamkeit als Großzügigkeit",
+        "testimonial.one": "\"Ich habe mich in einem Buch noch nie so zuhause gefühlt\"",
+        "testimonial.oneAuthor": "Privates Mitglied",
+        "testimonial.two": "\"Als ich diesen Teil der Gita hörte, kamen mir die Tränen. Danke, wirklich.\"",
+        "testimonial.twoAuthor": "Arjun, Mumbai (Kunde für individuelles Audio)",
+        "testimonial.three": "\"Ich schloss auf halbem Weg die Augen und öffnete sie erst wieder, als es vorbei war.\"",
+        "testimonial.threeAuthor": "Gründungshörer",
+        "explore.kicker": "Erkunden",
+        "explore.title": "Wähle die Tür, die du öffnen möchtest.",
+        "explore.worldview": "Nach Weltanschauung erkunden",
+        "explore.existentialism": "Existenzialismus",
+        "explore.stoicism": "Stoizismus",
+        "explore.romanticism": "Romantik",
+        "explore.postmodernism": "Postmoderne",
+        "explore.easternWisdom": "Östliche Weisheit",
+        "explore.mysticism": "Mystik",
+        "explore.powerSociety": "Macht und Gesellschaft erkunden",
+        "explore.power": "Macht",
+        "explore.politics": "Politik",
+        "explore.society": "Gesellschaft",
+        "explore.justice": "Gerechtigkeit",
+        "marx.kicker": "Antikapitalistische Ausnahme",
+        "marx.title": "Karl Marx ist die kostenlose Tür in einer bezahlten Bibliothek.",
+        "marx.copy": "Die meisten Daily-Art-Cult-Hörbücher liegen hinter bezahltem Zugang. Marx öffnet anders: als kostenlose Bibliothek für den Denker, der das Kapital selbst zur Frage machte.",
+        "marx.note": "Alle anderen Auswahlen zu Macht und Gesellschaft bleiben Teil der bezahlten Sammlung.",
+        "marx.free": "Kostenlos",
+        "marx.openLibrary": "Offene Bibliothek",
+        "marx.capital": "Das Kapital",
+        "marx.freeLibrary": "Karl Marx — Kostenlose Bibliothek",
+        "story.kicker": "Vertrauen & Geschichte",
+        "story.title": "Seit über einem Jahrzehnt schaffe ich Räume, in denen Menschen etwas Echtes fühlen — keine Algorithmen, keine Trends. The Daily Art Cult ist derselbe Geist, nur leiser.",
+        "story.copy": "Jedes Stück wird langsam und persönlich ausgewählt — eine Person sitzt mit Ideen und fragt, ob sie deine zwei Minuten wert sind. Ich glaube, das sind sie.",
+        "experiment.kicker": "Das Experiment",
+        "experiment.title": "Das Experiment — Unsterblichkeitsprojekte",
+        "experiment.copyOne": "Inspiriert von Ernest Beckers Arbeit erkunden wir, wie wir durch die Werte und Weisheit weiterleben können, die wir hinterlassen.",
+        "experiment.copyTwo": "Mitglieder können Situationen eingeben und Antworten in der Stimme eines geliebten Menschen erhalten, geformt durch persönliche Nachrichten, erinnerte Prinzipien und jene besonderen Formulierungen, die diese Person unverwechselbar gegenwärtig machten.",
+        "experiment.cta": "Mehr über das Unsterblichkeitsprojekt erfahren",
+        "footer.copyright": "© 2026 The Daily Art Cult. Alle Rechte vorbehalten.",
+        "footer.socialLabel": "Soziale Medien",
+        "footer.languageLabel": "Sprache auswählen",
+        "alt.sartre": "Porträt von Jean-Paul Sartre",
+        "alt.marcus": "Porträtbüste von Marcus Aurelius",
+        "alt.byron": "Porträt von Lord Byron",
+        "alt.baudrillard": "Porträt von Jean Baudrillard",
+        "alt.laoTzu": "Porträt von Lao Tzu",
+        "alt.rumi": "Porträt von Rumi",
+        "alt.marx": "Porträt von Karl Marx",
+        "alt.foucault": "Porträt von Michel Foucault",
+        "alt.arendt": "Porträt von Hannah Arendt",
+        "alt.dubois": "Porträt von W. E. B. Du Bois",
+        "alt.weil": "Porträt von Simone Weil",
+        "alt.curator": "Porträt des Kurators"
+      }
+    };
+
+    const supportedLanguages = Object.keys(translations);
+    let activeLanguage = "en";
+
+    const t = (key, language = activeLanguage) => translations[language]?.[key] ?? translations.en[key] ?? key;
+
+    const detectLanguage = () => {
+      const savedLanguage = window.localStorage.getItem("dailyArtCultLanguage");
+      if (supportedLanguages.includes(savedLanguage)) {
+        return savedLanguage;
+      }
+
+      const browserLanguages = navigator.languages?.length ? navigator.languages : [navigator.language];
+      const matchedLanguage = browserLanguages
+        .map((language) => language?.toLowerCase().split("-")[0])
+        .find((language) => supportedLanguages.includes(language));
+
+      return matchedLanguage || "en";
+    };
+
+    const applyLanguage = (language, shouldPersist = true) => {
+      activeLanguage = supportedLanguages.includes(language) ? language : "en";
+      document.documentElement.lang = activeLanguage;
+      document.title = t("meta.title");
+
+      document.querySelector('meta[name="description"]')?.setAttribute("content", t("meta.description"));
+      document.querySelector('meta[property="og:title"]')?.setAttribute("content", t("meta.title"));
+      document.querySelector('meta[property="og:description"]')?.setAttribute("content", t("meta.description"));
+
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        element.textContent = t(element.dataset.i18n);
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+        element.setAttribute("placeholder", t(element.dataset.i18nPlaceholder));
+      });
+      document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+        element.setAttribute("aria-label", t(element.dataset.i18nAriaLabel));
+      });
+      document.querySelectorAll("[data-i18n-alt]").forEach((element) => {
+        element.setAttribute("alt", t(element.dataset.i18nAlt));
+      });
+
+      const languageSelect = document.querySelector("#language-select");
+      if (languageSelect) {
+        languageSelect.value = activeLanguage;
+      }
+
+      if (shouldPersist) {
+        window.localStorage.setItem("dailyArtCultLanguage", activeLanguage);
+      }
+    };
+
+    applyLanguage(detectLanguage(), !window.localStorage.getItem("dailyArtCultLanguage"));
+
+    document.querySelector("#language-select")?.addEventListener("change", (event) => {
+      applyLanguage(event.target.value);
+      document.querySelectorAll("[data-audio-toggle]").forEach((button) => {
+        const audio = document.getElementById(button.dataset.audioToggle);
+        if (audio) {
+          setAudioButtonState(button, audio);
+        }
+      });
+    });
+
     const revealEls = document.querySelectorAll(".reveal");
 
     const revealObserver = new IntersectionObserver((entries) => {
@@ -765,7 +1490,8 @@
     const setAudioButtonState = (button, audio) => {
       const isPlaying = !audio.paused && !audio.ended;
       button.textContent = isPlaying ? "❚❚" : "▶";
-      button.setAttribute("aria-label", `${isPlaying ? "Pause" : "Play"} ${audio.id === "intro-audio" ? "introduction" : "sample"} audio`);
+      const labelKey = `${isPlaying ? "pause" : "play"}${audio.id === "intro-audio" ? "Intro" : "Sample"}`;
+      button.setAttribute("aria-label", t(`audio.${labelKey}`));
     };
 
     const pauseOtherAudio = (activeAudio) => {
@@ -860,7 +1586,7 @@
       introShare.addEventListener("click", async () => {
         const shareData = {
           title: "The Daily Art Cult",
-          text: "Listen to the introduction from The Daily Art Cult.",
+          text: t("share.text"),
           url: window.location.href
         };
 
