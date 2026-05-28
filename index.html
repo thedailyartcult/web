@@ -12,7 +12,7 @@
   <title>The Daily Art Cult | Quiet Philosophy Audio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -283,6 +283,215 @@
       color: #f2eadc;
     }
 
+    /* Ripple ring animation */
+    @keyframes ripple-anim {
+      0% {
+        transform: scale(1);
+        opacity: 0.4;
+      }
+      100% {
+        transform: scale(3.5);
+        opacity: 0;
+      }
+    }
+    .ripple-ring {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid #c6a766;
+      animation: ripple-anim 1.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      pointer-events: none;
+    }
+    .ripple-ring-1 { animation-delay: 0s; }
+    .ripple-ring-2 { animation-delay: 0.46s; }
+    .ripple-ring-3 { animation-delay: 0.92s; }
+
+    /* Waveform animation */
+    @keyframes wave-anim {
+      0%, 100% { transform: scaleY(0.2); }
+      50% { transform: scaleY(1); }
+    }
+    .wave-container {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 24px;
+      width: fit-content;
+    }
+    .wave-bar {
+      width: 2.5px;
+      height: 100%;
+      background-color: #c6a766;
+      transform-origin: bottom;
+      animation: wave-anim 1s ease-in-out infinite;
+    }
+
+    /* Bookshelf & Spines Spec Layout */
+    .font-cormorant {
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .font-jost {
+      font-family: 'Jost', sans-serif;
+    }
+    .spine-text {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      white-space: nowrap;
+    }
+
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-none {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch; /* Momentum scrolling for mobile */
+    }
+
+    /* Sweep Animation for Button */
+    .btn-sweep {
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      transition: color 0.4s ease;
+    }
+    .btn-sweep::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #b89a6a;
+      z-index: -1;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .btn-sweep:hover {
+      color: #0d0b09 !important;
+    }
+    .btn-sweep:hover::before {
+      transform: scaleX(1);
+    }
+
+    /* Dynamic Antique Book Spine Realism (Removed Stripes) */
+    .antique-spine {
+      box-shadow: 
+        inset 6px 0 12px rgba(255,255,255,0.03), 
+        inset -6px 0 12px rgba(0,0,0,0.7), 
+        0 8px 18px rgba(0,0,0,0.65);
+      position: relative;
+      border-radius: 4px 2px 2px 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+      will-change: transform;
+    }
+    .antique-spine::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 50% 30%, rgba(255,255,255,0.03) 0%, transparent 60%),
+        linear-gradient(to right, 
+          rgba(0,0,0,0.6) 0%, 
+          rgba(255,255,255,0.03) 6%, 
+          rgba(255,255,255,0) 25%, 
+          rgba(0,0,0,0) 80%, 
+          rgba(0,0,0,0.65) 100%);
+      pointer-events: none;
+      z-index: 15;
+    }
+    .antique-spine:hover {
+      box-shadow: 
+        inset 6px 0 12px rgba(255,255,255,0.08), 
+        inset -6px 0 12px rgba(0,0,0,0.5), 
+        0 18px 36px rgba(198, 167, 102, 0.22);
+    }
+
+    /* Ambient pulse state - gentle breathing movement */
+    .ambient-pulse-active {
+      transform: translateY(-4px);
+      box-shadow: 
+        inset 6px 0 12px rgba(255,255,255,0.06), 
+        inset -6px 0 12px rgba(0,0,0,0.55), 
+        0 12px 26px rgba(198, 167, 102, 0.12) !important;
+      transition: transform 1.2s ease, box-shadow 1.2s ease !important;
+    }
+
+    /* Rugged Raised Spine Bands */
+    .raised-band {
+      width: 100%;
+      height: 7px;
+      background: linear-gradient(to bottom, 
+        rgba(0,0,0,0.5) 0%, 
+        rgba(255,255,255,0.08) 30%, 
+        rgba(255,255,255,0.03) 50%, 
+        rgba(0,0,0,0.7) 100%);
+      border-top: 1px solid rgba(255,255,255,0.02);
+      border-bottom: 1px solid rgba(0,0,0,0.6);
+      z-index: 10;
+    }
+
+    /* Faded, Oxidized Gold Leaf Stamps */
+    .gold-line {
+      width: 100%;
+      height: 1.5px;
+      background-color: rgba(184, 154, 106, 0.28); /* Oxidized/darkened gold */
+      box-shadow: 0 1px 1px rgba(0,0,0,0.5);
+      z-index: 10;
+    }
+
+    /* Tooltip specs */
+    .spine-tooltip {
+      position: absolute;
+      bottom: 108%;
+      left: 50%;
+      transform: translate(-50%, 10px);
+      width: 170px;
+      background-color: #1a1712;
+      border: 1px solid #4a4035;
+      padding: 8px 12px;
+      border-radius: 2px;
+      color: #f2eadc;
+      font-family: "Inter", system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 300;
+      line-height: 1.4;
+      text-align: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 50;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.65);
+    }
+    .spine-container:hover .spine-tooltip {
+      opacity: 1;
+      transform: translate(-50%, -4px);
+    }
+    .spine-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: #4a4035 transparent transparent transparent;
+    }
+
+    /* Dynamic Uneven Spine Leanings (Ruggedness) */
+    .spine-container:nth-child(3n+1) { transform: rotate(-0.6deg); }
+    .spine-container:nth-child(3n+2) { transform: rotate(0.4deg); }
+    .spine-container:nth-child(3n+3) { transform: rotate(-0.3deg); }
+
     @media (max-width: 639px) {
       .floating-audio {
         right: 0.75rem;
@@ -290,23 +499,19 @@
         max-width: calc(100vw - 1.5rem);
         overflow: hidden;
       }
-
       .floating-audio .intro-audio-label,
       .floating-audio .intro-audio-duration,
       .floating-audio .compact-divider,
       .floating-audio [data-share-intro] {
         display: none;
       }
-
       .floating-audio.is-expanded .intro-audio-label,
       .floating-audio.is-expanded .intro-audio-duration {
         display: block;
       }
-
       .floating-audio.is-expanded [data-share-intro] {
         display: flex;
       }
-
       .site-logo {
         max-width: calc(100vw - 5rem);
         line-height: 1.15;
@@ -314,26 +519,16 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
+      html { scroll-behavior: auto; }
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
       }
-
-      video {
-        display: none;
-      }
-
-      .reveal,
-      .hero-swipe {
-        opacity: 1;
-        transform: none;
-      }
+      video { display: none; }
+      .reveal, .hero-swipe { opacity: 1; transform: none; }
+      .ripple-ring, .wave-bar { animation: none !important; }
     }
   </style>
 </head>
@@ -350,7 +545,7 @@
       <button type="button" id="play-now-close" class="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full border border-linen/15 text-lg leading-none text-linen/70 transition hover:border-linen/35 hover:text-cream focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" aria-label="Dismiss Play Now badge" data-i18n-aria-label="playNow.dismiss">
         ×
       </button>
-      <a href="#sample" class="group block pr-2">
+      <a href="#listening-booth" class="group block pr-2">
         <div class="flex items-center justify-center gap-3">
           <svg class="h-16 w-10 shrink-0 text-antique/60 sm:h-20 sm:w-12" viewBox="0 0 96 160" fill="none" aria-hidden="true">
             <path d="M68 12C38 34 24 66 25 101c.6 20 8.3 36.2 22 48" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
@@ -415,8 +610,7 @@
 
     <section class="mx-auto flex min-h-[calc(100vh-84px)] max-w-7xl items-center pb-24 pt-10">
       <div class="max-w-6xl">
-	        <p class="hero-swipe hero-swipe-delay mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-linen/90" data-i18n="hero.kicker">You read less than you'd like. You think more than most.
-</p>
+	        <p class="hero-swipe hero-swipe-delay mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-linen/90" data-i18n="hero.kicker">You read less than you'd like. You think more than most.</p>
         <div class="grid gap-7 lg:grid-cols-[minmax(0,1fr)] lg:items-end">
 	          <h1 class="hero-swipe max-w-5xl font-serif text-5xl font-semibold leading-[1.03] text-cream sm:text-6xl lg:text-7xl" data-i18n="hero.title">
             2 Minutes That Might Change How You See the World
@@ -424,12 +618,11 @@
         </div>
 	        <p class="hero-swipe hero-swipe-delay mt-7 max-w-2xl text-lg leading-8 text-linen sm:text-xl" data-i18n="hero.copy">
          A daily dose of philosophy and art — spoken, and made for the life you're actually living.
-
         </p>
 
         <form id="newsletter-form" class="reveal mt-10 grid max-w-2xl gap-3 rounded-md border border-linen/18 bg-ink/55 p-2 shadow-soft backdrop-blur-md sm:grid-cols-[1fr_auto]" action="#" method="post">
 	          <label for="hero-email" class="sr-only" data-i18n="form.emailLabel">Email address</label>
-	          <input id="hero-email" name="email" type="email" autocomplete="email" required placeholder="Enter your email to begin" data-i18n-placeholder="form.emailPlaceholder" class="min-h-14 rounded-sm border border-transparent bg-transparent px-4 text-base text-cream outline-none transition placeholder:text-linen/55 focus:border-linen/35">
+	          <input id="hero-email" name="email" type="email" autocomplete="email" required placeholder="Enter your email to begin" data-i18n-placeholder="form.emailPlaceholder" class="min-h-14 rounded-sm border border-transparent bg-transparent px-4 text-cream outline-none transition placeholder:text-linen/55 focus:border-linen/35">
 	          <button type="submit" class="rounded-sm bg-cream px-7 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition hover:bg-linen focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" data-i18n="form.begin">
             Begin
           </button>
@@ -442,6 +635,519 @@
   </header>
 
   <main>
+    <!-- SECTION 2: THE LISTENING BOOTH -->
+    <section id="listening-booth" class="px-5 py-24 sm:py-28">
+      <div class="mx-auto max-w-3xl reveal">
+        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75 text-center" data-i18n="booth.kicker">The Listening Booth</p>
+        <h2 class="mt-4 font-serif text-4xl font-semibold text-cream text-center sm:text-5xl" data-i18n="booth.title">Hear the difference</h2>
+        <p class="mx-auto mt-4 max-w-xl text-center leading-8 text-linen" data-i18n="booth.subtext">Type anything — a sentence, a thought, a line you love.</p>
+
+        <div class="mt-12 quiet-panel rounded-md p-6 sm:p-8 shadow-soft">
+          <div class="relative">
+            <textarea id="booth-input" maxlength="250" class="w-full min-h-[140px] rounded-sm border border-linen/18 bg-ink/55 p-4 pr-16 text-base text-cream outline-none transition placeholder:text-linen/55 focus:border-linen/35 resize-none" data-i18n-placeholder="booth.placeholder" placeholder="Type up to 250 characters..."></textarea>
+            <div id="booth-counter" class="absolute bottom-3 right-3 text-xs text-linen/60 pointer-events-none font-mono">0 / 250</div>
+          </div>
+
+          <button type="button" id="booth-generate" class="mt-4 w-full rounded-sm bg-cream px-7 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition hover:bg-linen focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" data-i18n="booth.generate">
+            Generate
+          </button>
+          <p id="tts-error" class="hidden text-xs text-red-400 font-semibold mt-3 text-center" data-i18n="booth.error">Something went wrong. Please try again.</p>
+
+          <div id="tts-processing" class="hidden flex-col items-center justify-center py-10">
+            <div class="relative flex items-center justify-center w-10 h-10">
+              <div class="w-10 h-10 bg-antique rounded-full z-10"></div>
+              <div class="ripple-ring ripple-ring-1"></div>
+              <div class="ripple-ring ripple-ring-2"></div>
+              <div class="ripple-ring ripple-ring-3"></div>
+            </div>
+            <p class="text-sm text-linen/60 mt-6 font-semibold" data-i18n="booth.processing">Generating your voice...</p>
+          </div>
+
+          <div id="tts-panels-container" class="hidden grid gap-5 md:grid-cols-2 mt-8">
+            <div class="quiet-panel rounded-md p-6 flex flex-col justify-between min-h-[200px]">
+              <div>
+                <span class="inline-block bg-blue-950/40 text-blue-200 border border-blue-500/20 text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full font-semibold" data-i18n="booth.aiTag">AI Voice</span>
+                <h3 class="font-serif text-2xl font-semibold text-cream mt-4" data-i18n="booth.aiTitle">Azure Neural</h3>
+                <p class="text-sm text-linen mt-2" data-i18n="booth.aiDesc">Decent. Clear. Gets the job done.</p>
+              </div>
+              <div class="flex items-center justify-between mt-6">
+                <button type="button" id="play-ai-btn" class="audio-control flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold focus:outline-none">▶</button>
+                <div class="wave-container hidden" id="ai-waveform">
+                  <div class="wave-bar" style="animation-delay: 0s;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.1s;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.2s;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.3s;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.4s;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.5s;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.6s;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.7s;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.8s;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.9s;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="craft-panel" class="quiet-panel rounded-md p-6 flex flex-col justify-between min-h-[200px] opacity-40 pointer-events-none transition-all duration-300">
+              <div>
+                <span class="inline-block bg-emerald/40 text-emerald-300 border border-emerald/20 text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full font-semibold" data-i18n="booth.craftTag">Hand-Crafted</span>
+                <h3 class="font-serif text-2xl font-semibold text-cream mt-4" data-i18n="booth.craftTitle">Our Voice</h3>
+                <p class="text-sm text-linen mt-2" data-i18n="booth.craftDesc">Listen to the AI version first.</p>
+              </div>
+              <div class="flex items-center justify-between mt-6">
+                <div id="craft-status-wrapper" class="flex items-center gap-2">
+                  <span id="craft-lock-icon" class="text-linen/50">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </span>
+                  <span id="craft-lock-text" class="text-xs text-linen/70" data-i18n="booth.lockedNotice">Unlocks after you hear the AI version</span>
+                  <button type="button" id="play-craft-btn" class="audio-control hidden flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold focus:outline-none">▶</button>
+                </div>
+                <div class="wave-container hidden" id="craft-waveform">
+                  <div class="wave-bar" style="animation-delay: 0s; background-color: #55b580;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.1s; background-color: #55b580;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.2s; background-color: #55b580;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.3s; background-color: #55b580;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.4s; background-color: #55b580;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.5s; background-color: #55b580;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.6s; background-color: #55b580;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.7s; background-color: #55b580;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.8s; background-color: #55b580;"></div>
+                  <div class="wave-bar" style="animation-delay: 0.9s; background-color: #55b580;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <audio id="ai-audio" preload="none"></audio>
+      <audio id="craft-audio" preload="none">
+        <source src="/audio/sample.mp3" type="audio/mpeg">
+      </audio>
+    </section>
+
+    <!-- SECTION 3: THE LIBRARY & VOICE OF THE CULT (Combined Grid & Transparent) -->
+    <section id="the-library" class="relative overflow-hidden px-5 py-24 sm:py-28 text-cream">
+      <!-- Ambient light on the shelf -->
+      <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/50 to-transparent pointer-events-none z-10"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(184,154,106,0.05),transparent_60%)] pointer-events-none z-10"></div>
+
+      <div class="mx-auto max-w-7xl relative z-20">
+        
+        <!-- CENTERED HEADER BLOCK (Typography connected to global dicts) -->
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="lib.kicker">The Library</p>
+          <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl" data-i18n="lib.title">
+            "Everyone asks if I write books. I do. You are one of them."
+          </h2>
+          <p class="mt-6 leading-7 text-linen max-w-xl mx-auto" data-i18n="lib.copy">
+            Every bespoke audiobook created here becomes part of something larger — a living library that no publisher holds, no algorithm ranks, and no reader can finish. These are not finished thoughts. They are lives, still being written. I am only the one who listens first.
+          </p>
+        </div>
+
+        <!-- TWO-COLUMN GRID (Testimonials on LEFT, Bookshelf on RIGHT - Compact Desktop scale) -->
+        <div class="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-12 items-center mt-12">
+          
+          <!-- LEFT COLUMN: Elegant Rotating Ledger Reviews ("Voice of the Cult") -->
+          <div class="w-full bg-ink/40 border border-linen/10 rounded-sm p-6 sm:p-8 backdrop-blur-sm self-center">
+            <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75 mb-6 text-center lg:text-left" data-i18n="lib.reviewsKicker">Voice of the Cult</p>
+            <div id="ledgers-container" class="relative min-h-[140px] flex items-center justify-center">
+              
+              <!-- Slide 1 -->
+              <div class="review-slide absolute inset-0 opacity-0 transition-opacity duration-1000 flex flex-col justify-center items-center lg:items-start pointer-events-none text-center lg:text-left">
+                <p class="font-serif italic text-lg sm:text-xl text-[#f2eadc] leading-relaxed" data-i18n="testimonial.one">
+                  "I never felt so home in a book"
+                </p>
+                <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/60" data-i18n="testimonial.oneAuthor">
+                  — Private Member
+                </p>
+              </div>
+
+              <!-- Slide 2 -->
+              <div class="review-slide absolute inset-0 opacity-0 transition-opacity duration-1000 flex flex-col justify-center items-center lg:items-start pointer-events-none text-center lg:text-left">
+                <p class="font-serif italic text-lg sm:text-xl text-[#f2eadc] leading-relaxed" data-i18n="testimonial.two">
+                  "गीता का वो हिस्सा सुनकर आँखें भर आईं। शुक्रिया, सच में।"
+                </p>
+                <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/60" data-i18n="testimonial.twoAuthor">
+                  — Arjun, Mumbai (Bespoke Client)
+                </p>
+              </div>
+
+              <!-- Slide 3 -->
+              <div class="review-slide absolute inset-0 opacity-0 transition-opacity duration-1000 flex flex-col justify-center items-center lg:items-start pointer-events-none text-center lg:text-left">
+                <p class="font-serif italic text-lg sm:text-xl text-[#f2eadc] leading-relaxed" data-i18n="testimonial.three">
+                  "I closed my eyes halfway through and didn't open them until it was over."
+                </p>
+                <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/60" data-i18n="testimonial.threeAuthor">
+                  — Founding Listener
+                </p>
+              </div>
+
+            </div>
+
+            <!-- Slider Dots/Controls with mobile hitboxes -->
+            <div class="flex justify-center lg:justify-start gap-2.5 mt-6">
+              <button class="review-dot p-2 -m-2 focus:outline-none" onclick="window.setReview(0)" aria-label="First testimonial">
+                <span class="block w-1.5 h-1.5 rounded-full bg-[#4a4035] transition-all duration-300"></span>
+              </button>
+              <button class="review-dot p-2 -m-2 focus:outline-none" onclick="window.setReview(1)" aria-label="Second testimonial">
+                <span class="block w-1.5 h-1.5 rounded-full bg-[#4a4035] transition-all duration-300"></span>
+              </button>
+              <button class="review-dot p-2 -m-2 focus:outline-none" onclick="window.setReview(2)" aria-label="Third testimonial">
+                <span class="block w-1.5 h-1.5 rounded-full bg-[#4a4035] transition-all duration-300"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: Bookshelf (Varying Widths, Heights, and Slopes - Compact size) -->
+          <div class="w-full lg:max-w-[480px] mx-auto relative">
+            <div class="bookshelf-wrapper relative rounded-sm border-b-[16px] border-[#362214] shadow-2xl bg-gradient-to-t from-black/60 to-black/20">
+              
+              <!-- Desktop Navigation Arrows -->
+              <button id="shelf-prev" class="hidden lg:flex absolute left-2 top-1/2 -translate-y-1/2 z-30 h-8 w-8 items-center justify-center rounded-full border border-[#b89a6a]/20 bg-[#1a1712]/90 text-[#b89a6a] hover:border-[#b89a6a]/60 hover:text-[#f2eadc] transition focus:outline-none" aria-label="Scroll left">
+                ←
+              </button>
+              <button id="shelf-next" class="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 z-30 h-8 w-8 items-center justify-center rounded-full border border-[#b89a6a]/20 bg-[#1a1712]/90 text-[#b89a6a] hover:border-[#b89a6a]/60 hover:text-[#f2eadc] transition focus:outline-none" aria-label="Scroll right">
+                →
+              </button>
+
+              <div id="bookshelf" class="overflow-x-auto pb-1 pt-24 scrollbar-none">
+                <!-- Infinite loop scrolling structure containing 3 sets -->
+                <div id="bookshelf-track" class="flex items-end justify-start gap-1.5 w-max px-4">
+                  
+                  <!-- SET A -->
+                  <div class="spine-set flex items-end gap-1.5 shrink-0">
+                    <!-- Spine 1 -->
+                    <div class="spine-container antique-spine shrink-0 w-[36px] bg-[#4a1a1a]" style="height: 220px;">
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[10px] font-medium tracking-wide text-[#b89a6a]/40" data-i18n="lib.book1.title">A Grief That Had No Name</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book1.desc">"On learning to stop apologizing for how deeply she felt things."</div>
+                    </div>
+                    <!-- Spine 2 -->
+                    <div class="spine-container antique-spine shrink-0 w-[58px] bg-[#835332]" style="height: 310px;">
+                      <div class="raised-band"></div>
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#1c120a]/80" data-i18n="lib.book2.title">The Version I Was Becoming</span>
+                      <div class="raised-band"></div>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book2.desc">"Written for a man becoming someone his younger self wouldn't recognize."</div>
+                    </div>
+                    <!-- Spine 3 -->
+                    <div class="spine-container antique-spine shrink-0 w-[44px] bg-[#221a15]" style="height: 270px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/50" data-i18n="lib.book3.title">What Power Felt From Below</span>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book3.desc">"A meditation on watching systems from the outside."</div>
+                    </div>
+                    <!-- Spine 4 -->
+                    <div class="spine-container antique-spine shrink-0 w-[34px] bg-[#bb7133]" style="height: 340px;">
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#422208]/80" data-i18n="lib.book4.title">Silence As A Second Language</span>
+                      <div class="spine-tooltip" data-i18n="lib.book4.desc">"For a woman who used words to fill rooms she was afraid of."</div>
+                    </div>
+                    <!-- Spine 5 -->
+                    <div class="spine-container antique-spine shrink-0 w-[66px] bg-[#3a2113]" style="height: 320px;">
+                      <div class="gold-line"></div>
+                      <div class="raised-band my-4"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/60" data-i18n="lib.book5.title">The Unglamorous Decision</span>
+                      <div class="raised-band my-4"></div>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book5.desc">"On the strange courage it takes to stay ordinary."</div>
+                    </div>
+                    <!-- Spine 6 -->
+                    <div class="spine-container antique-spine shrink-0 w-[38px] bg-[#53301a]" style="height: 290px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#2a1306]/80" data-i18n="lib.book6.title">Geography of Belonging</span>
+                      <div class="spine-tooltip" data-i18n="lib.book6.desc">"A letter to the city she left that never left her."</div>
+                    </div>
+                    <!-- Spine 7 -->
+                    <div class="spine-container antique-spine shrink-0 w-[48px] bg-[#1a1512]" style="height: 335px;">
+                      <div class="raised-band"></div>
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/40" data-i18n="lib.book7.title">What I Made and Let Go</span>
+                      <div class="gold-line"></div>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book7.desc">"On building things that will outlast your ability to protect them."</div>
+                    </div>
+                    <!-- Spine 8 -->
+                    <div class="spine-container antique-spine shrink-0 w-[42px] bg-[#443a32]" style="height: 325px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#1c1815]/70" data-i18n="lib.book8.title">Rest As Resistance</span>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book8.desc">"For someone who confused exhaustion with strength for too long."</div>
+                    </div>
+                    <!-- Spine 9 -->
+                    <div class="spine-container antique-spine shrink-0 w-[46px] bg-[#7c512d]" style="height: 300px;">
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#f0e8dc]/50" data-i18n="lib.book9.title">Appetite</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book9.desc">"The philosophy of wanting more than you were given permission to want."</div>
+                    </div>
+                    <!-- Spine 10 -->
+                    <div class="spine-container antique-spine shrink-0 w-[44px] bg-[#dfd2bc]" style="height: 330px; border-left: 2px solid rgba(0,0,0,0.15)">
+                      <div class="raised-band opacity-60"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#4a361e]/70" data-i18n="lib.book10.title">The Old Language</span>
+                      <div class="raised-band opacity-60"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book10.desc">"On returning to a faith she thought she had outgrown."</div>
+                    </div>
+                    <!-- Spine 11 -->
+                    <div class="spine-container antique-spine shrink-0 w-[54px] bg-[#a07343]" style="height: 335px;">
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#f0e8dc]/60" data-i18n="lib.book11.title">Notes From Unreadable Year</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book11.desc">"Written during a year that refused to make sense."</div>
+                    </div>
+                    <!-- Spine 12 -->
+                    <div class="spine-container antique-spine shrink-0 w-[46px] bg-[#3a2618]" style="height: 335px;">
+                      <div class="raised-band my-4"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/60" data-i18n="lib.book12.title">The Longer Loyalty</span>
+                      <div class="raised-band my-4"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book12.desc">"A meditation on staying when leaving would have been easier."</div>
+                    </div>
+                    <!-- Spine 13 -->
+                    <div class="spine-container antique-spine shrink-0 w-[32px] bg-[#502b1f]" style="height: 320px;">
+                      <span class="spine-text font-cormorant text-[10px] font-medium tracking-wide text-[#b89a6a]/40" data-i18n="lib.book13.title">What She Asked Me</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book13.desc">"For a father relearning himself through his daughter's questions."</div>
+                    </div>
+                    <!-- Spine 14 -->
+                    <div class="spine-container antique-spine shrink-0 w-[50px] bg-[#1e130d]" style="height: 350px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/50" data-i18n="lib.book14.title">After the Hunger</span>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book14.desc">"On watching your ambition outlive your certainty."</div>
+                    </div>
+                  </div>
+
+                  <!-- SET B (Center clone) -->
+                  <div class="spine-set flex items-end gap-1.5 shrink-0">
+                    <!-- Spine 1 -->
+                    <div class="spine-container antique-spine shrink-0 w-[36px] bg-[#4a1a1a]" style="height: 220px;">
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[10px] font-medium tracking-wide text-[#b89a6a]/40" data-i18n="lib.book1.title">A Grief That Had No Name</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book1.desc">"On learning to stop apologizing for how deeply she felt things."</div>
+                    </div>
+                    <!-- Spine 2 -->
+                    <div class="spine-container antique-spine shrink-0 w-[58px] bg-[#835332]" style="height: 310px;">
+                      <div class="raised-band"></div>
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#1c120a]/80" data-i18n="lib.book2.title">The Version I Was Becoming</span>
+                      <div class="raised-band"></div>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book2.desc">"Written for a man becoming someone his younger self wouldn't recognize."</div>
+                    </div>
+                    <!-- Spine 3 -->
+                    <div class="spine-container antique-spine shrink-0 w-[44px] bg-[#221a15]" style="height: 270px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/50" data-i18n="lib.book3.title">What Power Felt From Below</span>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book3.desc">"A meditation on watching systems from the outside."</div>
+                    </div>
+                    <!-- Spine 4 -->
+                    <div class="spine-container antique-spine shrink-0 w-[34px] bg-[#bb7133]" style="height: 340px;">
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#422208]/80" data-i18n="lib.book4.title">Silence As A Second Language</span>
+                      <div class="spine-tooltip" data-i18n="lib.book4.desc">"For a woman who used words to fill rooms she was afraid of."</div>
+                    </div>
+                    <!-- Spine 5 -->
+                    <div class="spine-container antique-spine shrink-0 w-[66px] bg-[#3a2113]" style="height: 320px;">
+                      <div class="gold-line"></div>
+                      <div class="raised-band my-4"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/60" data-i18n="lib.book5.title">The Unglamorous Decision</span>
+                      <div class="raised-band my-4"></div>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book5.desc">"On the strange courage it takes to stay ordinary."</div>
+                    </div>
+                    <!-- Spine 6 -->
+                    <div class="spine-container antique-spine shrink-0 w-[38px] bg-[#53301a]" style="height: 290px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#2a1306]/80" data-i18n="lib.book6.title">Geography of Belonging</span>
+                      <div class="spine-tooltip" data-i18n="lib.book6.desc">"A letter to the city she left that never left her."</div>
+                    </div>
+                    <!-- Spine 7 -->
+                    <div class="spine-container antique-spine shrink-0 w-[48px] bg-[#1a1512]" style="height: 335px;">
+                      <div class="raised-band"></div>
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/40" data-i18n="lib.book7.title">What I Made and Let Go</span>
+                      <div class="gold-line"></div>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book7.desc">"On building things that will outlast your ability to protect them."</div>
+                    </div>
+                    <!-- Spine 8 -->
+                    <div class="spine-container antique-spine shrink-0 w-[42px] bg-[#443a32]" style="height: 325px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#1c1815]/70" data-i18n="lib.book8.title">Rest As Resistance</span>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book8.desc">"For someone who confused exhaustion with strength for too long."</div>
+                    </div>
+                    <!-- Spine 9 -->
+                    <div class="spine-container antique-spine shrink-0 w-[46px] bg-[#7c512d]" style="height: 300px;">
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#f0e8dc]/50" data-i18n="lib.book9.title">Appetite</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book9.desc">"The philosophy of wanting more than you were given permission to want."</div>
+                    </div>
+                    <!-- Spine 10 -->
+                    <div class="spine-container antique-spine shrink-0 w-[44px] bg-[#dfd2bc]" style="height: 330px; border-left: 2px solid rgba(0,0,0,0.15)">
+                      <div class="raised-band opacity-60"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#4a361e]/70" data-i18n="lib.book10.title">The Old Language</span>
+                      <div class="raised-band opacity-60"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book10.desc">"On returning to a faith she thought she had outgrown."</div>
+                    </div>
+                    <!-- Spine 11 -->
+                    <div class="spine-container antique-spine shrink-0 w-[54px] bg-[#a07343]" style="height: 335px;">
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#f0e8dc]/60" data-i18n="lib.book11.title">Notes From Unreadable Year</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book11.desc">"Written during a year that refused to make sense."</div>
+                    </div>
+                    <!-- Spine 12 -->
+                    <div class="spine-container antique-spine shrink-0 w-[46px] bg-[#3a2618]" style="height: 335px;">
+                      <div class="raised-band my-4"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/60" data-i18n="lib.book12.title">The Longer Loyalty</span>
+                      <div class="raised-band my-4"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book12.desc">"A meditation on staying when leaving would have been easier."</div>
+                    </div>
+                    <!-- Spine 13 -->
+                    <div class="spine-container antique-spine shrink-0 w-[32px] bg-[#502b1f]" style="height: 320px;">
+                      <span class="spine-text font-cormorant text-[10px] font-medium tracking-wide text-[#b89a6a]/40" data-i18n="lib.book13.title">What She Asked Me</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book13.desc">"For a father relearning himself through his daughter's questions."</div>
+                    </div>
+                    <!-- Spine 14 -->
+                    <div class="spine-container antique-spine shrink-0 w-[50px] bg-[#1e130d]" style="height: 350px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/50" data-i18n="lib.book14.title">After the Hunger</span>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book14.desc">"On watching your ambition outlive your certainty."</div>
+                    </div>
+                  </div>
+
+                  <!-- SET C -->
+                  <div class="spine-set flex items-end gap-1.5 shrink-0">
+                    <!-- Spine 1 -->
+                    <div class="spine-container antique-spine shrink-0 w-[36px] bg-[#4a1a1a]" style="height: 220px;">
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[10px] font-medium tracking-wide text-[#b89a6a]/40" data-i18n="lib.book1.title">A Grief That Had No Name</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book1.desc">"On learning to stop apologizing for how deeply she felt things."</div>
+                    </div>
+                    <!-- Spine 2 -->
+                    <div class="spine-container antique-spine shrink-0 w-[58px] bg-[#835332]" style="height: 310px;">
+                      <div class="raised-band"></div>
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#1c120a]/80" data-i18n="lib.book2.title">The Version I Was Becoming</span>
+                      <div class="raised-band"></div>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book2.desc">"Written for a man becoming someone his younger self wouldn't recognize."</div>
+                    </div>
+                    <!-- Spine 3 -->
+                    <div class="spine-container antique-spine shrink-0 w-[44px] bg-[#221a15]" style="height: 270px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/50" data-i18n="lib.book3.title">What Power Felt From Below</span>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book3.desc">"A meditation on watching systems from the outside."</div>
+                    </div>
+                    <!-- Spine 4 -->
+                    <div class="spine-container antique-spine shrink-0 w-[34px] bg-[#bb7133]" style="height: 340px;">
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#422208]/80" data-i18n="lib.book4.title">Silence As A Second Language</span>
+                      <div class="spine-tooltip" data-i18n="lib.book4.desc">"For a woman who used words to fill rooms she was afraid of."</div>
+                    </div>
+                    <!-- Spine 5 -->
+                    <div class="spine-container antique-spine shrink-0 w-[66px] bg-[#3a2113]" style="height: 320px;">
+                      <div class="gold-line"></div>
+                      <div class="raised-band my-4"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/60" data-i18n="lib.book5.title">The Unglamorous Decision</span>
+                      <div class="raised-band my-4"></div>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book5.desc">"On the strange courage it takes to stay ordinary."</div>
+                    </div>
+                    <!-- Spine 6 -->
+                    <div class="spine-container antique-spine shrink-0 w-[38px] bg-[#53301a]" style="height: 290px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#2a1306]/80" data-i18n="lib.book6.title">Geography of Belonging</span>
+                      <div class="spine-tooltip" data-i18n="lib.book6.desc">"A letter to the city she left that never left her."</div>
+                    </div>
+                    <!-- Spine 7 -->
+                    <div class="spine-container antique-spine shrink-0 w-[48px] bg-[#1a1512]" style="height: 335px;">
+                      <div class="raised-band"></div>
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/40" data-i18n="lib.book7.title">What I Made and Let Go</span>
+                      <div class="gold-line"></div>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book7.desc">"On building things that will outlast your ability to protect them."</div>
+                    </div>
+                    <!-- Spine 8 -->
+                    <div class="spine-container antique-spine shrink-0 w-[42px] bg-[#443a32]" style="height: 325px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#1c1815]/70" data-i18n="lib.book8.title">Rest As Resistance</span>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book8.desc">"For someone who confused exhaustion with strength for too long."</div>
+                    </div>
+                    <!-- Spine 9 -->
+                    <div class="spine-container antique-spine shrink-0 w-[46px] bg-[#7c512d]" style="height: 300px;">
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#f0e8dc]/50" data-i18n="lib.book9.title">Appetite</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book9.desc">"The philosophy of wanting more than you were given permission to want."</div>
+                    </div>
+                    <!-- Spine 10 -->
+                    <div class="spine-container antique-spine shrink-0 w-[44px] bg-[#dfd2bc]" style="height: 330px; border-left: 2px solid rgba(0,0,0,0.15)">
+                      <div class="raised-band opacity-60"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#4a361e]/70" data-i18n="lib.book10.title">The Old Language</span>
+                      <div class="raised-band opacity-60"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book10.desc">"On returning to a faith she thought she had outgrown."</div>
+                    </div>
+                    <!-- Spine 11 -->
+                    <div class="spine-container antique-spine shrink-0 w-[54px] bg-[#a07343]" style="height: 335px;">
+                      <div class="gold-line"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#f0e8dc]/60" data-i18n="lib.book11.title">Notes From Unreadable Year</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book11.desc">"Written during a year that refused to make sense."</div>
+                    </div>
+                    <!-- Spine 12 -->
+                    <div class="spine-container antique-spine shrink-0 w-[46px] bg-[#3a2618]" style="height: 335px;">
+                      <div class="raised-band my-4"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/60" data-i18n="lib.book12.title">The Longer Loyalty</span>
+                      <div class="raised-band my-4"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book12.desc">"A meditation on staying when leaving would have been easier."</div>
+                    </div>
+                    <!-- Spine 13 -->
+                    <div class="spine-container antique-spine shrink-0 w-[32px] bg-[#502b1f]" style="height: 320px;">
+                      <span class="spine-text font-cormorant text-[10px] font-medium tracking-wide text-[#b89a6a]/40" data-i18n="lib.book13.title">What She Asked Me</span>
+                      <div class="gold-line"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book13.desc">"For a father relearning himself through his daughter's questions."</div>
+                    </div>
+                    <!-- Spine 14 -->
+                    <div class="spine-container antique-spine shrink-0 w-[50px] bg-[#1e130d]" style="height: 350px;">
+                      <div class="raised-band"></div>
+                      <span class="spine-text font-cormorant text-[11px] font-medium tracking-wide text-[#b89a6a]/50" data-i18n="lib.book14.title">After the Hunger</span>
+                      <div class="raised-band"></div>
+                      <div class="spine-tooltip" data-i18n="lib.book14.desc">"On watching your ambition outlive your certainty."</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- Bottom Shelf Ledge Details -->
+            <div class="max-w-5xl mx-auto h-[12px] bg-[#22150c] shadow-md border-t border-white/[0.04]"></div>
+          </div>
+
+        </div>
+
+        <!-- 8. CLOSING & BUTTON -->
+        <div class="text-center mt-20 flex flex-col items-center reveal">
+          <p class="font-serif italic text-2xl text-[#7a7060] mb-6" data-i18n="lib.closing">Your chapter belongs here.</p>
+          <a href="#hero-email" class="btn-sweep inline-block border border-[#7a6443] text-antique font-sans text-xs font-semibold uppercase tracking-[0.3em] px-8 py-3.5 rounded-sm transition" data-i18n="lib.cta">
+            Begin Yours →
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 4: OFFERINGS -->
     <section id="offerings" class="px-5 py-24 sm:py-28">
       <div class="mx-auto max-w-7xl">
         <div class="max-w-3xl reveal">
@@ -453,37 +1159,33 @@
           <article class="quiet-panel reveal rounded-md p-7 shadow-soft">
             <p class="text-sm font-semibold uppercase tracking-[0.2em] text-linen/70" data-i18n="offerings.freeTier">Free Tier</p>
             <h3 class="mt-4 font-serif text-3xl font-semibold text-cream" data-i18n="offerings.quietBeginnings">Quiet Beginnings</h3>
-            <p class="mt-5 leading-7 text-linen" data-i18n="offerings.freeCopy">A weekly audio piece from the public domain — hand-picked for the curious mind. No card required, no catch. Just a taste of what depth sounds like.
-</p>
-            <a href="#hero-email" class="mt-8 inline-flex rounded-sm border border-linen/22 px-5 py-3 text-sm font-medium text-cream transition hover:border-linen/45 hover:bg-cream/5" data-i18n="offerings.startFree">Start Listening Free →
-</a>
+            <p class="mt-5 leading-7 text-linen" data-i18n="offerings.freeCopy">A weekly audio piece from the public domain — hand-picked for the curious mind. No card required, no catch. Just a taste of what depth sounds like.</p>
+            <a href="#hero-email" class="mt-8 inline-flex rounded-sm border border-linen/22 px-5 py-3 text-sm font-medium text-cream transition hover:border-linen/45 hover:bg-cream/5" data-i18n="offerings.startFree">Start Listening Free →</a>
           </article>
 
-        <article class="quiet-panel-strong reveal rounded-md p-7 shadow-soft lg:-mt-5">
-  <p class="text-sm font-semibold uppercase tracking-[0.2em] text-linen/78" data-i18n="offerings.mainSubscription">Main Subscription</p>
-  <h3 class="mt-4 font-serif text-3xl font-semibold text-cream" data-i18n="offerings.weeklyCollective">The Weekly Collective</h3>
-  <p class="mt-4 font-serif text-6xl font-semibold leading-none text-cream"><span class="price-underline">$12</span></p>
-  <p class="mt-4 text-sm leading-6 text-linen/78" data-i18n="offerings.everyFourWeeks">every 4 weeks</p>
-  <ul class="mt-6 space-y-3 text-linen">
-    <li class="leading-7" data-i18n="offerings.bulletClassic">• One timeless classic revisited</li>
-    <li class="leading-7" data-i18n="offerings.bulletModern">• One modern insight reframed</li>
-    <li class="leading-7" data-i18n="offerings.bulletWorld">• One clear lens on the world right now</li>
-  </ul>
-  <p class="mt-5 text-sm leading-6 text-linen/78" data-i18n="offerings.pieceLength">Each piece is 2–4 minutes.</p>
-  <p class="mt-5 font-semibold text-cream" data-i18n="offerings.noFluff">No fluff. No hype. No daily spam.</p>
-  <p class="mt-3 text-sm text-linen/78" data-i18n="offerings.cancel">You have full control to Cancel anytime.</p>
-  <a href="#hero-email" class="mt-8 inline-flex rounded-sm bg-cream px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition hover:bg-linen" data-i18n="offerings.subscribe">Subscribe</a>
-</article>
+          <article class="quiet-panel-strong reveal rounded-md p-7 shadow-soft lg:-mt-5">
+            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-linen/78" data-i18n="offerings.mainSubscription">Main Subscription</p>
+            <h3 class="mt-4 font-serif text-3xl font-semibold text-cream" data-i18n="offerings.weeklyCollective">The Weekly Collective</h3>
+            <p class="mt-4 font-serif text-6xl font-semibold leading-none text-cream"><span class="price-underline">$12</span></p>
+            <p class="mt-4 text-sm leading-6 text-linen/78" data-i18n="offerings.everyFourWeeks">every 4 weeks</p>
+            <ul class="mt-6 space-y-3 text-linen">
+              <li class="leading-7" data-i18n="offerings.bulletClassic">• One timeless classic revisited</li>
+              <li class="leading-7" data-i18n="offerings.bulletModern">• One modern insight reframed</li>
+              <li class="leading-7" data-i18n="offerings.bulletWorld">• One clear lens on the world right now</li>
+            </ul>
+            <p class="mt-5 text-sm leading-6 text-linen/78" data-i18n="offerings.pieceLength">Each piece is 2–4 minutes.</p>
+            <p class="mt-5 font-semibold text-cream" data-i18n="offerings.noFluff">No fluff. No hype. No daily spam.</p>
+            <p class="mt-3 text-sm text-linen/78" data-i18n="offerings.cancel">You have full control to Cancel anytime.</p>
+            <a href="#hero-email" class="mt-8 inline-flex rounded-sm bg-cream px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition hover:bg-linen" data-i18n="offerings.subscribe">Subscribe</a>
+          </article>
 
           <article class="quiet-panel reveal rounded-md p-7 shadow-soft">
             <p class="text-sm font-semibold uppercase tracking-[0.2em] text-linen/70" data-i18n="offerings.oneTime">One-Time</p>
             <h3 class="mt-4 font-serif text-3xl font-semibold text-cream" data-i18n="offerings.personalReflection">The Personal Reflection</h3>
             <p class="mt-3 font-serif text-4xl font-semibold text-cream">$47</p>
-            <p class="mt-5 leading-7 text-linen" data-i18n="offerings.personalCopyOne">You fill out a short form. You tell us something real — a chapter of your life, a question you keep returning to, a version of yourself you're working toward. You choose a book you've always wanted to understand.
-</p>
-<p class="mt-5 leading-7 text-linen" data-i18n="offerings.personalCopyTwo">We build it into an original audiobook written around you. </p>
-<p class="mt-5 leading-7 text-linen" data-i18n="offerings.personalCopyThree">One piece. Made for one person. Yours to keep.
-</p>
+            <p class="mt-5 leading-7 text-linen" data-i18n="offerings.personalCopyOne">You fill out a short form. You tell us something real — a chapter of your life, a question you keep returning to, a version of yourself you're working toward. You choose a book you've always wanted to understand.</p>
+            <p class="mt-5 leading-7 text-linen" data-i18n="offerings.personalCopyTwo">We build it into an original audiobook written around you. </p>
+            <p class="mt-5 leading-7 text-linen" data-i18n="offerings.personalCopyThree">One piece. Made for one person. Yours to keep.</p>
             <a href="#hero-email" class="mt-8 inline-flex rounded-sm border border-linen/22 px-5 py-3 text-sm font-medium text-cream transition hover:border-linen/45 hover:bg-cream/5" data-i18n="offerings.requestYours">Request Yours →</a>
           </article>
         </div>
@@ -506,59 +1208,8 @@
       </div>
     </section>
 
-    <section id="sample" class="px-5 py-20 sm:py-24">
-      <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-        <div class="reveal">
-          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="sample.kicker">Listen In</p>
-          <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl" data-i18n="sample.title">This Is What It Sounds Like.</h2>
-          <p class="mt-6 max-w-xl leading-8 text-linen" data-i18n="sample.copy">A sample piece from our collection. No signup. Just listen.</p>
-        </div>
-        <div class="premium-audio reveal rounded-md p-5 sm:p-6">
-          <audio id="sample-audio" preload="none" aria-label="Sample audio: Attention as Generosity" data-i18n-aria-label="audio.sampleLabel">
-            <source src="sample.mp3" type="audio/mpeg">
-          </audio>
-          <div class="flex flex-col gap-5">
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.26em] text-antique/80" data-i18n="sample.featured">Featured Reflection</p>
-                <h3 class="font-serif text-2xl font-semibold text-cream sm:text-3xl" data-i18n="sample.reflectionTitle">Attention as Generosity</h3>
-              </div>
-              <p class="text-sm text-linen/70" data-audio-time="sample-audio">0:00 / 0:00</p>
-            </div>
-
-            <div class="grid gap-4 sm:grid-cols-[auto_1fr_auto] sm:items-center">
-              <div class="flex items-center gap-3">
-                <button type="button" data-audio-toggle="sample-audio" class="audio-play flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold focus:outline-none focus:ring-2 focus:ring-linen focus:ring-offset-2 focus:ring-offset-ink" aria-label="Play sample audio">▶</button>
-                <button type="button" data-skip="-15" data-audio-target="sample-audio" class="audio-control flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold" aria-label="Rewind audio 15 seconds" data-i18n-aria-label="audio.rewind">-15</button>
-                <button type="button" data-skip="15" data-audio-target="sample-audio" class="audio-control flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold" aria-label="Fast forward audio 15 seconds" data-i18n-aria-label="audio.forward">+15</button>
-              </div>
-              <label class="block min-w-0">
-                <span class="sr-only" data-i18n="audio.progress">Sample audio progress</span>
-                <input class="audio-progress h-1.5 w-full cursor-pointer" type="range" min="0" max="100" value="0" step="0.1" data-progress-for="sample-audio">
-              </label>
-              <button type="button" data-speed-for="sample-audio" class="audio-control min-w-12 rounded-[10px] px-3 py-2 text-center text-sm font-semibold" aria-label="Playback speed" data-i18n-aria-label="audio.speed">1x</button>
-            </div>
-          </div>
-
-          <div class="mt-8 grid gap-4 border-t border-linen/14 pt-6 md:grid-cols-3">
-            <blockquote class="rounded-sm border border-linen/12 bg-ink/28 p-4">
-              <p class="font-serif text-lg leading-7 text-cream" data-i18n="testimonial.one">"I never felt so home in a book"</p>
-              <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/64" data-i18n="testimonial.oneAuthor">Private Member</p>
-            </blockquote>
-            <blockquote class="rounded-sm border border-linen/12 bg-ink/28 p-4">
-              <p class="font-serif text-lg leading-7 text-cream" data-i18n="testimonial.two">"गीता का वो हिस्सा सुनकर आँखें भर आईं। शुक्रिया, सच में।"</p>
-              <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/64" data-i18n="testimonial.twoAuthor">Arjun, Mumbai (Bespoke Audio Client)</p>
-            </blockquote>
-            <blockquote class="rounded-sm border border-linen/12 bg-ink/28 p-4">
-              <p class="font-serif text-lg leading-7 text-cream" data-i18n="testimonial.three">"I closed my eyes halfway through and didn't open them until it was over."</p>
-              <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-linen/64" data-i18n="testimonial.threeAuthor">Founding Listener</p>
-            </blockquote>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="px-5 py-24 sm:py-28">
+    <!-- SECTION 5: EXPLORE BY WORLDVIEW -->
+    <section id="explore" class="px-5 py-24 sm:py-28">
       <div class="mx-auto max-w-7xl">
         <div class="reveal max-w-3xl">
           <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="explore.kicker">Explore</p>
@@ -614,7 +1265,7 @@
         </div>
 
         <div class="mt-14">
-          <h3 class="reveal text-sm font-semibold uppercase tracking-[0.28em] text-antique/80" data-i18n="explore.powerSociety">Explore Power & Society</h3>
+          <h3 class="reveal text-sm font-semibold uppercase tracking-[0.28em] text-[#c6a766]" data-i18n="explore.powerSociety">Explore Power & Society</h3>
           <div class="mt-5 grid gap-4 lg:grid-cols-[0.85fr_1.15fr] lg:items-stretch">
             <div class="quiet-panel reveal rounded-md border-emerald/35 p-6 shadow-soft">
               <p class="text-xs font-semibold uppercase tracking-[0.24em] text-linen/68" data-i18n="marx.kicker">Anti-capitalist exception</p>
@@ -666,23 +1317,25 @@
       </div>
     </section>
 
-<section class="px-5 py-24 sm:py-28">
-  <div class="quiet-panel mx-auto grid max-w-6xl gap-8 rounded-md p-6 shadow-soft md:grid-cols-[0.9fr_1.1fr] md:items-center md:p-8">
-    <div class="portrait-frame reveal rounded-md p-2">
-      <img src="portrait.jpeg" alt="Portrait of the curator" data-i18n-alt="alt.curator" class="h-full min-h-[22rem] w-full rounded-sm object-cover">
-    </div>
-    <div class="reveal">
-      <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="story.kicker">Trust & Story</p>
-      <p class="mt-6 font-serif text-3xl leading-[1.35] text-cream sm:text-4xl" data-i18n="story.title">
-        For over a decade, I've been creating spaces where people feel something real — no algorithms, no trends. The Daily Art Cult is that same spirit, just quieter.
-      </p>
-      <p class="mt-6 leading-8 text-linen" data-i18n="story.copy">
-        Every piece is chosen slowly and personally — one person sitting with ideas, asking whether it's worth your two minutes. I think it is.
-      </p>
-    </div>
-  </div>
-</section>
+    <!-- SECTION 6: CURATOR TRUST -->
+    <section class="px-5 py-24 sm:py-28">
+      <div class="quiet-panel mx-auto grid max-w-6xl gap-8 rounded-md p-6 shadow-soft md:grid-cols-[0.9fr_1.1fr] md:items-center md:p-8">
+        <div class="portrait-frame reveal rounded-md p-2">
+          <img src="portrait.jpeg" alt="Portrait of the curator" data-i18n-alt="alt.curator" class="h-full min-h-[22rem] w-full rounded-sm object-cover">
+        </div>
+        <div class="reveal">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="story.kicker">Trust & Story</p>
+          <p class="mt-6 font-serif text-3xl leading-[1.35] text-cream sm:text-4xl" data-i18n="story.title">
+            For over a decade, I've been creating spaces where people feel something real — no algorithms, no trends. The Daily Art Cult is that same spirit, just quieter.
+          </p>
+          <p class="mt-6 leading-8 text-linen" data-i18n="story.copy">
+            Every piece is chosen slowly and personally — one person sitting with ideas, asking whether it's worth your two minutes. I think it is.
+          </p>
+        </div>
+      </div>
+    </section>
 
+    <!-- SECTION 7: IMMORTALITY PROJECT -->
     <section class="px-5 py-24 sm:py-28">
       <div class="mx-auto max-w-5xl text-center reveal">
         <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="experiment.kicker">The Experiment</p>
@@ -762,6 +1415,7 @@
   </footer>
 
   <script>
+
     const languageNames = {
       en: "English",
       hi: "हिंदी",
@@ -894,7 +1548,58 @@
         "alt.arendt": "Portrait of Hannah Arendt",
         "alt.dubois": "Portrait of W. E. B. Du Bois",
         "alt.weil": "Portrait of Simone Weil",
-        "alt.curator": "Portrait of the curator"
+        "alt.curator": "Portrait of the curator",
+        "booth.kicker": "The Listening Booth",
+        "booth.title": "Hear the difference",
+        "booth.subtext": "Type anything — a sentence, a thought, a line you love.",
+        "booth.placeholder": "Type up to 250 characters...",
+        "booth.generate": "Generate",
+        "booth.processing": "Generating your voice...",
+        "booth.lockedNotice": "Unlocks after you hear the AI version",
+        "booth.aiTitle": "Azure Neural",
+        "booth.aiDesc": "Decent. Clear. Gets the job done.",
+        "booth.craftTitle": "Our Voice",
+        "booth.craftDesc": "Listen to the AI version first.",
+        "booth.aiTag": "AI Voice",
+        "booth.craftTag": "Hand-Crafted",
+        "booth.error": "Something went wrong. Please try again.",
+        "testimonials.kicker": "Voices of the Cult",
+        "testimonials.title": "Resonance",
+        "lib.kicker": "The Library",
+        "lib.title": '"Everyone asks if I write books. I do. You are one of them."',
+        "lib.copy": "Every bespoke audiobook created here becomes part of something larger — a living library that no publisher holds, no algorithm ranks, and no reader can finish. These are not finished thoughts. They are lives, still being written. I am only the one who listens first.",
+        "lib.shelfKicker": "Volumes in the collection",
+        "lib.reviewsKicker": "Voice of the Cult",
+        "lib.closing": "Your chapter belongs here.",
+        "lib.cta": "Begin Yours →",
+        "lib.book1.title": "A Grief That Had No Name",
+        "lib.book1.desc": "On learning to stop apologizing for how deeply she felt things.",
+        "lib.book2.title": "The Version I Was Becoming",
+        "lib.book2.desc": "Written for a man becoming someone his younger self wouldn't recognize.",
+        "lib.book3.title": "What Power Felt From Below",
+        "lib.book3.desc": "A meditation on watching systems from the outside.",
+        "lib.book4.title": "Silence As A Second Language",
+        "lib.book4.desc": "For a woman who used words to fill rooms she was afraid of.",
+        "lib.book5.title": "The Unglamorous Decision",
+        "lib.book5.desc": "On the strange courage it takes to stay ordinary.",
+        "lib.book6.title": "Geography of Belonging",
+        "lib.book6.desc": "A letter to the city she left that never left her.",
+        "lib.book7.title": "What I Made and Let Go",
+        "lib.book7.desc": "On building things that will outlast your ability to protect them.",
+        "lib.book8.title": "Rest As Resistance",
+        "lib.book8.desc": "For someone who confused exhaustion with strength for too long.",
+        "lib.book9.title": "Appetite",
+        "lib.book9.desc": "The philosophy of wanting more than you were given permission to want.",
+        "lib.book10.title": "The Old Language",
+        "lib.book10.desc": "On returning to a faith she thought she had outgrown.",
+        "lib.book11.title": "Notes From Unreadable Year",
+        "lib.book11.desc": "Written during a year that refused to make sense.",
+        "lib.book12.title": "The Longer Loyalty",
+        "lib.book12.desc": "A meditation on staying when leaving would have been easier.",
+        "lib.book13.title": "What She Asked Me",
+        "lib.book13.desc": "For a father relearning himself through his daughter's questions.",
+        "lib.book14.title": "After the Hunger",
+        "lib.book14.desc": "On watching your ambition outlive your certainty."
       },
       hi: {
         ...commonNames,
@@ -985,7 +1690,7 @@
         "marx.freeLibrary": "Karl Marx — मुफ़्त पुस्तकालय",
         "story.kicker": "विश्वास और कहानी",
         "story.title": "एक दशक से अधिक समय से मैं ऐसे स्थान बना रहा हूँ जहाँ लोग कुछ सच्चा महसूस करें — बिना एल्गोरिद्म, बिना रुझानों के। The Daily Art Cult वही आत्मा है, बस और शांत।",
-        "story.copy": "हर रचना धीरे और निजी रूप से चुनी जाती है — एक व्यक्ति विचारों के साथ बैठकर पूछता है कि क्या यह आपके दो मिनटों के योग्य है। मुझे लगता है, है।",
+        "story.copy": "हर रचना धीरे और निजी रूप से चुनी जाती है — एक व्यक्ति विचारों के साथ बैठकर पूछता है कि क्या यह आपके दो मिनटों के योग्य है। मुझे लगता, है।",
         "experiment.kicker": "प्रयोग",
         "experiment.title": "प्रयोग — अमरता परियोजनाएँ",
         "experiment.copyOne": "Ernest Becker के कार्य से प्रेरित होकर हम देखते हैं कि अपने पीछे छोड़े मूल्यों और ज्ञान के माध्यम से हम कैसे जीवित रह सकते हैं।",
@@ -993,7 +1698,7 @@
         "experiment.cta": "अमरता परियोजना के बारे में और जानें",
         "footer.copyright": "© 2026 The Daily Art Cult. सर्वाधिकार सुरक्षित।",
         "footer.socialLabel": "सोशल मीडिया",
-        "footer.languageLabel": "भाषा चुनें",
+        "footer.languageLabel": "Select language",
         "alt.sartre": "Jean-Paul Sartre का चित्र",
         "alt.marcus": "Marcus Aurelius की प्रतिमा का चित्र",
         "alt.byron": "Lord Byron का चित्र",
@@ -1005,7 +1710,58 @@
         "alt.arendt": "Hannah Arendt का चित्र",
         "alt.dubois": "W. E. B. Du Bois का चित्र",
         "alt.weil": "Simone Weil का चित्र",
-        "alt.curator": "क्यूरेटर का चित्र"
+        "alt.curator": "क्यूरेटर का चित्र",
+        "booth.kicker": "द लिसनिंग बूथ",
+        "booth.title": "अंतर महसूस करें",
+        "booth.subtext": "कुछ भी लिखें — एक वाक्य, एक विचार, या अपनी पसंदीदा पंक्ति।",
+        "booth.placeholder": "250 अक्षरों तक लिखें...",
+        "booth.generate": "आवाज़ बनाएं",
+        "booth.processing": "आपकी आवाज़ तैयार की जा रही है...",
+        "booth.lockedNotice": "एआई संस्करण सुनने के बाद अनलॉक होगा",
+        "booth.aiTitle": "अज़्योर न्यूरल",
+        "booth.aiDesc": "ठीक-ठाक। स्पष्ट। काम पूरा करता है।",
+        "booth.craftTitle": "हमारी आवाज़",
+        "booth.craftDesc": "पहले एआई संस्करण सुनें।",
+        "booth.aiTag": "एआई आवाज़",
+        "booth.craftTag": "हस्तनिर्मित",
+        "booth.error": "कुछ गड़बड़ हुई। कृपया पुनः प्रयास करें।",
+        "testimonials.kicker": "कल्प की आवाज़ें",
+        "testimonials.title": "अनुनाद",
+        "lib.kicker": "पुस्तकालय",
+        "lib.title": '"हर कोई मुझसे पूछता है कि क्या मैं किताबें लिखता हूँ। हाँ, लिखता हूँ। आप उनमें से एक हैं।"',
+        "lib.copy": "यहाँ बनाई गई हर अनूठी ऑडियोबुक किसी बड़ी चीज़ का हिस्सा बन जाती है — एक जीवंत पुस्तकालय जिसे कोई प्रकाशक नहीं रखता, कोई एल्गोरिदम रैंक नहीं करता, और कोई पाठक समाप्त नहीं कर सकता। ये कोई समाप्त विचार नहीं हैं। ये जीवन हैं, जो अब भी लिखे जा रहे हैं। मैं केवल वह हूँ जो सबसे पहले सुनता है।",
+        "lib.shelfKicker": "संग्रह के खंड",
+        "lib.reviewsKicker": "कल्प की आवाज़ें",
+        "lib.closing": "आपका अध्याय यहाँ होना चाहिए।",
+        "lib.cta": "अपना आरंभ करें →",
+        "lib.book1.title": "A Grief That Had No Name",
+        "lib.book1.desc": "On learning to stop apologizing for how deeply she felt things.",
+        "lib.book2.title": "The Version I Was Becoming",
+        "lib.book2.desc": "Written for a man becoming someone his younger self wouldn't recognize.",
+        "lib.book3.title": "What Power Felt From Below",
+        "lib.book3.desc": "A meditation on watching systems from the outside.",
+        "lib.book4.title": "Silence As A Second Language",
+        "lib.book4.desc": "For a woman who used words to fill rooms she was afraid of.",
+        "lib.book5.title": "The Unglamorous Decision",
+        "lib.book5.desc": "On the strange courage it takes to stay ordinary.",
+        "lib.book6.title": "Geography of Belonging",
+        "lib.book6.desc": "A letter to the city she left that never left her.",
+        "lib.book7.title": "What I Made and Let Go",
+        "lib.book7.desc": "On building things that will outlast your ability to protect them.",
+        "lib.book8.title": "Rest As Resistance",
+        "lib.book8.desc": "For someone who confused exhaustion with strength for too long.",
+        "lib.book9.title": "Appetite",
+        "lib.book9.desc": "The philosophy of wanting more than you were given permission to want.",
+        "lib.book10.title": "The Old Language",
+        "lib.book10.desc": "On returning to a faith she thought she had outgrown.",
+        "lib.book11.title": "Notes From Unreadable Year",
+        "lib.book11.desc": "Written during a year that refused to make sense.",
+        "lib.book12.title": "The Longer Loyalty",
+        "lib.book12.desc": "A meditation on staying when leaving would have been easier.",
+        "lib.book13.title": "What She Asked Me",
+        "lib.book13.desc": "For a father relearning himself through his daughter's questions.",
+        "lib.book14.title": "After the Hunger",
+        "lib.book14.desc": "On watching your ambition outlive your certainty."
       },
       es: {
         ...commonNames,
@@ -1017,7 +1773,7 @@
         "audio.introLabel": "Audio de introducción",
         "audio.listenArticle": "Escuchar el artículo",
         "audio.shareIntro": "Compartir audio de introducción",
-        "audio.sampleLabel": "Audio de muestra: La atención como generosidad",
+        "audio.sampleLabel": "Sample audio: Attention as Generosity",
         "audio.rewind": "Retroceder audio 15 segundos",
         "audio.forward": "Avanzar audio 15 segundos",
         "audio.progress": "Progreso del audio de muestra",
@@ -1049,7 +1805,7 @@
         "offerings.pieceLength": "Cada pieza dura 2–4 minutos.",
         "offerings.noFluff": "Sin relleno. Sin exageración. Sin spam diario.",
         "offerings.cancel": "Tienes control total para cancelar cuando quieras.",
-        "offerings.subscribe": "Suscribirse",
+        "offerings.subscribe": "Suscripción",
         "offerings.oneTime": "Una vez",
         "offerings.personalReflection": "La reflexión personal",
         "offerings.personalCopyOne": "Completas un breve formulario. Nos cuentas algo real — un capítulo de tu vida, una pregunta a la que vuelves, una versión de ti hacia la que caminas. Eliges un libro que siempre quisiste comprender.",
@@ -1066,7 +1822,7 @@
         "sample.copy": "Una pieza de muestra de nuestra colección. Sin registro. Solo escucha.",
         "sample.featured": "Reflexión destacada",
         "sample.reflectionTitle": "La atención como generosidad",
-        "testimonial.one": "\"Nunca me sentí tan en casa dentro de un libro\"",
+        "testimonial.one": "\"I never felt so home in a book\"",
         "testimonial.oneAuthor": "Miembro privado",
         "testimonial.two": "\"Al escuchar esa parte del Gita se me llenaron los ojos. Gracias, de verdad.\"",
         "testimonial.twoAuthor": "Arjun, Mumbai (cliente de audio a medida)",
@@ -1116,7 +1872,58 @@
         "alt.arendt": "Retrato de Hannah Arendt",
         "alt.dubois": "Retrato de W. E. B. Du Bois",
         "alt.weil": "Retrato de Simone Weil",
-        "alt.curator": "Retrato del curador"
+        "alt.curator": "Retrato del curador",
+        "booth.kicker": "La cabina de escucha",
+        "booth.title": "Escucha la diferencia",
+        "booth.subtext": "Escribe lo que quieras — una frase, un pensamiento, una línea que ames.",
+        "booth.placeholder": "Escribe hasta 250 caracteres...",
+        "booth.generate": "Generar",
+        "booth.processing": "Generando tu voz...",
+        "booth.lockedNotice": "Se desbloquea tras escuchar la versión IA",
+        "booth.aiTitle": "Azure Neural",
+        "booth.aiDesc": "Decente. Claro. Cumple su función.",
+        "booth.craftTitle": "Our Voice",
+        "booth.craftDesc": "Listen to the AI version first.",
+        "booth.aiTag": "Voz de IA",
+        "booth.craftTag": "Hecho a mano",
+        "booth.error": "Algo salió mal. Por favor, inténtalo de nuevo.",
+        "testimonials.kicker": "Voces del Culto",
+        "testimonials.title": "Resonancia",
+        "lib.kicker": "La Biblioteca",
+        "lib.title": '"Todos me preguntan si escribo libros. Sí, lo hago. Tú eres uno de ellos."',
+        "lib.copy": "Cada audiolibro a medida creado aquí pasa a formar parte de algo más grande: una biblioteca viva que ningún editor posee, ningún algoritmo clasifica y ningún lector puede terminar. No son pensamientos acabados. Son vidas, que aún se están escribiendo. Solo soy el que escucha primero.",
+        "lib.shelfKicker": "Volúmenes de la colección",
+        "lib.reviewsKicker": "Voces del Culto",
+        "lib.closing": "Tu capítulo pertenece aquí.",
+        "lib.cta": "Comenzar el tuyo →",
+        "lib.book1.title": "A Grief That Had No Name",
+        "lib.book1.desc": "On learning to stop apologizing for how deeply she felt things.",
+        "lib.book2.title": "The Version I Was Becoming",
+        "lib.book2.desc": "Written for a man becoming someone his younger self wouldn't recognize.",
+        "lib.book3.title": "What Power Felt From Below",
+        "lib.book3.desc": "A meditation on watching systems from the outside.",
+        "lib.book4.title": "Silence As A Second Language",
+        "lib.book4.desc": "For a woman who used words to fill rooms she was afraid of.",
+        "lib.book5.title": "The Unglamorous Decision",
+        "lib.book5.desc": "On the strange courage it takes to stay ordinary.",
+        "lib.book6.title": "Geography of Belonging",
+        "lib.book6.desc": "A letter to the city she left that never left her.",
+        "lib.book7.title": "What I Made and Let Go",
+        "lib.book7.desc": "On building things that will outlast your ability to protect them.",
+        "lib.book8.title": "Rest As Resistance",
+        "lib.book8.desc": "For someone who confused exhaustion with strength for too long.",
+        "lib.book9.title": "Appetite",
+        "lib.book9.desc": "The philosophy of wanting more than you were given permission to want.",
+        "lib.book10.title": "The Old Language",
+        "lib.book10.desc": "On returning to a faith she thought she had outgrown.",
+        "lib.book11.title": "Notes From Unreadable Year",
+        "lib.book11.desc": "Written during a year that refused to make sense.",
+        "lib.book12.title": "The Longer Loyalty",
+        "lib.book12.desc": "A meditation on staying when leaving would have been easier.",
+        "lib.book13.title": "What She Asked Me",
+        "lib.book13.desc": "For a father relearning himself through his daughter's questions.",
+        "lib.book14.title": "After the Hunger",
+        "lib.book14.desc": "On watching your ambition outlive your certainty."
       },
       fr: {
         ...commonNames,
@@ -1164,60 +1971,59 @@
         "offerings.oneTime": "Une fois",
         "offerings.personalReflection": "La réflexion personnelle",
         "offerings.personalCopyOne": "Vous remplissez un court formulaire. Vous nous confiez quelque chose de vrai — un chapitre de votre vie, une question qui revient, une version de vous-même vers laquelle vous avancez. Vous choisissez un livre que vous avez toujours voulu comprendre.",
-        "offerings.personalCopyTwo": "Nous en faisons un livre audio original écrit autour de vous.",
-        "offerings.personalCopyThree": "Une pièce. Faite pour une seule personne. À vous de la garder.",
-        "offerings.requestYours": "Demander la vôtre →",
-        "support.title": "Soutenir votre curateur",
-        "support.copy": "Devenez membre mensuel sur Patreon ou envoyez une contribution ponctuelle via Ko-fi.",
-        "support.hosted": "Adhésion hébergée en toute sécurité sur Patreon",
-        "support.patreon": "Soutenir chaque mois sur Patreon",
-        "support.kofi": "Une fois via Ko-fi",
-        "sample.kicker": "Écouter",
-        "sample.title": "Voilà ce que cela donne.",
-        "sample.copy": "Un extrait de notre collection. Pas d'inscription. Écoutez simplement.",
-        "sample.featured": "Réflexion à l'honneur",
-        "sample.reflectionTitle": "L'attention comme générosité",
-        "testimonial.one": "\"Je ne me suis jamais senti autant chez moi dans un livre\"",
-        "testimonial.oneAuthor": "Membre privé",
-        "testimonial.two": "\"En entendant ce passage de la Gita, j'ai eu les larmes aux yeux. Merci, vraiment.\"",
-        "testimonial.twoAuthor": "Arjun, Mumbai (client audio sur mesure)",
-        "testimonial.three": "\"J'ai fermé les yeux à mi-chemin et je ne les ai rouverts qu'à la fin.\"",
-        "testimonial.threeAuthor": "Auditeur fondateur",
-        "explore.kicker": "Explorer",
-        "explore.title": "Choisissez la porte que vous voulez ouvrir.",
-        "explore.worldview": "Explorer par vision du monde",
-        "explore.existentialism": "Existentialisme",
-        "explore.stoicism": "Stoïcisme",
-        "explore.romanticism": "Romantisme",
-        "explore.postmodernism": "Postmodernisme",
-        "explore.easternWisdom": "Sagesse orientale",
-        "explore.mysticism": "Mysticisme",
-        "explore.powerSociety": "Explorer le pouvoir et la société",
-        "explore.power": "Pouvoir",
-        "explore.politics": "Politique",
-        "explore.society": "Société",
+        "offerings.personalCopyTwo": "We build it into an original audiobook written around you.",
+        "offerings.personalCopyThree": "One piece. Made for one person. Yours to keep.",
+        "offerings.requestYours": "Request Yours →",
+        "support.title": "Support Your Curator",
+        "support.copy": "Become a monthly member on Patreon or send a one-time contribution via Ko-fi.",
+        "support.hosted": "Membership hosted securely on Patreon",
+        "support.patreon": "Support Monthly on Patreon",
+        "support.kofi": "One-time via Ko-fi",
+        "sample.kicker": "Listen In",
+        "sample.title": "This Is What It Sounds Like.",
+        "sample.copy": "A sample piece from our collection. No signup. Just listen.",
+        "sample.featured": "Featured Reflection",
+        "sample.reflectionTitle": "Attention as Generosity",
+        "testimonial.one": "\"I never felt so home in a book\"",
+        "testimonial.oneAuthor": "Private Member",
+        "testimonial.two": "\"गीता का वो हिस्सा सुनकर आँखें भर आईं। शुक्रिया, सच में।\"",
+        "testimonial.twoAuthor": "Arjun, Mumbai (Bespoke Audio Client)",
+        "testimonial.three": "\"I closed my eyes halfway through and didn't open them until it was over.\"",
+        "testimonial.threeAuthor": "Founding Listener",
+        "explore.kicker": "Explore",
+        "explore.title": "Choose the door you want to open.",
+        "explore.worldview": "Explore by Worldview",
+        "explore.existentialism": "Existentialism",
+        "explore.stoicism": "Stoicism",
+        "explore.romanticism": "Romanticism",
+        "explore.postmodernism": "Postmodernism",
+        "explore.easternWisdom": "Eastern Wisdom",
+        "explore.mysticism": "Mysticism",
+        "explore.powerSociety": "Explore Power & Society",
+        "explore.power": "Power",
+        "explore.politics": "Politics",
+        "explore.society": "Society",
         "explore.justice": "Justice",
-        "marx.kicker": "Exception anticapitaliste",
-        "marx.title": "Karl Marx est la porte gratuite d'une bibliothèque payante.",
-        "marx.copy": "La plupart des livres audio Daily Art Cult sont derrière un accès payant. Marx s'ouvre autrement : une bibliothèque gratuite pour le penseur qui a fait du capital lui-même la question.",
-        "marx.note": "Toutes les autres sélections sur le pouvoir et la société restent dans la collection payante.",
-        "marx.free": "Gratuit",
-        "marx.openLibrary": "Bibliothèque ouverte",
+        "marx.kicker": "Anti-capitalist exception",
+        "marx.title": "Karl Marx is the free door in a paid library.",
+        "marx.copy": "Most Daily Art Cult audiobooks sit behind paid access. Marx opens differently: a free library for the thinker who made capital itself the question.",
+        "marx.note": "All other power and society selections remain part of the paid collection.",
+        "marx.free": "Free",
+        "marx.openLibrary": "Open Library",
         "marx.capital": "Le Capital",
         "marx.freeLibrary": "Karl Marx — Bibliothèque gratuite",
-        "story.kicker": "Confiance et récit",
-        "story.title": "Depuis plus de dix ans, je crée des espaces où les gens ressentent quelque chose de réel — sans algorithmes, sans tendances. The Daily Art Cult porte ce même esprit, simplement plus calme.",
-        "story.copy": "Chaque pièce est choisie lentement et personnellement — une personne assise avec des idées, se demandant si elles valent vos deux minutes. Je crois que oui.",
-        "experiment.kicker": "L'expérience",
-        "experiment.title": "L'expérience — Projets d'immortalité",
-        "experiment.copyOne": "Inspirés par l'œuvre d'Ernest Becker, nous explorons comment nous pouvons survivre à travers les valeurs et la sagesse que nous laissons derrière nous.",
-        "experiment.copyTwo": "Les membres peuvent entrer des situations et recevoir des réponses dans la voix d'un être aimé, façonnées par des messages personnels, des principes mémorisés et les tournures particulières qui rendaient cette personne indéniablement présente.",
+        "story.kicker": "Trust & Story",
+        "story.title": "Pour over a decade, I've been creating spaces where people feel something real — no algorithms, no trends. The Daily Art Cult is that same spirit, just quieter.",
+        "story.copy": "Every piece is chosen slowly and personally — one person sitting with ideas, asking whether it's worth your two minutes. I think it is.",
+        "experiment.kicker": "The Experiment",
+        "experiment.title": "The Experiment — Immortality Projects",
+        "experiment.copyOne": "Inspired by Ernest Becker's work, we explore how we can live on through the values and wisdom we leave behind.",
+        "experiment.copyTwo": "Members can input situations and receive responses in their loved one's voice, shaped by personal messages, remembered principles, and the particular phrases that made that person feel unmistakably present.",
         "experiment.cta": "En savoir plus sur le projet d'immortalité",
         "footer.copyright": "© 2026 The Daily Art Cult. Tous droits réservés.",
-        "footer.socialLabel": "Réseaux sociaux",
-        "footer.languageLabel": "Choisir la langue",
+        "footer.socialLabel": "Social media",
         "alt.sartre": "Portrait de Jean-Paul Sartre",
-        "alt.marcus": "Buste de Marcus Aurelius",
+        "alt.marcus": "Portrait bust of Marcus Aurelius",
         "alt.byron": "Portrait de Lord Byron",
         "alt.baudrillard": "Portrait de Jean Baudrillard",
         "alt.laoTzu": "Portrait de Lao Tzu",
@@ -1227,7 +2033,58 @@
         "alt.arendt": "Portrait de Hannah Arendt",
         "alt.dubois": "Portrait de W. E. B. Du Bois",
         "alt.weil": "Portrait de Simone Weil",
-        "alt.curator": "Portrait du curateur"
+        "alt.curator": "Portrait du curateur",
+        "booth.kicker": "La cabine d'écoute",
+        "booth.title": "Entendez la différence",
+        "booth.subtext": "Écrivez ce que vous voulez — une phrase, une pensée, une ligne que vous aimez.",
+        "booth.placeholder": "Écrivez jusqu'à 250 caractères...",
+        "booth.generate": "Générer",
+        "booth.processing": "Génération de votre voix en cours...",
+        "booth.lockedNotice": "Se débloque après avoir écouté la version IA",
+        "booth.aiTitle": "Azure Neural",
+        "booth.aiDesc": "Décent. Clair. Fait le travail.",
+        "booth.craftTitle": "Notre voix",
+        "booth.craftDesc": "Écoutez d'abord la version IA.",
+        "booth.aiTag": "Voix IA",
+        "booth.craftTag": "Fait main",
+        "booth.error": "Quelque chose s'est mal passé. Veuillez réessayer.",
+        "testimonials.kicker": "Voix du Culte",
+        "testimonials.title": "Résonance",
+        "lib.kicker": "La Bibliothèque",
+        "lib.title": '"Tout le monde me demande si j’écris des livres. Oui, c’est le cas. Vous êtes l’un d’entre eux."',
+        "lib.copy": "Chaque livre audio sur mesure créé ici s'intègre dans un ensemble plus vaste : une bibliothèque vivante qu'aucun éditeur ne détient, qu'aucun algorithme ne classe et qu'aucun lecteur ne peut achever. Ce ne sont pas des pensées figées. Ce sont des vies, encore en train d'être écrites. Je suis seulement celui qui écoute en premier.",
+        "lib.shelfKicker": "Volumes de la collection",
+        "lib.reviewsKicker": "Résonance — Voix du Culte",
+        "lib.closing": "Votre chapitre a sa place ici.",
+        "lib.cta": "Commencer le vôtre →",
+        "lib.book1.title": "A Grief That Had No Name",
+        "lib.book1.desc": "On learning to stop apologizing for how deeply she felt things.",
+        "lib.book2.title": "The Version I Was Becoming",
+        "lib.book2.desc": "Written for a man becoming someone his younger self wouldn't recognize.",
+        "lib.book3.title": "What Power Felt From Below",
+        "lib.book3.desc": "A meditation on watching systems from the outside.",
+        "lib.book4.title": "Silence As A Second Language",
+        "lib.book4.desc": "For a woman who used words to fill rooms she was afraid of.",
+        "lib.book5.title": "The Unglamorous Decision",
+        "lib.book5.desc": "On the strange courage it takes to stay ordinary.",
+        "lib.book6.title": "Geography of Belonging",
+        "lib.book6.desc": "A letter to the city she left that never left her.",
+        "lib.book7.title": "What I Made and Let Go",
+        "lib.book7.desc": "On building things that will outlast your ability to protect them.",
+        "lib.book8.title": "Rest As Resistance",
+        "lib.book8.desc": "For someone who confused exhaustion with strength for too long.",
+        "lib.book9.title": "Appetite",
+        "lib.book9.desc": "The philosophy of wanting more than you were given permission to want.",
+        "lib.book10.title": "The Old Language",
+        "lib.book10.desc": "On returning to a faith she thought she had outgrown.",
+        "lib.book11.title": "Notes From Unreadable Year",
+        "lib.book11.desc": "Written during a year that refused to make sense.",
+        "lib.book12.title": "The Longer Loyalty",
+        "lib.book12.desc": "A meditation on staying when leaving would have been easier.",
+        "lib.book13.title": "What She Asked Me",
+        "lib.book13.desc": "For a father relearning himself through his daughter's questions.",
+        "lib.book14.title": "After the Hunger",
+        "lib.book14.desc": "On watching your ambition outlive your certainty."
       },
       de: {
         ...commonNames,
@@ -1268,11 +2125,11 @@
         "offerings.bulletClassic": "• Ein zeitloser Klassiker neu besucht",
         "offerings.bulletModern": "• Eine moderne Einsicht neu gerahmt",
         "offerings.bulletWorld": "• Ein klarer Blick auf die Welt von jetzt",
-        "offerings.pieceLength": "Jedes Stück dauert 2–4 Minuten.",
+        "offerings.pieceLength": "Each piece is 2–4 minutes.",
         "offerings.noFluff": "Kein Füllmaterial. Kein Hype. Kein täglicher Spam.",
         "offerings.cancel": "Du hast jederzeit volle Kontrolle zum Kündigen.",
         "offerings.subscribe": "Abonnieren",
-        "offerings.oneTime": "Einmalig",
+        "offerings.oneTime": "Einmals",
         "offerings.personalReflection": "Die persönliche Reflexion",
         "offerings.personalCopyOne": "Du füllst ein kurzes Formular aus. Du erzählst uns etwas Echtes — ein Kapitel deines Lebens, eine Frage, zu der du immer wieder zurückkehrst, eine Version deiner selbst, auf die du hinarbeitest. Du wählst ein Buch, das du immer verstehen wolltest.",
         "offerings.personalCopyTwo": "Wir machen daraus ein originelles Hörbuch, das um dich herum geschrieben ist.",
@@ -1282,7 +2139,7 @@
         "support.copy": "Werde monatliches Mitglied auf Patreon oder sende einen einmaligen Beitrag über Ko-fi.",
         "support.hosted": "Mitgliedschaft sicher über Patreon gehostet",
         "support.patreon": "Monatlich auf Patreon unterstützen",
-        "support.kofi": "Einmalig über Ko-fi",
+        "support.kofi": "Einmals über Ko-fi",
         "sample.kicker": "Hineinhören",
         "sample.title": "So klingt es.",
         "sample.copy": "Ein Beispielstück aus unserer Sammlung. Keine Anmeldung. Einfach zuhören.",
@@ -1320,13 +2177,12 @@
         "story.title": "Seit über einem Jahrzehnt schaffe ich Räume, in denen Menschen etwas Echtes fühlen — keine Algorithmen, keine Trends. The Daily Art Cult ist derselbe Geist, nur leiser.",
         "story.copy": "Jedes Stück wird langsam und persönlich ausgewählt — eine Person sitzt mit Ideen und fragt, ob sie deine zwei Minuten wert sind. Ich glaube, das sind sie.",
         "experiment.kicker": "Das Experiment",
-        "experiment.title": "Das Experiment — Unsterblichkeitsprojekte",
-        "experiment.copyOne": "Inspiriert von Ernest Beckers Arbeit erkunden wir, wie wir durch die Werte und Weisheit weiterleben können, die wir hinterlassen.",
-        "experiment.copyTwo": "Mitglieder können Situationen eingeben und Antworten in der Stimme eines geliebten Menschen erhalten, geformt durch persönliche Nachrichten, erinnerte Prinzipien und jene besonderen Formulierungen, die diese Person unverwechselbar gegenwärtig machten.",
+        "experiment.title": "The Experiment — Immortality Projects",
+        "experiment.copyOne": "Inspiriert von Ernest Becker's work, we explore how we can live on through the values and wisdom we leave behind.",
+        "experiment.copyTwo": "Members can input situations and receive responses in their loved one's voice, shaped by personal messages, remembered principles, and the particular phrases that made that person feel unmistakably present.",
         "experiment.cta": "Mehr über das Unsterblichkeitsprojekt erfahren",
         "footer.copyright": "© 2026 The Daily Art Cult. Alle Rechte vorbehalten.",
         "footer.socialLabel": "Soziale Medien",
-        "footer.languageLabel": "Sprache auswählen",
         "alt.sartre": "Porträt von Jean-Paul Sartre",
         "alt.marcus": "Porträtbüste von Marcus Aurelius",
         "alt.byron": "Porträt von Lord Byron",
@@ -1338,7 +2194,58 @@
         "alt.arendt": "Porträt von Hannah Arendt",
         "alt.dubois": "Porträt von W. E. B. Du Bois",
         "alt.weil": "Porträt von Simone Weil",
-        "alt.curator": "Porträt des Kurators"
+        "alt.curator": "Porträt des Kurators",
+        "booth.kicker": "Die Hörkabine",
+        "booth.title": "Höre den Unterschied",
+        "booth.subtext": "Schreibe, was du willst — einen Satz, einen Gedanken, eine Zeile, die du liebst.",
+        "booth.placeholder": "Schreibe bis zu 250 Zeichen...",
+        "booth.generate": "Generieren",
+        "booth.processing": "Stimme wird generiert...",
+        "booth.lockedNotice": "Wird nach dem Hören der KI-Version freigeschaltet",
+        "booth.aiTitle": "Azure Neural",
+        "booth.aiDesc": "Ordentlich. Klar. Erfüllt seinen Zweck.",
+        "booth.craftTitle": "Unsere Stimme",
+        "booth.craftDesc": "Höre zuerst die KI-Version.",
+        "booth.aiTag": "KI-Stimme",
+        "booth.craftTag": "Handgefertigt",
+        "booth.error": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+        "testimonials.kicker": "Stimmen des Kults",
+        "testimonials.title": "Resonanz",
+        "lib.kicker": "Die Bibliothek",
+        "lib.title": '"Jeder fragt mich, ob ich Bücher schreibe. Ja, das tue ich. Sie sind eines davon."',
+        "lib.copy": "Jedes hier erstellte maßgeschneiderte Hörbuch wird Teil von etwas Größerem – einer lebendigen Bibliothek, die kein Verleger besitzt, kein Algorithmus bewertet und kein Leser jemals beenden kann. Dies sind keine fertigen Gedanken. Es sind Leben, die noch geschrieben werden. Ich bin nur derjenige, der als Erster zuhört.",
+        "lib.shelfKicker": "Bände in der Sammlung",
+        "lib.reviewsKicker": "Resonanz — Stimme des Kults",
+        "lib.closing": "Ihr Kapitel gehört hierher.",
+        "lib.cta": "Deins beginnen →",
+        "lib.book1.title": "A Grief That Had No Name",
+        "lib.book1.desc": "On learning to stop apologizing for how deeply she felt things.",
+        "lib.book2.title": "The Version I Was Becoming",
+        "lib.book2.desc": "Written for a man becoming someone his younger self wouldn't recognize.",
+        "lib.book3.title": "What Power Felt From Below",
+        "lib.book3.desc": "A meditation on watching systems from the outside.",
+        "lib.book4.title": "Silence As A Second Language",
+        "lib.book4.desc": "For a woman who used words to fill rooms she was afraid of.",
+        "lib.book5.title": "The Unglamorous Decision",
+        "lib.book5.desc": "On the strange courage it takes to stay ordinary.",
+        "lib.book6.title": "Geography of Belonging",
+        "lib.book6.desc": "A letter to the city she left that never left her.",
+        "lib.book7.title": "What I Made and Let Go",
+        "lib.book7.desc": "On building things that will outlast your ability to protect them.",
+        "lib.book8.title": "Rest As Resistance",
+        "lib.book8.desc": "For someone who confused exhaustion with strength for too long.",
+        "lib.book9.title": "Appetite",
+        "lib.book9.desc": "The philosophy of wanting more than you were given permission to want.",
+        "lib.book10.title": "The Old Language",
+        "lib.book10.desc": "On returning to a faith she thought she had outgrown.",
+        "lib.book11.title": "Notes From Unreadable Year",
+        "lib.book11.desc": "Written during a year that refused to make sense.",
+        "lib.book12.title": "The Longer Loyalty",
+        "lib.book12.desc": "A meditation on staying when leaving would have been easier.",
+        "lib.book13.title": "What She Asked Me",
+        "lib.book13.desc": "For a father relearning himself through his daughter's questions.",
+        "lib.book14.title": "After the Hunger",
+        "lib.book14.desc": "On watching your ambition outlive your certainty."
       }
     };
 
@@ -1393,18 +2300,18 @@
       }
     };
 
-    applyLanguage(detectLanguage(), !window.localStorage.getItem("dailyArtCultLanguage"));
-
-    document.querySelector("#language-select")?.addEventListener("change", (event) => {
-      applyLanguage(event.target.value);
-      document.querySelectorAll("[data-audio-toggle]").forEach((button) => {
-        const audio = document.getElementById(button.dataset.audioToggle);
-        if (audio) {
-          setAudioButtonState(button, audio);
-        }
-      });
+    // Auto-run translation logic on load
+    document.addEventListener("DOMContentLoaded", () => {
+      applyLanguage(detectLanguage(), !window.localStorage.getItem("dailyArtCultLanguage"));
     });
 
+    // Bind globally so other scripts can access it
+    window.t = t;
+    window.applyLanguage = applyLanguage;
+  </script>
+
+  <script>
+    /* Global Page Logic */
     const revealEls = document.querySelectorAll(".reveal");
 
     const revealObserver = new IntersectionObserver((entries) => {
@@ -1439,7 +2346,7 @@
 
         event.preventDefault();
         target.scrollIntoView({ behavior: "smooth", block: "start" });
-        if (target.matches("input")) {
+        if (target.matches("input") || target.matches("textarea")) {
           window.setTimeout(() => target.focus(), 500);
         }
       });
@@ -1488,10 +2395,16 @@
     };
 
     const setAudioButtonState = (button, audio) => {
+      if (!button || !audio) return;
       const isPlaying = !audio.paused && !audio.ended;
       button.textContent = isPlaying ? "❚❚" : "▶";
-      const labelKey = `${isPlaying ? "pause" : "play"}${audio.id === "intro-audio" ? "Intro" : "Sample"}`;
-      button.setAttribute("aria-label", t(`audio.${labelKey}`));
+      const keyMap = {
+        "intro-audio": isPlaying ? "pauseIntro" : "playIntro",
+        "ai-audio": isPlaying ? "pauseSample" : "playSample",
+        "craft-audio": isPlaying ? "pauseSample" : "playSample"
+      };
+      const labelKey = keyMap[audio.id] || (isPlaying ? "pauseSample" : "playSample");
+      button.setAttribute("aria-label", window.t ? window.t(`audio.${labelKey}`) : "Play");
     };
 
     const pauseOtherAudio = (activeAudio) => {
@@ -1586,7 +2499,7 @@
       introShare.addEventListener("click", async () => {
         const shareData = {
           title: "The Daily Art Cult",
-          text: t("share.text"),
+          text: window.t ? window.t("share.text") : "Listen to the introduction",
           url: window.location.href
         };
 
@@ -1649,6 +2562,289 @@
           playNowBadge.remove();
         });
       }
+    }
+
+ /* Secure Listening Booth Proxy Call */
+async function callAzureTTS(text) {
+  // Fetches from your secure Netlify Serverless Function
+  const response = await fetch("/.netlify/functions/tts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ text })
+  });
+
+  if (!response.ok) {
+    throw new Error("Proxy TTS Request failed");
+  }
+
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
+}
+
+    const boothInput = document.getElementById("booth-input");
+    const boothCounter = document.getElementById("booth-counter");
+    const boothGenerate = document.getElementById("booth-generate");
+    const ttsError = document.getElementById("tts-error");
+    const ttsProcessing = document.getElementById("tts-processing");
+    const ttsPanelsContainer = document.getElementById("tts-panels-container");
+
+    const aiAudio = document.getElementById("ai-audio");
+    const craftAudio = document.getElementById("craft-audio");
+
+    const playAiBtn = document.getElementById("play-ai-btn");
+    const playCraftBtn = document.getElementById("play-craft-btn");
+    const aiWaveform = document.getElementById("ai-waveform");
+    const craftWaveform = document.getElementById("craft-waveform");
+
+    const craftPanel = document.getElementById("craft-panel");
+    const craftLockIcon = document.getElementById("craft-lock-icon");
+    const craftLockText = document.getElementById("craft-lock-text");
+
+    if (boothInput && boothCounter) {
+      boothInput.addEventListener("input", () => {
+        const length = boothInput.value.length;
+        boothCounter.textContent = `${length} / 250`;
+      });
+    }
+
+    if (boothGenerate && boothInput) {
+      boothGenerate.addEventListener("click", async () => {
+        const text = boothInput.value.trim();
+        if (!text || text.length > 250) {
+          return;
+        }
+
+        pauseOtherAudio(null);
+
+        ttsError.classList.add("hidden");
+        ttsProcessing.classList.remove("hidden");
+        ttsProcessing.classList.add("flex");
+        ttsPanelsContainer.classList.add("hidden");
+        boothGenerate.disabled = true;
+
+        craftPanel.classList.add("opacity-40", "pointer-events-none");
+        craftLockIcon.classList.remove("hidden");
+        craftLockText.classList.remove("hidden");
+        playCraftBtn.classList.add("hidden");
+        aiWaveform.classList.add("hidden");
+        craftWaveform.classList.add("hidden");
+
+        try {
+          const url = await callAzureTTS(text);
+          aiAudio.src = url;
+
+          ttsProcessing.classList.remove("flex");
+          ttsProcessing.classList.add("hidden");
+          ttsPanelsContainer.classList.remove("hidden");
+
+          aiAudio.play().catch(err => console.warn("Auto-play blocked or failed", err));
+        } catch (error) {
+          console.error(error);
+          ttsProcessing.classList.remove("flex");
+          ttsProcessing.classList.add("hidden");
+          ttsError.classList.remove("hidden");
+          boothGenerate.disabled = false;
+        }
+      });
+    }
+
+    if (aiAudio) {
+      aiAudio.addEventListener("play", () => {
+        aiWaveform.classList.remove("hidden");
+        setAudioButtonState(playAiBtn, aiAudio);
+        ttsProcessing.classList.remove("flex");
+        ttsProcessing.classList.add("hidden");
+        boothGenerate.disabled = false;
+      });
+      aiAudio.addEventListener("pause", () => {
+        aiWaveform.classList.add("hidden");
+        setAudioButtonState(playAiBtn, aiAudio);
+      });
+      aiAudio.addEventListener("ended", () => {
+        aiWaveform.classList.add("hidden");
+        setAudioButtonState(playAiBtn, aiAudio);
+
+        craftPanel.classList.remove("opacity-40", "pointer-events-none");
+        craftLockIcon.classList.add("hidden");
+        craftLockText.classList.add("hidden");
+        playCraftBtn.classList.remove("hidden");
+      });
+    }
+
+    if (craftAudio) {
+      craftAudio.addEventListener("play", () => {
+        craftWaveform.classList.remove("hidden");
+        setAudioButtonState(playCraftBtn, craftAudio);
+      });
+      craftAudio.addEventListener("pause", () => {
+        craftWaveform.classList.add("hidden");
+        setAudioButtonState(playCraftBtn, craftAudio);
+      });
+      craftAudio.addEventListener("ended", () => {
+        craftWaveform.classList.add("hidden");
+        setAudioButtonState(playCraftBtn, craftAudio);
+      });
+    }
+
+    if (playAiBtn && aiAudio) {
+      playAiBtn.addEventListener("click", () => {
+        if (aiAudio.paused) {
+          pauseOtherAudio(aiAudio);
+          aiAudio.play().catch(err => console.warn(err));
+        } else {
+          aiAudio.pause();
+        }
+      });
+    }
+
+    if (playCraftBtn && craftAudio) {
+      playCraftBtn.addEventListener("click", () => {
+        if (craftAudio.paused) {
+          pauseOtherAudio(craftAudio);
+          craftAudio.play().catch(err => console.warn(err));
+        } else {
+          craftAudio.pause();
+        }
+      });
+    }
+
+    /* The Library entrance cascading animations */
+    const libraryObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const spines = entry.target.querySelectorAll('.spine-container');
+          spines.forEach((spine, idx) => {
+            spine.style.transitionDelay = `${idx * 0.04}s`;
+            spine.style.opacity = '1';
+            spine.style.transform = 'translateY(0)';
+          });
+          libraryObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const libSec = document.getElementById('the-library');
+    if (libSec) {
+      const spines = libSec.querySelectorAll('.spine-container');
+      spines.forEach(spine => {
+        spine.style.opacity = '0';
+        spine.style.transform = 'translateY(30px)';
+        spine.style.transition = 'opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
+      });
+      libraryObserver.observe(libSec);
+    }
+
+    /* Ambient pulse logic */
+    setInterval(() => {
+      const spines = document.querySelectorAll('.spine-container');
+      if (spines.length === 0) return;
+      spines.forEach(s => s.classList.remove('ambient-pulse-active'));
+      const randIdx = Math.floor(Math.random() * spines.length);
+      const target = spines[randIdx];
+      target.classList.add('ambient-pulse-active');
+      setTimeout(() => {
+        target.classList.remove('ambient-pulse-active');
+      }, 2500);
+    }, 5000);
+
+    /* Rotating Testimonials Logic (Cleaned up and bound to global window scope) */
+    let currentReview = 0;
+    const slides = document.querySelectorAll('.review-slide');
+    const dots = document.querySelectorAll('.review-dot');
+
+    function showReview(index) {
+      if (!slides.length) return;
+      currentReview = index;
+      slides.forEach((slide, idx) => {
+        if (idx === index) {
+          slide.classList.remove('opacity-0', 'pointer-events-none');
+          slide.classList.add('opacity-100');
+        } else {
+          slide.classList.remove('opacity-100');
+          slide.classList.add('opacity-0', 'pointer-events-none');
+        }
+      });
+      dots.forEach((dot, idx) => {
+        const dotSpan = dot.querySelector('span');
+        if (dotSpan) {
+          dotSpan.style.backgroundColor = idx === index ? '#b89a6a' : '#4a4035';
+          dotSpan.style.transform = idx === index ? 'scale(1.25)' : 'scale(1)';
+        }
+      });
+    }
+
+    // Exposed explicitly to window so inline click handlers resolve perfectly
+    window.setReview = function(index) {
+      showReview(index);
+    }
+
+    if (slides.length > 0) {
+      showReview(0);
+      setInterval(() => {
+        let next = (currentReview + 1) % slides.length;
+        showReview(next);
+      }, 6000);
+    }
+
+    /* Infinite Manual Loop Scroll logic for Bookshelf */
+    const bookshelf = document.getElementById('bookshelf');
+    const track = document.getElementById('bookshelf-track');
+    
+    if (bookshelf && track) {
+      const updateInfiniteScroll = () => {
+        const singleSetWidth = track.scrollWidth / 3;
+        
+        if (bookshelf.scrollLeft === 0) {
+          bookshelf.scrollLeft = singleSetWidth;
+        }
+
+        bookshelf.addEventListener('scroll', () => {
+          const currentScroll = bookshelf.scrollLeft;
+
+          if (currentScroll >= singleSetWidth * 2) {
+            bookshelf.scrollLeft = currentScroll - singleSetWidth;
+          } 
+          else if (currentScroll <= 0) {
+            bookshelf.scrollLeft = currentScroll + singleSetWidth;
+          }
+        });
+      };
+
+      window.addEventListener('load', updateInfiniteScroll);
+      window.addEventListener('resize', updateInfiniteScroll);
+    }
+
+    /* Bookshelf Scroll Parallax (Movable Books) */
+    const bookshelfEl = document.getElementById('bookshelf');
+    
+    if (bookshelfEl) {
+      bookshelfEl.addEventListener('scroll', () => {
+        const scrollPos = bookshelfEl.scrollLeft;
+        const spines = bookshelfEl.querySelectorAll('.spine-container');
+        
+        spines.forEach((spine, index) => {
+          // Calculate subtle shifting coordinates to simulate depth and loose organic packing
+          const shiftValue = Math.sin((scrollPos + (index * 130)) * 0.006) * 4;
+          const tiltAngle = Math.cos((scrollPos + (index * 130)) * 0.006) * 1.2;
+          
+          spine.style.transform = `translateY(${shiftValue}px) rotate(${tiltAngle}deg)`;
+        });
+      });
+    }
+
+    /* Bookshelf Manual Arrow Controls (Prev / Next Buttons) */
+    const shelfPrev = document.getElementById('shelf-prev');
+    const shelfNext = document.getElementById('shelf-next');
+
+    if (shelfPrev && shelfNext && bookshelf) {
+      shelfPrev.addEventListener('click', () => {
+        bookshelf.scrollBy({ left: -140, behavior: 'smooth' });
+      });
+      shelfNext.addEventListener('click', () => {
+        bookshelf.scrollBy({ left: 140, behavior: 'smooth' });
+      });
     }
   </script>
 </body>
