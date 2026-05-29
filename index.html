@@ -2603,7 +2603,7 @@
 
  /* Secure Listening Booth Proxy Call */
 async function callAzureTTS(text) {
-  const response = await fetch("//.netlify/functions/tts", {
+  const response = await fetch("/.netlify/functions/tts", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
