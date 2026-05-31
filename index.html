@@ -1473,7 +1473,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const answers = { q1: '', q2: '', q3: '' };
 
   const q1Suggestions = [
-    { text: "Something I've lost that I haven't full admitted I'm grieving.", label: "Something I've lost" },
+    { text: "Something I've lost that I haven't fully admitted I'm grieving.", label: "Something I've lost" },
     { text: "Something I'm building or becoming inside myself or out in the world", label: "Something I'm creating" },
     { text: "A feeling I can't name or a want I can't let go of.", label: "Something I can't name" }
   ];
@@ -1567,7 +1567,7 @@ document.addEventListener("DOMContentLoaded", () => {
         currentStage = 2;
         chatInput.value = '';
         chatInput.style.height = 'auto';
-        chatInput.placeholder = "Does it feel like something ending or something beginning?.";
+        chatInput.placeholder = "Does it feel like something ending or something beginning?";
         stageLabel.textContent = "Step 2 of 3";
         updateCharacterCount();
         renderSuggestions(2);
