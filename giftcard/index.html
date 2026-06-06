@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Redeem your physical Daily Art Cult gift card and configure your bespoke audiobook reflection.">
-  <title>The Daily Art Cult | Claim Your Giftcard</title>
+  <title>The Daily Art Cult | Claim Your Reflection</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,8 +50,9 @@
   <style>
     body {
       background-color: #070504;
+      /* Image fallback in case the video fails to load or autoplay on mobile */
       background-image: radial-gradient(circle at center, rgba(13, 9, 7, 0.2) 0%, rgba(7, 5, 4, 0.95) 100%), 
-                        url('marble-bg.png'); /* Your gold-veined marble background */
+                        url('marble-bg.jpg'); 
       background-size: cover;
       background-attachment: fixed;
       background-position: center;
@@ -60,6 +61,33 @@
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
+    }
+
+    /* Background Video Styles */
+    .bg-video-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -10;
+      overflow: hidden;
+    }
+    .bg-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* An elegant vignette overlay on top of the video to maintain legible text contrast */
+    .video-vignette {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -9;
+      background: radial-gradient(circle at center, rgba(13, 9, 7, 0.1) 0%, rgba(7, 5, 4, 0.85) 100%);
+      pointer-events: none;
     }
 
     /* Smooth scale and fade for the gateway card transition */
@@ -117,17 +145,29 @@
 <body class="min-h-screen relative flex flex-col justify-between">
 
   <!-- ======================================================== -->
+  <!-- BACKGROUND VIDEO ELEMENTS -->
+  <!-- ======================================================== -->
+  <div class="bg-video-container">
+    <!-- Replace "video.mp4" with your background video's file name -->
+    <video autoplay muted loop playsinline class="bg-video" id="bg-video">
+      <source src="giftcard/video.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="video-vignette"></div>
+
+
+  <!-- ======================================================== -->
   <!-- CINEMATIC ENTRY PORTAL (CARD DISSOLVE) -->
   <!-- ======================================================== -->
   <div id="portal-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-md transition-opacity duration-1000 pointer-events-auto">
     
-    <!-- Floating Gold Card Container -->
-    <div id="gateway-card" class="relative w-full max-w-2xl aspect-[1.45/1] bg-contain bg-center bg-no-repeat drop-shadow-[0_35px_35px_rgba(0,0,0,0.8)]" style="background-image: url('card2.png');">
+    <!-- Floating Gold Card Container using your transparent card2.png background -->
+    <div id="gateway-card" class="relative w-full max-w-2xl aspect-[1.45/1] bg-contain bg-center bg-no-repeat drop-shadow-[0_35px_35px_rgba(0,0,0,0.8)]" style="background-image: url('giftcard/card.png');">
       
       <!-- Code Verification Form -->
       <form id="code-verification-form" class="absolute inset-0">
         
-        <!-- Input fields positioned precisely over the scratch-off rectangle (Approx: 30% left, 48% top, 40% width, 14% height) -->
+        <!-- Input fields positioned over the scratch-off rectangle (Approx: 30% left, 48% top, 40% width, 14% height) -->
         <div class="absolute left-[30%] top-[48%] w-[40%] h-[14%]">
           <input 
             type="text" 
@@ -139,7 +179,7 @@
           />
         </div>
 
-        <!-- Submit Button disguised directly below the card to avoid breaking the card's visual design -->
+        <!-- Submit Button directly below the card to prevent visual clutter -->
         <div class="absolute bottom-[-80px] left-1/2 -translate-x-1/2 w-64 text-center space-y-2">
           <button 
             type="submit" 
@@ -166,14 +206,14 @@
   <!-- ======================================================== -->
   <!-- MAIN CONFIGURATION FORM (REVEALED UNDERNEATH) -->
   <!-- ======================================================== -->
-  <header class="relative px-5 py-6">
+  <header class="relative px-5 py-6 z-10">
     <nav class="mx-auto flex w-full max-w-4xl items-center justify-between text-sm text-linen/80">
       <a href="../index.html" class="font-serif text-lg font-semibold tracking-wide text-cream hover:text-antique transition">The Daily Art Cult</a>
       <span class="font-mono text-[9px] uppercase tracking-[0.2em] text-linen/40">Bespoke Redemption</span>
     </nav>
   </header>
 
-  <main class="flex-grow flex items-center justify-center px-5 py-12">
+  <main class="flex-grow flex items-center justify-center px-5 py-12 z-10">
     <div id="configuration-container" class="w-full max-w-2xl bg-night/70 border border-linen/10 rounded-2xl p-6 sm:p-10 backdrop-blur-xl shadow-2xl opacity-0 transition-opacity duration-[1500ms] pointer-events-none">
       
       <!-- Form Header -->
@@ -318,7 +358,7 @@
     </div>
   </main>
 
-  <footer class="site-footer border-t border-linen/12 px-5 py-6 mt-12">
+  <footer class="site-footer border-t border-linen/12 px-5 py-6 mt-12 z-10">
     <div class="mx-auto max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-linen/50">
       <p>&copy; 2026 The Daily Art Cult. All rights reserved.</p>
     </div>
