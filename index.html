@@ -9,7 +9,7 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="portrait.jpeg">
   <meta name="twitter:card" content="summary_large_image">
-  <title>The Daily Art Cult | Quiet Philosophy Audio</title>
+  <title>The Daily Art Cult</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +19,18 @@
   <!-- Leaflet.js Map Assets -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+<!-- Supabase JS Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  // Initialize Supabase with your credentials
+  const SUPABASE_URL = "https://frwjaixxlgthkgjtafhz.supabase.co"; 
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZyd2phaXh4bGd0aGtnanRhZmh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNDUzNDQsImV4cCI6MjA5NDYyMTM0NH0.j2DKz__QMml4WplMYNmsQpTUw0qu-kZG7Md3qBEEdEc"; 
+  
+  // Use "supabaseClient" to match your pipeline function and avoid temporal dead-zone errors
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -342,8 +354,7 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      object-cover: cover;
-      filter: grayscale(1) contrast(1.15) brightness(0.7);
+      object-fit: cover;
       opacity: 0;
       transition: opacity 1.5s ease-in-out;
     }
@@ -499,7 +510,7 @@
 <body class="min-h-screen overflow-x-hidden">
   <div class="fixed inset-0 -z-30 bg-[#1a120b]" aria-hidden="true">
     <video id="background-video" class="h-full w-full scale-[1.02] object-cover opacity-95 saturate-[.9] contrast-105" autoplay muted loop playsinline preload="metadata">
-      <source src="background.mp4" type="video/mp4">
+      <source src="assets/background.mp4" type="video/mp4">
     </video>
   </div>
   <div class="library-overlay fixed inset-0 -z-20" aria-hidden="true"></div>
@@ -592,39 +603,77 @@
         <!-- STATE D: INTEGRATED BESPOKE MASTER AUDIO PLAYER -->
         <div id="booth-bespoke-frame" class="hidden opacity-0 transform translate-y-6 transition-all duration-1000">
           <div class="premium-audio rounded-2xl p-6 sm:p-8 shadow-glow border-[#c6a766]/30">
-            <div class="text-center mb-6">
-              <span class="inline-block bg-[#102c26]/40 text-emerald-300 border border-emerald/20 text-[9px] uppercase tracking-[0.25em] px-3.5 py-1 rounded-full font-bold">Bespoke Master</span>
-              <h3 class="font-serif text-3xl font-semibold text-cream mt-3">The Bespoke Audio Edition</h3>
-              <p id="bespoke-territory-label" class="text-xs text-linen/70 mt-1 italic">A piece on becoming.</p>
-            </div>
+            
+            <!-- WRAPPER FOR PLAYER (To be hidden later) -->
+            <div id="bespoke-player-interface">
+              <div class="text-center mb-6">
+                <span class="inline-block bg-[#102c26]/40 text-emerald-300 border border-emerald/20 text-[9px] uppercase tracking-[0.25em] px-3.5 py-1 rounded-full font-bold">Bespoke Master</span>
+                <h3 class="font-serif text-3xl font-semibold text-cream mt-3">The Bespoke Audio Edition</h3>
+                <p id="bespoke-territory-label" class="text-xs text-linen/70 mt-1 italic">A piece on becoming.</p>
+              </div>
 
-            <div class="bg-black/40 border border-[#c6a766]/15 rounded-xl p-5 sm:p-6 backdrop-blur-md">
-              <div class="flex items-center gap-3">
-                <span id="bespoke-time-current" class="text-[10px] font-mono text-linen/60">0:00</span>
-                <div class="relative flex-1">
-                  <input type="range" id="bespoke-progress" value="0" max="100" class="audio-progress w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer">
+              <div class="bg-black/40 border border-[#c6a766]/15 rounded-xl p-5 sm:p-6 backdrop-blur-md">
+                <div class="flex items-center gap-3">
+                  <span id="bespoke-time-current" class="text-[10px] font-mono text-linen/60">0:00</span>
+                  <div class="relative flex-1">
+                    <input type="range" id="bespoke-progress" value="0" max="100" class="audio-progress w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer">
+                  </div>
+                  <span id="bespoke-time-total" class="text-[10px] font-mono text-[#c6a766]">0:00</span>
                 </div>
-                <span id="bespoke-time-total" class="text-[10px] font-mono text-[#c6a766]">0:00</span>
-              </div>
 
-              <div class="flex items-center justify-center gap-8 mt-6">
-                <button type="button" id="play-bespoke-btn" class="flex h-16 w-16 items-center justify-center rounded-full bg-cream text-ink text-xl transition-all duration-300 hover:bg-antique hover:scale-105 shadow-lg shadow-black/40 animate-pulse">▶</button>
+                <div class="flex items-center justify-center gap-8 mt-6">
+                  <button type="button" id="play-bespoke-btn" class="flex h-16 w-16 items-center justify-center rounded-full bg-cream text-ink text-xl transition-all duration-300 hover:bg-antique hover:scale-105 shadow-lg shadow-black/40 animate-pulse">▶</button>
+                </div>
               </div>
             </div>
 
-            <!-- POST PLAYBACK ACTION TRIGGERS -->
-            <div id="post-playback-ui" class="hidden mt-10 text-center border-t border-white/5 pt-8 animate-in fade-in duration-1000">
-              <p class="font-serif text-xl text-cream mb-6">You can own this chapter. Or you can begin your own.</p>
-              <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#offerings" class="rounded-sm bg-antique px-8 py-4 text-xs font-bold uppercase tracking-widest text-ink transition hover:bg-cream">Commission Yours — $47</a>
-                <button id="booth-reset" class="px-8 py-4 text-xs font-bold uppercase tracking-widest text-linen/60 hover:text-cream transition">Reset Flow</button>
+            <!-- POST PLAYBACK ACTION TRIGGERS (The High-End Conversion) -->
+            <div id="post-playback-ui" class="hidden text-center animate-in fade-in zoom-in duration-1000 px-4 md:px-8">
+              <div class="max-w-3xl mx-auto">
+                <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-antique/60 mb-2">The Bespoke Offering</p>
+                <h2 class="font-serif text-3xl md:text-5xl font-medium text-cream leading-tight">A chapter of a life, <br class="hidden md:block">captured in sound.</h2>
+                
+                <div class="mt-8 flex items-center justify-center gap-4">
+                  <div class="h-px w-8 bg-antique/20"></div>
+                  <p class="font-serif text-4xl text-cream italic"><span class="price-underline">$47</span></p>
+                  <div class="h-px w-8 bg-antique/20"></div>
+                </div>
+
+                <p class="mt-8 text-sm md:text-base leading-relaxed text-linen/60 max-w-xl mx-auto font-serif italic">
+                  Whether for your own library or as a physical card delivered to a doorstep, each piece is hand-voiced and unhurried.
+                </p>
+
+                <!-- THE BUTTONS: TWO PATHS -->
+                <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
+                  
+                  <!-- PATH 1: PERSONAL COMMISSION -->
+                  <a href="private/index.html" class="group relative w-full sm:w-auto overflow-hidden rounded-sm bg-cream px-10 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-ink transition-all hover:bg-white hover:scale-[1.02] active:scale-[0.98]">
+                    Commission Your Chapter
+                  </a>
+
+                  <!-- PATH 2: THE PHYSICAL GIFT (The "Cards in Transit" bridge) -->
+                  <a href="gift/index.html" class="group relative w-full sm:w-auto overflow-hidden rounded-sm border border-antique/40 px-10 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-antique transition-all hover:border-antique hover:text-cream hover:bg-antique/5 active:scale-[0.98]">
+                    <span class="relative z-10 flex items-center justify-center gap-2">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="opacity-70 group-hover:scale-110 transition-transform">
+                        <path d="M22 6L12 13L2 6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V6" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      Send as a Physical Gift
+                    </span>
+                  </a>
+                </div>
+
+                <!-- SUBTLE HINT AT THE MAP BELOW -->
+                <p class="mt-10 text-[9px] font-mono uppercase tracking-[0.25em] text-linen/20">
+                  Your gift will appear on our <span class="text-linen/40">Global Transit Map</span> below
+                </p>
               </div>
             </div>
+
+            <p id="tts-error" class="hidden text-xs text-red-400 font-semibold mt-4 text-center">Something went wrong. Please try again.</p>
           </div>
-        </div>
-
-        <p id="tts-error" class="hidden text-xs text-red-400 font-semibold mt-4 text-center">Something went wrong. Please try again.</p>
-      </div>
+        </div> <!-- [FIX] Closed booth-bespoke-frame wrapper -->
+      </div> <!-- [FIX] Closed studio-active-container wrapper -->
 
       <!-- Centered Whispered Suggestions -->
       <div id="hero-suggestions" class="mt-5 flex flex-wrap gap-2.5 justify-center"></div>
@@ -672,267 +721,1163 @@
         <p class="mt-6 text-center text-xs font-mono tracking-widest text-linen/40 uppercase">Pins represent confirmed orders in production — Hawaiʻi · Switzerland · and growing</p>
       </div>
     </section>
-
+    
     <!-- SECTION 4: THE WORLDVIEWS ATELIER -->
-    <section id="explore" class="px-5 py-24 sm:py-28">
+    <section id="explore" class="px-5 py-24 sm:py-28 relative">
+     <style>
+        #explore .worldview-netflix-grid {
+          overflow: visible;
+          isolation: isolate;
+        }
+
+        #explore .iconic-token {
+          position: relative;
+          overflow: hidden; /* Clips details by default */
+          isolation: isolate;
+          aspect-ratio: 16 / 9; /* Strictly locked to 16:9 to maintain grid row footprint */
+          min-height: 0;
+          padding: 0;
+          border: 1px solid rgba(198, 167, 102, 0.18);
+          border-radius: 0.42rem;
+          background: #12100d;
+          box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+          transform-origin: center center;
+          transition: 
+            transform 360ms cubic-bezier(0.16, 1, 0.3, 1), 
+            border-color 360ms ease, 
+            box-shadow 360ms ease;
+        }
+
+        #explore .iconic-token:hover,
+        #explore .iconic-token.is-touch-preview {
+          transform: translateY(-20px) scale(1.52);
+          border-color: rgba(246, 229, 188, 0.42);
+          box-shadow: 0 34px 90px rgba(0, 0, 0, 0.82), 0 0 34px rgba(198, 167, 102, 0.16);
+          z-index: 80; /* Respects standard order within the same parent grid */
+          overflow: visible; /* Allows the info panel to drop down past the card bounds */
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        #explore .token-image-container,
+        #explore .token-video,
+        #explore .token-vignette {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0; /* Spans 100% of the 16:9 parent box */
+          width: 100%;
+          height: 100%;
+        }
+
+        #explore .token-image-container {
+          z-index: 1;
+          opacity: 0.88;
+          mix-blend-mode: normal;
+          transition: opacity 280ms ease;
+        }
+
+        #explore .token-img-slide {
+          opacity: 0 !important;
+        }
+
+        #explore .token-img-slide.active {
+          opacity: 1 !important;
+        }
+
+        #explore .token-video {
+          z-index: 2;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          opacity: 0; /* Hidden initially */
+          filter: saturate(0.9) contrast(1.08) brightness(0.76);
+          transform: scale(1.03);
+          transition: opacity 280ms ease, transform 280ms ease;
+        }
+
+        /* Force image-container to fade out and video layer to fade in during previews */
+        #explore .iconic-token.is-previewing .token-video {
+          opacity: 1 !important;
+          transform: scale(1);
+        }
+
+        #explore .iconic-token.is-previewing .token-image-container {
+          opacity: 0 !important;
+        }
+
+        #explore .token-vignette {
+          z-index: 3;
+          pointer-events: none;
+          background: linear-gradient(to top, rgba(10, 7, 4, 0.9), rgba(10, 7, 4, 0.08) 58%, rgba(10, 7, 4, 0.28));
+        }
+
+        #explore .token-topline {
+          position: absolute;
+          left: 0.75rem;
+          right: 0.75rem;
+          top: 0.65rem;
+          z-index: 5;
+        }
+
+        /* 
+         Standard unhovered panel sits flush over the image.
+         When hovered, it snaps to top: 100% to hang underneath the video without shifting other grids.
+        */
+        #explore .token-info {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 6;
+          padding: 0.95rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          background: transparent;
+          opacity: 1;
+          transform: none;
+          transition: opacity 280ms ease;
+        }
+
+        #explore .iconic-token:hover .token-info,
+        #explore .iconic-token.is-touch-preview .token-info {
+          position: absolute;
+          top: calc(100% - 1px); /* Sits exactly below the video, overlapping by 1px to avoid hairlines */
+          bottom: auto;
+          left: -1px;
+          right: -1px;
+          height: auto; /* Fits contents dynamically without extra blank gaps */
+          padding: 0.95rem 1rem;
+          background: #0d0907;
+          border: 1px solid rgba(246, 229, 188, 0.42);
+          border-top: none;
+          border-bottom-left-radius: 0.42rem;
+          border-bottom-right-radius: 0.42rem;
+          box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+          opacity: 1;
+          display: flex;
+          flex-direction: column;
+          transform: none;
+        }
+
+        #explore .iconic-token:not(:hover):not(.is-touch-preview) .token-info {
+          height: auto;
+          padding: 0.95rem;
+          justify-content: flex-end;
+          background: transparent;
+          opacity: 1;
+          transform: none;
+          border-top: none;
+        }
+
+        #explore .token-info-controls {
+          display: none; /* Hidden on primary card overview */
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.45rem;
+          margin-bottom: 0.5rem;
+        }
+
+        #explore .iconic-token:hover .token-info-controls,
+        #explore .iconic-token.is-touch-preview .token-info-controls {
+          display: flex; /* Revealed on hover */
+        }
+
+        #explore .token-control-cluster {
+          display: flex;
+          align-items: center;
+          gap: 0.36rem;
+        }
+
+        #explore .token-circle {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 1.65rem;
+          height: 1.65rem;
+          border-radius: 999px;
+          border: 1px solid rgba(246, 229, 188, 0.48);
+          color: #f6e5bc;
+          background: rgba(20, 20, 20, 0.76);
+          font-size: 0.7rem;
+          line-height: 1;
+          cursor: pointer;
+          transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+        #explore .token-circle:hover {
+          transform: scale(1.1);
+          border-color: #fff3cf;
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        #explore .token-primary-control {
+          border-color: #fff3cf;
+          background: #fff3cf;
+          color: #111;
+        }
+
+        #explore .token-primary-control:hover {
+          background: #ffffff;
+          border-color: #ffffff;
+        }
+
+        #explore .token-mute {
+          position: absolute;
+          right: 0.68rem;
+          bottom: 0.65rem; /* Stays locked in the bottom-right of the 16:9 video container */
+          z-index: 10;
+          opacity: 0;
+          cursor: pointer;
+          transition: opacity 220ms ease;
+        }
+
+        #explore .iconic-token:hover .token-mute,
+        #explore .iconic-token.is-touch-preview .token-mute {
+          opacity: 1;
+        }
+
+        #explore .token-title {
+          font-size: 1.05rem;
+          font-weight: 600;
+          color: #f2eadc;
+          line-height: 1.2;
+          margin-top: 0.15rem;
+        }
+
+        #explore .token-meta {
+          margin-top: 0.15rem;
+          font-size: 0.6rem;
+          color: #c6a766;
+          text-transform: uppercase;
+          font-family: monospace;
+          letter-spacing: 0.12em;
+          line-height: 1;
+        }
+
+        #explore .token-question {
+          display: none;
+          margin-top: 0.45rem;
+          color: rgba(246, 229, 188, 0.9);
+          font-size: 0.68rem;
+          font-style: italic;
+          line-height: 1.3;
+        }
+
+        #explore .token-character {
+          display: none;
+          margin-top: 0.35rem;
+          color: rgba(216, 203, 184, 0.7);
+          font-size: 0.62rem;
+          line-height: 1.4;
+        }
+
+        #explore .iconic-token:hover .token-question,
+        #explore .iconic-token:hover .token-character,
+        #explore .iconic-token.is-touch-preview .token-question,
+        #explore .iconic-token.is-touch-preview .token-character {
+          display: block;
+        }
+
+        #explore .token-tags {
+          display: none;
+          margin-top: 0.45rem; /* Snug spacing directly underneath description text */
+          color: rgba(198, 167, 102, 0.85);
+          font-size: 0.58rem;
+          font-family: monospace;
+          letter-spacing: 0.05em;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        #explore .iconic-token:hover .token-tags,
+        #explore .iconic-token.is-touch-preview .token-tags {
+          display: block;
+        }
+
+        /* Netflix Widescreen Episode Detail Modal */
+        #explore-modal-backdrop {
+          transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #explore-modal-window {
+          box-shadow: 0 30px 100px rgba(0,0,0,0.9), 0 0 40px rgba(198,167,102,0.08);
+          background: #0d0907;
+          border: 1px solid rgba(198, 167, 102, 0.2);
+          transform: scale(0.95) translateY(20px);
+          transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #explore-modal-backdrop.modal-active {
+          opacity: 1 !important;
+          pointer-events: auto !important;
+        }
+        #explore-modal-backdrop.modal-active #explore-modal-window {
+          transform: scale(1) translateY(0);
+        }
+
+        @media (max-width: 1023px) {
+          #explore .iconic-token:hover,
+          #explore .iconic-token.is-touch-preview {
+            transform: translateY(-18px) scale(1.22);
+          }
+        }
+
+        @media (max-width: 640px) {
+          #explore .worldview-netflix-grid {
+            gap: 0.9rem;
+          }
+
+          #explore .iconic-token:hover,
+          #explore .iconic-token.is-touch-preview {
+            transform: translateY(-8px) scale(1.05);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+          }
+
+          #explore .iconic-token:hover .token-info,
+          #explore .iconic-token.is-touch-preview .token-info {
+            padding: 0.75rem;
+          }
+        }
+      </style>
+
       <div class="mx-auto max-w-7xl">
         <div class="reveal max-w-3xl text-center md:text-left">
           <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="explore.kicker">Explore</p>
           <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl" data-i18n="explore.title">Choose the door you want to open.</h2>
-          <p class="mt-4 text-linen leading-relaxed max-w-xl">Each worldview holds curated recordings from the public domain — philosophy as it was meant to be heard. The bespoke is something different: a piece written around your life, in a voice made for you alone.</p>
+          <p class="mt-4 text-linen leading-relaxed max-w-xl">Each worldview holds curated recordings from the public domain — philosophy as it was meant to be heard. Browse until one pulls at you. That pull is where the form begins. The bespoke is something different: a piece written around your life, in a voice made for you alone.</p>
         </div>
 
+        <!-- UNIFIED WORLDVIEWS COLLECTION GRID -->
         <div class="mt-12">
-          <h3 class="reveal text-sm font-semibold uppercase tracking-[0.28em] text-antique/80" data-i18n="explore.worldview">Explore by Worldview</h3>
+          <h3 class="reveal text-sm font-semibold uppercase tracking-[0.28em] text-antique/80" data-i18n="explore.worldview">The Worldviews Library</h3>
           
-          <div class="mt-5 grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
-            <!-- Token 1: Existentialism -->
-            <a href="#" class="iconic-token p-4 rounded-xl flex flex-col justify-between aspect-square select-none focus-visible:outline-none">
-              <!-- Animated Image Slides -->
+          <div class="worldview-netflix-grid mt-5 grid gap-4 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+
+            <!-- Token 01: Becoming -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="Becoming" data-philosopher="Nietzsche" data-video-url="assets/nietzsche.mp4" data-question="Who are you becoming?" data-character="You are the person who suspects the life you're living was designed for someone else — and you're starting to find that unacceptable.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
               <div class="token-image-container">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sartre_1967_crop.jpg" class="token-img-slide active" alt="Sartre Slide 1">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jean-Paul_Sartre_et_Simone_de_Beauvoir.jpg" class="token-img-slide" alt="Sartre Slide 2">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nietzsche187a.jpg" class="token-img-slide active" alt="Friedrich Nietzsche">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nietzsche_1882.jpg" class="token-img-slide" alt="Nietzsche 1882">
               </div>
-              <div class="z-10 flex justify-between items-start w-full">
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
                 <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">01</span>
                 <span class="text-xs text-linen/50">✦</span>
               </div>
-              <div class="z-10 mt-auto block text-left">
-                <span class="block font-serif text-lg font-medium leading-tight text-cream" data-i18n="explore.existentialism">Existentialism</span>
-                <span class="block text-[10px] uppercase font-mono tracking-wider text-linen/60 mt-1">Sartre</span>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream">Becoming</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">Nietzsche</span>
+                <span class="token-question">Who are you becoming?</span>
+                <span class="token-character">You are the person who suspects the life you're living was designed for someone else — and you're starting to find that unacceptable.</span>
+                <span class="token-tags">Becoming · Will · Self-overcoming</span>
               </div>
             </a>
 
-            <!-- Token 2: Stoicism -->
-            <a href="#" class="iconic-token p-4 rounded-xl flex flex-col justify-between aspect-square select-none focus-visible:outline-none">
+            <!-- Token 02: Existentialism / de Beauvoir -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="Existentialism" data-philosopher="de Beauvoir" data-video-url="assets/frida.mp4" data-audio-url="assets/sample12.mp3" data-question="Who am I without the role?" data-character="You are the person who performs yourself all day and wonders, alone, if there's anyone underneath.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
               <div class="token-image-container">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Marcus_Aurelius_Glyptothek_Munich.jpg" class="token-img-slide active" alt="Marcus Aurelius">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Bust_of_Marcus_Aurelius_at_the_Metropolitan_Museum_of_Art.png" class="token-img-slide" alt="Stoic Architecture">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Simone_de_Beauvoir2.png" class="token-img-slide active" alt="Simone de Beauvoir">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jean-Paul_Sartre_et_Simone_de_Beauvoir.jpg" class="token-img-slide" alt="de Beauvoir and Sartre">
               </div>
-              <div class="z-10 flex justify-between items-start w-full">
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
                 <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">02</span>
                 <span class="text-xs text-linen/50">✦</span>
               </div>
-              <div class="z-10 mt-auto block text-left">
-                <span class="block font-serif text-lg font-medium leading-tight text-cream" data-i18n="explore.stoicism">Stoicism</span>
-                <span class="block text-[10px] uppercase font-mono tracking-wider text-linen/60 mt-1">Aurelius</span>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream" data-i18n="explore.existentialism">Existentialism</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">de Beauvoir</span>
+                <span class="token-question">Who am I without the role?</span>
+                <span class="token-character">You are the person who performs yourself all day and wonders, alone, if there's anyone underneath.</span>
+                <span class="token-tags">Freedom · Choice · Authenticity</span>
               </div>
             </a>
 
-            <!-- Token 3: Romanticism -->
-            <a href="#" class="iconic-token p-4 rounded-xl flex flex-col justify-between aspect-square select-none focus-visible:outline-none">
+            <!-- Token 03: Stoicism / Aurelius -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="Stoicism" data-philosopher="Aurelius" data-video-url="assets/background1.mp4" data-question="What can I actually control?" data-character="You are the person who has realized the world will not cooperate — and you're looking for peace with that, without surrender.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
               <div class="token-image-container">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Byron_1813_by_Phillips.jpg" class="token-img-slide active" alt="Lord Byron">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Joseph_Mallord_William_Turner_-_The_Shipwreck_-_Google_Art_Project.jpg" class="token-img-slide" alt="Romanticist Shipwreck">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Marcus_Aurelius_Glyptothek_Munich.jpg" class="token-img-slide active" alt="Marcus Aurelius">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Bust_of_Marcus_Aurelius_at_the_Metropolitan_Museum_of_Art.png" class="token-img-slide" alt="Marcus Aurelius bust">
               </div>
-              <div class="z-10 flex justify-between items-start w-full">
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
                 <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">03</span>
                 <span class="text-xs text-linen/50">✦</span>
               </div>
-              <div class="z-10 mt-auto block text-left">
-                <span class="block font-serif text-lg font-medium leading-tight text-cream" data-i18n="explore.romanticism">Romanticism</span>
-                <span class="block text-[10px] uppercase font-mono tracking-wider text-linen/60 mt-1">Byron</span>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream" data-i18n="explore.stoicism">Stoicism</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">Aurelius</span>
+                <span class="token-question">What can I actually control?</span>
+                <span class="token-character">You are the person who has realized the world will not cooperate — and you're looking for peace with that, without surrender.</span>
+                <span class="token-tags">Control · Peace · Duty</span>
               </div>
             </a>
 
-            <!-- Token 4: Postmodernism -->
-            <a href="#" class="iconic-token p-4 rounded-xl flex flex-col justify-between aspect-square select-none focus-visible:outline-none">
+            <!-- Token 04: Absurdism / Camus -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="Absurdism" data-philosopher="Camus" data-video-url="assets/background1.mp4" data-question="How do I keep going when none of it adds up?" data-character="You are the person who has looked at the question long enough to know there isn't a clean answer — and has decided to keep going anyway.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
               <div class="token-image-container">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jean_Baudrillard_2004.jpg" class="token-img-slide active" alt="Baudrillard">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Baudrillard_in_front_of_the_simulacra_mural.jpg" class="token-img-slide" alt="Simulation plate">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Albert_Camus,_gagnant_de_prix_Nobel,_portrait_en_buste,_pos%C3%A9_au_bureau,_faisant_face_%C3%A0_gauche,_cigarette.jpg" class="token-img-slide active" alt="Albert Camus">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Camus_vers_1953.jpg" class="token-img-slide" alt="Camus 1953">
               </div>
-              <div class="z-10 flex justify-between items-start w-full">
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
                 <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">04</span>
                 <span class="text-xs text-linen/50">✦</span>
               </div>
-              <div class="z-10 mt-auto block text-left">
-                <span class="block font-serif text-lg font-medium leading-tight text-cream" data-i18n="explore.postmodernism">Postmodernism</span>
-                <span class="block text-[10px] uppercase font-mono tracking-wider text-linen/60 mt-1">Baudrillard</span>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream">Absurdism</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">Camus</span>
+                <span class="token-question">How do I keep going?</span>
+                <span class="token-character">You are the person who has looked at the question long enough to know there isn't a clean answer — and has decided to keep going anyway.</span>
+                <span class="token-tags">Absurd · Rebellion · Freedom</span>
               </div>
             </a>
 
-            <!-- Token 5: Eastern Wisdom -->
-            <a href="#" class="iconic-token p-4 rounded-xl flex flex-col justify-between aspect-square select-none focus-visible:outline-none">
+            <!-- Token 05: The Leap / Kierkegaard -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="The Leap" data-philosopher="Kierkegaard" data-video-url="assets/background1.mp4" data-question="What do I actually choose?" data-character="You are the person who has considered every angle — and finds that knowledge without commitment is its own kind of paralysis.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
               <div class="token-image-container">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lao_Tzu_-_Project_Gutenberg_eText_15250.jpg" class="token-img-slide active" alt="Lao Tzu">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese_landscape_painting_with_mist.jpg" class="token-img-slide" alt="Taoist mist painting">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kierkegaard.jpg" class="token-img-slide active" alt="Søren Kierkegaard">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kierkegaard_portrait_by_Luplau_Janssen.jpg" class="token-img-slide" alt="Kierkegaard portrait">
               </div>
-              <div class="z-10 flex justify-between items-start w-full">
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
                 <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">05</span>
                 <span class="text-xs text-linen/50">✦</span>
               </div>
-              <div class="z-10 mt-auto block text-left">
-                <span class="block font-serif text-lg font-medium leading-tight text-cream" data-i18n="explore.easternWisdom">Eastern Wisdom</span>
-                <span class="block text-[10px] uppercase font-mono tracking-wider text-linen/60 mt-1">Lao Tzu</span>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream">The Leap</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">Kierkegaard</span>
+                <span class="token-question">What do I actually choose?</span>
+                <span class="token-character">You are the person who has considered every angle — and finds that knowledge without commitment is its own kind of paralysis.</span>
+                <span class="token-tags">Faith · Anxiety · Subjectivity</span>
               </div>
             </a>
 
-            <!-- Token 6: Mysticism -->
-            <a href="#" class="iconic-token p-4 rounded-xl flex flex-col justify-between aspect-square select-none focus-visible:outline-none">
+            <!-- Token 06: Mysticism / Rumi -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="Mysticism" data-philosopher="Rumi" data-video-url="assets/background1.mp4" data-question="Why does longing feel like home?" data-character="You are the person for whom the ache is not a problem to be solved — but a language you haven't learned to read yet.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
               <div class="token-image-container">
                 <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Rumi_portrait.jpg" class="token-img-slide active" alt="Rumi">
                 <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Persian_calligraphy_manuscript_Rumi.jpg" class="token-img-slide" alt="Rumi calligraphy">
               </div>
-              <div class="z-10 flex justify-between items-start w-full">
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
                 <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">06</span>
                 <span class="text-xs text-linen/50">✦</span>
               </div>
-              <div class="z-10 mt-auto block text-left">
-                <span class="block font-serif text-lg font-medium leading-tight text-cream" data-i18n="explore.mysticism">Mysticism</span>
-                <span class="block text-[10px] uppercase font-mono tracking-wider text-linen/60 mt-1">Rumi</span>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream" data-i18n="explore.mysticism">Mysticism</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">Rumi</span>
+                <span class="token-question">Why does longing feel like home?</span>
+                <span class="token-character">You are the person for whom the ache is not a problem to be solved — but a language you haven't learned to read yet.</span>
+                <span class="token-tags">Longing · Love · Divine Union</span>
               </div>
             </a>
-          </div>
-        </div>
 
-        <div class="mt-14">
-          <h3 class="reveal text-sm font-semibold uppercase tracking-[0.28em] text-[#c6a766]" data-i18n="explore.powerSociety">Explore Power & Society</h3>
-          <div class="mt-5 grid gap-4 lg:grid-cols-[0.85fr_1.15fr] lg:items-stretch">
-            <div class="quiet-panel reveal rounded-md border-emerald/35 p-6 shadow-soft">
-              <p class="text-xs font-semibold uppercase tracking-[0.24em] text-linen/68" data-i18n="marx.kicker">Anti-capitalist exception</p>
-              <h4 class="mt-4 font-serif text-3xl font-semibold leading-tight text-cream" data-i18n="marx.title">Karl Marx is the free door in a paid library.</h4>
-              <p class="mt-5 leading-7 text-linen" data-i18n="marx.copy">Most Daily Art Cult audiobooks sit behind paid access. Marx opens differently: a free library for the thinker who made capital itself the question.</p>
-              <p class="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-antique/80" data-i18n="marx.note">All other power and society selections remain part of the paid collection.</p>
-            </div>
-            
-            <a href="https://library.thedailyartcult.lol" target="_blank" rel="noopener" class="explore-tile marx-free-tile quiet-panel reveal relative flex rounded-md border border-emerald p-6 transition hover:-translate-y-1 hover:border-linen/40 focus-visible:outline-none">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Karl_Marx_001.jpg" alt="Portrait of Karl Marx" data-i18n-alt="alt.marx" class="absolute inset-0 z-0 h-full w-full object-cover opacity-20 filter grayscale">
-              <span class="absolute right-4 top-4 z-10 rounded-sm border border-emerald/70 bg-cream px-3 py-1 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-emerald" data-i18n="marx.free">Free</span>
-              <span class="mt-auto block max-w-md z-10">
-                <span class="block text-xs font-semibold uppercase tracking-[0.24em] text-linen/78" data-i18n="marx.openLibrary">Open Library</span>
-                <span class="mt-3 block font-serif text-4xl font-semibold text-cream sm:text-5xl" data-i18n="marx.capital">Capital</span>
-                <span class="thinker-name mt-3 block text-xs font-semibold uppercase tracking-[0.18em] text-linen" data-i18n="marx.freeLibrary">Karl Marx — Free Library</span>
-              </span>
+            <!-- Token 07: Lao Tzu -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="Eastern Wisdom" data-philosopher="Lao Tzu" data-video-url="assets/background.mp4" data-question="What if I stopped forcing it?" data-character="You are the person who is exhausted by the effort of becoming — and suspects there's something the West forgot to mention.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
+              <div class="token-image-container">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lao_Tzu_-_Project_Gutenberg_eText_15250.jpg" class="token-img-slide active" alt="Lao Tzu">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese_landscape_painting_with_mist.jpg" class="token-img-slide" alt="Taoist mist painting">
+              </div>
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
+                <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">07</span>
+                <span class="text-xs text-linen/50">✦</span>
+              </div>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream" data-i18n="explore.easternWisdom">Eastern Wisdom</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">Lao Tzu</span>
+                <span class="token-question">What if I stopped forcing it?</span>
+                <span class="token-character">You are the person who is exhausted by the effort of becoming — and suspects there's something the West forgot to mention.</span>
+                <span class="token-tags">Wu Wei · Tao · Balance</span>
+              </div>
             </a>
-          </div>
-          
-          <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <!-- Foucault -->
-            <a href="#" class="iconic-token p-4 rounded-xl flex flex-col justify-between aspect-square select-none focus-visible:outline-none">
+
+            <!-- Token 08: Baudrillard -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="Postmodernism" data-philosopher="Baudrillard" data-video-url="assets/background1.mp4" data-question="Is any of this real?" data-character="You are the person who watches the world and suspects the whole thing is a performance — for an audience that doesn't know it's an audience.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
+              <div class="token-image-container">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jean_Baudrillard_2004.jpg" class="token-img-slide active" alt="Baudrillard">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Baudrillard_in_front_of_the_simulacra_mural.jpg" class="token-img-slide" alt="Simulation plate">
+              </div>
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
+                <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">08</span>
+                <span class="text-xs text-linen/50">✦</span>
+              </div>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream" data-i18n="explore.postmodernism">Postmodernism</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">Baudrillard</span>
+                <span class="token-question">Is any of this real?</span>
+                <span class="token-character">You are the person who watches the world and suspects the whole thing is a performance — for an audience that doesn't know it's an audience.</span>
+                <span class="token-tags">Hyperreality · Simulacra · Media</span>
+              </div>
+            </a>
+
+            <!-- Token 09: Foucault -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="Power" data-philosopher="Foucault" data-video-url="assets/background1.mp4" data-question="Who benefits from this arrangement?" data-character="You are the person who can't walk into an institution without seeing the architecture of control underneath it.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
               <div class="token-image-container">
                 <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Michel_Foucault_1974_Brasil.jpg" class="token-img-slide active" alt="Michel Foucault">
                 <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Panopticon_blueprint.jpg" class="token-img-slide" alt="Panopticon blueprint">
               </div>
-              <div class="z-10 flex justify-between items-start w-full">
-                <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">07</span>
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
+                <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">09</span>
                 <span class="text-xs text-linen/50">✦</span>
               </div>
-              <div class="z-10 mt-auto block text-left">
-                <span class="block font-serif text-lg font-medium leading-tight text-cream" data-i18n="explore.power">Power</span>
-                <span class="block text-[10px] uppercase font-mono tracking-wider text-linen/60 mt-1">Foucault</span>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream" data-i18n="explore.power">Power</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">Foucault</span>
+                <span class="token-question">Who benefits from this?</span>
+                <span class="token-character">You are the person who can't walk into an institution without seeing the architecture of control underneath it.</span>
+                <span class="token-tags">Control · Institutions · Surveillance</span>
               </div>
             </a>
 
-            <!-- Arendt -->
-            <a href="#" class="iconic-token p-4 rounded-xl flex flex-col justify-between aspect-square select-none focus-visible:outline-none">
+            <!-- Token 10: Arendt -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="Politics" data-philosopher="Arendt" data-video-url="assets/background1.mp4" data-question="What do we owe each other?" data-character="You are the person who thinks about what makes a society worth living in — and finds the current answer insufficient.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
               <div class="token-image-container">
                 <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hannah_Arendt_1975.jpg" class="token-img-slide active" alt="Hannah Arendt">
                 <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hannah_Arendt_working.jpg" class="token-img-slide" alt="Working study room">
               </div>
-              <div class="z-10 flex justify-between items-start w-full">
-                <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">08</span>
-                <span class="text-xs text-linen/50">✦</span>
-              </div>
-              <div class="z-10 mt-auto block text-left">
-                <span class="block font-serif text-lg font-medium leading-tight text-cream" data-i18n="explore.politics">Politics</span>
-                <span class="block text-[10px] uppercase font-mono tracking-wider text-linen/60 mt-1">Arendt</span>
-              </div>
-            </a>
-
-            <!-- Du Bois -->
-            <a href="#" class="iconic-token p-4 rounded-xl flex flex-col justify-between aspect-square select-none focus-visible:outline-none">
-              <div class="token-image-container">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/WEB_DuBois_1918.jpg" class="token-img-slide active" alt="W. E. B. Du Bois">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Du_Bois_exhibit.jpg" class="token-img-slide" alt="Aged historical ledger">
-              </div>
-              <div class="z-10 flex justify-between items-start w-full">
-                <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">09</span>
-                <span class="text-xs text-linen/50">✦</span>
-              </div>
-              <div class="z-10 mt-auto block text-left">
-                <span class="block font-serif text-lg font-medium leading-tight text-cream" data-i18n="explore.society">Society</span>
-                <span class="block text-[10px] uppercase font-mono tracking-wider text-linen/60 mt-1">Du Bois</span>
-              </div>
-            </a>
-
-            <!-- Weil -->
-            <a href="#" class="iconic-token p-4 rounded-xl flex flex-col justify-between aspect-square select-none focus-visible:outline-none">
-              <div class="token-image-container">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Simone_Weil_1921.jpg" class="token-img-slide active" alt="Simone Weil">
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Gravity_and_grace_plate.jpg" class="token-img-slide" alt="Evocative abstract woodblock">
-              </div>
-              <div class="z-10 flex justify-between items-start w-full">
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
                 <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">10</span>
                 <span class="text-xs text-linen/50">✦</span>
               </div>
-              <div class="z-10 mt-auto block text-left">
-                <span class="block font-serif text-lg font-medium leading-tight text-cream" data-i18n="explore.justice">Justice</span>
-                <span class="block text-[10px] uppercase font-mono tracking-wider text-linen/60 mt-1">Weil</span>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream" data-i18n="explore.politics">Politics</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">Arendt</span>
+                <span class="token-question">What do we owe each other?</span>
+                <span class="token-character">You are the person who thinks about what makes a society worth living in — and finds the current answer insufficient.</span>
+                <span class="token-tags">Action · Plurality · Public Sphere</span>
+              </div>
+            </a>
+
+            <!-- Token 11: Du Bois + Weil -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="Witness" data-philosopher="Du Bois · Weil" data-video-url="assets/background1.mp4" data-question="What does it cost to exist in a world not built for you?" data-character="You are the person who understands that being seen — truly seen — is rarer than it should be, and that most suffering comes not from cruelty but from inattention.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
+              <div class="token-image-container">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/WEB_DuBois_1918.jpg" class="token-img-slide active" alt="W. E. B. Du Bois">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Simone_Weil_1921.jpg" class="token-img-slide" alt="Simone Weil">
+              </div>
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
+                <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">11</span>
+                <span class="text-xs text-linen/50">✦</span>
+              </div>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream">Witness</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">Du Bois · Weil</span>
+                <span class="token-question">What does it cost to exist?</span>
+                <span class="token-character">You are the person who understands that being seen — truly seen — is rarer than it should be, and that most suffering comes not from cruelty but from inattention.</span>
+                <span class="token-tags">Attention · Consciousness · Double Consciousness</span>
+              </div>
+            </a>
+
+            <!-- Token 12: Capital / Karl Marx (Free Library Door!) -->
+            <a href="#" class="iconic-token select-none focus-visible:outline-none" data-title="Capital" data-philosopher="Karl Marx" data-video-url="assets/background1.mp4" data-question="Who owns the value of your hours?" data-character="You are the person who watches the relentless engine of productivity and wonders why the builders are always the ones left in the cold.">
+              <video class="token-video" muted loop playsinline preload="metadata"></video>
+              <div class="token-image-container">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Karl_Marx_001.jpg" class="token-img-slide active" alt="Karl Marx">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Capital_volume_1.jpg" class="token-img-slide" alt="Das Kapital">
+              </div>
+              <span class="token-vignette"></span>
+              <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
+              <div class="token-topline flex justify-between items-start w-full">
+                <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">12</span>
+                <span class="absolute right-3 top-3 z-10 rounded-sm border border-emerald/70 bg-emerald/10 backdrop-blur-md px-2 py-0.5 text-[0.55rem] font-bold uppercase tracking-[0.18em] text-emerald-300">Free</span>
+              </div>
+              <div class="token-info text-left">
+                <div class="token-info-controls">
+                  <div class="token-control-cluster">
+                    <span class="token-circle token-primary-control">▶</span>
+                    <span class="token-circle">♡</span>
+                  </div>
+                  <span class="token-circle token-expand-button">⌄</span>
+                </div>
+                <span class="token-title block font-serif font-medium text-cream">Capital</span>
+                <span class="token-meta block uppercase font-mono tracking-wider text-linen/60">Karl Marx</span>
+                <span class="token-question">Who owns the value of your hours?</span>
+                <span class="token-character">You are the person who watches the relentless engine of productivity and wonders why the builders are always the ones left in the cold.</span>
+                <span class="token-tags">Labor · Capital · Alienation</span>
               </div>
             </a>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- SECTION 5: SAMPLE AUDIO PLAYER — hear before you pay -->
-    <section class="px-5 py-24 sm:py-28 relative">
-      <div class="mx-auto max-w-3xl">
-        <div class="reveal text-center mb-10">
-          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="sample.kicker">Listen In</p>
-          <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl" data-i18n="sample.title">This Is What It Sounds Like.</h2>
-          <p class="mx-auto mt-4 max-w-xl leading-8 text-linen" data-i18n="sample.copy">A sample piece from our collection. No signup. Just listen.</p>
-        </div>
+      <!-- IMERSIVE NETFLIX DETAILS MODAL -->
+      <div id="explore-modal-backdrop" class="fixed inset-0 z-[9999] opacity-0 pointer-events-none bg-black/85 backdrop-blur-md overflow-y-auto flex items-start justify-center p-4 sm:p-6 md:p-10 select-none">
+        <div id="explore-modal-window" class="relative w-full max-w-4xl rounded-xl overflow-hidden my-8 text-cream">
+          
+          <!-- Close Button -->
+          <button id="explore-modal-close" class="absolute right-4 top-4 z-[10005] flex items-center justify-center w-10 h-10 rounded-full bg-black/60 border border-white/20 text-cream hover:bg-cream hover:text-ink transition duration-300">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
 
-        <div class="premium-audio rounded-2xl p-6 sm:p-8 shadow-glow border-[#c6a766]/30">
-          <div class="text-center mb-6">
-            <span class="inline-block bg-emerald/40 text-emerald-300 border border-emerald/20 text-[9px] uppercase tracking-[0.25em] px-3.5 py-1 rounded-full font-bold" data-i18n="sample.featured">Featured Reflection</span>
-            <h3 class="font-serif text-3xl font-semibold text-cream mt-3" data-i18n="sample.reflectionTitle">Attention as Generosity</h3>
-          </div>
-
-          <div class="bg-black/40 border border-[#c6a766]/15 rounded-xl p-5 sm:p-6 backdrop-blur-md">
-            <div class="flex items-center gap-3">
-              <span id="sample-time-current" class="text-[10px] font-mono text-linen/60">0:00</span>
-              <div class="relative flex-1">
-                <input type="range" id="sample-progress" value="0" max="100" class="audio-progress w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer focus:outline-none">
-              </div>
-              <span id="sample-time-total" class="text-[10px] font-mono text-[#c6a766]">0:00</span>
-            </div>
-
-            <div class="flex items-center justify-between mt-6">
-              <button type="button" id="sample-speed-btn" class="text-[10px] font-mono font-semibold tracking-wider text-linen/60 uppercase border border-linen/15 rounded px-2.5 py-1 transition hover:text-cream hover:border-[#c6a766]">1.0x</button>
+          <!-- Top Hero Widescreen Video Box -->
+          <div class="relative aspect-video w-full overflow-hidden bg-black">
+            <video id="explore-modal-video" class="absolute inset-0 w-full h-full object-cover opacity-85" loop playsinline muted></video>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0d0907] via-transparent to-black/30"></div>
+            
+            <!-- Context Layout Overlay inside Video -->
+            <div class="absolute bottom-6 left-6 md:left-10 max-w-xl z-20 text-left">
+              <span class="text-[10px] font-mono tracking-[0.25em] text-[#c6a766] uppercase mb-1 block">Worldview Collection</span>
+              <h2 id="explore-modal-title" class="font-serif text-3xl md:text-5xl font-semibold text-cream leading-tight">Becoming</h2>
+              <p id="explore-modal-subtitle" class="font-mono text-xs text-linen/70 uppercase tracking-widest mt-1 mb-6">Nietzsche</p>
               
-              <div class="flex items-center gap-4">
-                <button type="button" data-skip="-15" data-audio-target="sample-audio-element" class="text-linen/50 hover:text-cream transition" aria-label="Rewind 15 seconds">
-                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.334 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z" />
-                  </svg>
+              <div class="flex items-center gap-3">
+                <button id="explore-modal-play-action" class="flex items-center gap-2.5 bg-cream hover:bg-[#c6a766] text-ink transition px-6 py-3 rounded-md font-bold text-sm shadow-lg">
+                  <span class="text-xs">▶</span> Play
                 </button>
-                <button type="button" id="play-sample-btn" class="flex h-14 w-14 items-center justify-center rounded-full bg-cream text-ink text-xl transition-all duration-300 hover:bg-antique hover:scale-105 shadow-lg shadow-black/40" aria-label="Play sample audio">▶</button>
-                <button type="button" data-skip="15" data-audio-target="sample-audio-element" class="text-linen/50 hover:text-cream transition" aria-label="Forward 15 seconds">
-                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.934 12.8a1 1 0 000-1.6l-5.334-4A1 1 0 005 8v8a1 1 0 001.6.8l5.334-4zM19.934 12.8a1 1 0 000-1.6l-5.334-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.334-4z" />
-                  </svg>
+                <button class="flex items-center justify-center w-11 h-11 rounded-full border border-white/30 hover:border-white text-cream hover:bg-white/10 transition">
+                  <span class="text-lg font-light">+</span>
+                </button>
+                <button class="flex items-center justify-center w-11 h-11 rounded-full border border-white/30 hover:border-white text-cream hover:bg-white/10 transition">
+                  <span class="text-sm">♡</span>
                 </button>
               </div>
+            </div>
 
-              <div class="wave-container invisible" id="sample-waveform">
-                <div class="wave-bar" style="animation-delay: 0s; background-color: #c6a766;"></div>
-                <div class="wave-bar" style="animation-delay: 0.1s; background-color: #c6a766;"></div>
-                <div class="wave-bar" style="animation-delay: 0.2s; background-color: #c6a766;"></div>
-                <div class="wave-bar" style="animation-delay: 0.3s; background-color: #c6a766;"></div>
-                <div class="wave-bar" style="animation-delay: 0.4s; background-color: #c6a766;"></div>
+            <!-- Mute trigger bottom right inside Video -->
+            <button id="explore-modal-mute-toggle" class="absolute bottom-6 right-6 md:right-10 z-20 flex items-center justify-center w-11 h-11 rounded-full border border-white/30 bg-black/40 text-cream hover:border-white transition">
+              ⌁
+            </button>
+          </div>
+
+          <!-- Description Section -->
+          <div class="p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-8 text-left border-b border-white/[0.04]">
+            <!-- Core Profiles (2 cols) -->
+            <div class="md:col-span-2 space-y-4">
+              <div class="flex flex-wrap items-center gap-3 text-xs text-linen/60 font-mono">
+                <span class="border border-[#c6a766]/40 px-1.5 py-0.5 rounded text-[10px] font-bold text-[#c6a766]">PHIL-101</span>
+                <span class="text-emerald-400 font-bold">98% Match</span>
+                <span>2026</span>
+                <span class="border border-white/10 px-1.5 rounded text-[9px] uppercase tracking-wider font-semibold">HD</span>
+                <span>3 Chapters</span>
+              </div>
+              <p id="explore-modal-question" class="font-serif text-xl md:text-2xl text-cream italic leading-relaxed">Who are you becoming?</p>
+              <p id="explore-modal-character" class="text-sm leading-relaxed text-linen/85">You are the person who suspects the life you're living was designed for someone else — and you're starting to find that unacceptable.</p>
+            </div>
+
+            <!-- Metainfo lists (1 col) -->
+            <div class="space-y-4 text-xs leading-relaxed text-linen/50">
+              <div>
+                <span class="text-linen/35 font-semibold block mb-1">Narrated by:</span>
+                <span class="text-cream font-medium">Bespoke Voice Engine · Hand-Voiced</span>
+              </div>
+              <div>
+                <span class="text-linen/35 font-semibold block mb-1">Atmosphere:</span>
+                <span class="text-cream font-medium">Introspective, Quiet Luxury, Timeless</span>
+              </div>
+              <div>
+                <span class="text-linen/35 font-semibold block mb-1">Core Pillars:</span>
+                <span id="explore-modal-tags" class="text-cream font-medium">Becoming · Will · Self-overcoming</span>
               </div>
             </div>
           </div>
+
+          <!-- Dynamic Episodes List (Image 2 style) -->
+          <div class="p-6 md:p-10 text-left bg-black/20">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="font-serif text-xl font-semibold text-cream">Chapters</h3>
+              <span class="text-xs text-linen/40 font-mono tracking-widest uppercase">Season 1</span>
+            </div>
+
+            <div id="explore-modal-chapters" class="space-y-4">
+              <!-- Dynamically populated via JS loop -->
+            </div>
+          </div>
+
         </div>
       </div>
-      <audio id="sample-audio-element" preload="none">
-        <source src="sample.mp3" type="audio/mpeg">
-      </audio>
+<script>
+        (() => {
+          const explore = document.getElementById("explore");
+          if (!explore) return;
+
+          const cards = [...explore.querySelectorAll(".iconic-token")];
+          const audio = new Audio();
+          let activeCard = null;
+
+          // Consolidated Episodes Database for Widescreen Modal Popups
+          const worldviewEpisodes = {
+            "Becoming": [
+              { title: "The Death of Safe Shelters", duration: "18m", desc: "Stepping away from inherited convictions to face the raw winds of existence." },
+              { title: "Active Nihilism as a Cleansing Fire", duration: "24m", desc: "Why breaking your own idols is the first act of real creation." },
+              { title: "Amor Fati and the Heavy Weight of the Hour", duration: "29m", desc: "To love your life so completely that you would repeat every error, every grief, for eternity." }
+            ],
+            "Existentialism": [
+              { title: "The Cage of Bad Faith", duration: "15m", desc: "Recognizing the comfortable roles we play to avoid the terrifying burden of freedom." },
+              { title: "The Ethics of Ambiguity", duration: "22m", desc: "How to construct a moral life when there are no absolute values written in the stars." },
+              { title: "Project and Transcendence", duration: "26m", desc: "Defining yourself not by what you are, but by the actions you throw yourself into next." }
+            ],
+            "Stoicism": [
+              { title: "The Citadel of the Mind", duration: "16m", desc: "Establishing the boundary between the chaos of the outer empire and your inner peace." },
+              { title: "The Obstacle is the Path", duration: "20m", desc: "Transforming blockages, betrayals, and delays into raw fuel for character." },
+              { title: "Memento Mori as a Great Grounding", duration: "25m", desc: "How the constant awareness of mortality makes every quiet breath sweet and urgent." }
+            ],
+            "Absurdism": [
+              { title: "The Sisyphus Revelation", duration: "17m", desc: "Finding joy in the repetitive, meaningless tasks of survival." },
+              { title: "The Three Consequences: Revolt, Freedom, Passion", duration: "23m", desc: "Living with maximum vitality precisely because nothing lasts." },
+              { title: "Summer in Algiers", duration: "21m", desc: "Embracing the physical beauty of the present moment despite the silent universe." }
+            ],
+            "The Leap": [
+              { title: "The Trembling of Anxiety", duration: "19m", desc: "Why deep dread is the calling card of a soul realizing its own possibilities." },
+              { title: "The Madness of Commitment", duration: "22m", desc: "Stepping past the paralysis of endless analysis into absolute devotion." },
+              { title: "Knight of Infinite Resignation", duration: "27m", desc: "Letting go of worldly demands to receive them back in a spirit of trust." }
+            ],
+            "Mysticism": [
+              { title: "The Architecture of Longing", duration: "14m", desc: "Understanding why your deepest ache is actually the destination itself." },
+              { title: "Escaping the Cage of Words", duration: "18m", desc: "Dismantling logical structures to experience direct, unmediated reality." },
+              { title: "The Caravan of No Despair", duration: "22m", desc: "A call to return to love, even if you have broken your vows a thousand times." }
+            ],
+            "Eastern Wisdom": [
+              { title: "Wu Wei — The Art of Non-Forcing", duration: "16m", desc: "Aligning with the natural stream of reality instead of paddling upstream." },
+              { title: "The Power of the Empty Vessel", duration: "19m", desc: "Why utility resides in what is absent, and strength in what is soft." },
+              { title: "Returning to the Root", duration: "23m", desc: "Quieting the intellect to remember the simple, unnamed source of balance." }
+            ],
+            "Postmodernism": [
+              { title: "The Desert of the Real", duration: "18m", desc: "How signs, symbols, and screens replaced the actual objects they once represented." },
+              { title: "Precession of Simulacra", duration: "21m", desc: "Navigating a world where the map has completely swallowed the territory." },
+              { title: "The Illusion of Endings", duration: "24m", desc: "Why we are fascinated by catastrophes as a way to pretend we are still alive." }
+            ],
+            "Power": [
+              { title: "The Eye of the Panopticon", duration: "20m", desc: "How modern structures teach us to watch, judge, and police ourselves." },
+              { title: "Docile Bodies, Secret Rules", duration: "22m", desc: "The invisible training that molds our schedules, gestures, and desires." },
+              { title: "Resistance as a Constant Shadow", duration: "25m", desc: "Wherever power operates, the friction of liberation is already active." }
+            ],
+            "Politics": [
+              { title: "The Space of Appearance", duration: "21m", desc: "Why speaking and acting in public is the only true defense against tyranny." },
+              { title: "The Banality of Unthinking", duration: "25m", desc: "How ordinary people participate in profound harm through simple thoughtlessness." },
+              { title: "Natality — The Grace of Beginnings", duration: "23m", desc: "Every birth represents a brand-new promise that can break history's momentum." }
+            ],
+            "Witness": [
+              { title: "Double Consciousness", duration: "19m", desc: "The pain and unique power of seeing oneself always through the eyes of others." },
+              { title: "Attention as the Purest Generosity", duration: "24m", desc: "Why truly looking at another’s suffering is the rarest form of love." },
+              { title: "The Weight of Gravity and Grace", duration: "22m", desc: "Resisting the spiritual gravity that pulls us toward self-preservation." }
+            ],
+            "Capital": [
+              { title: "The Alchemy of Commodity", duration: "19m", desc: "Dismantling the illusions that turn human labor into mere exchange value." },
+              { title: "The Machinery of Alienation", duration: "23m", desc: "Why modern work splits you from your creations, your peers, and your own nature." },
+              { title: "The Specter of the Future", duration: "28m", desc: "Reimagining a world where human development, not profit, is the absolute destination." }
+            ]
+          };
+
+          // Modal DOM Node Elements
+          const modalBackdrop = document.getElementById("explore-modal-backdrop");
+          const modalWindow = document.getElementById("explore-modal-window");
+          const modalClose = document.getElementById("explore-modal-close");
+          const modalVideo = document.getElementById("explore-modal-video");
+          const modalTitle = document.getElementById("explore-modal-title");
+          const modalSubtitle = document.getElementById("explore-modal-subtitle");
+          const modalQuestion = document.getElementById("explore-modal-question");
+          const modalCharacter = document.getElementById("explore-modal-character");
+          const modalTags = document.getElementById("explore-modal-tags");
+          const modalChaptersContainer = document.getElementById("explore-modal-chapters");
+          const modalMuteToggle = document.getElementById("explore-modal-mute-toggle");
+          const modalPlayAction = document.getElementById("explore-modal-play-action");
+
+          const resetCard = (card, resetVideo = true) => {
+            card.classList.remove("is-previewing", "is-playing");
+            const playBtn = card.querySelector(".token-primary-control");
+            if (playBtn) playBtn.textContent = "▶";
+
+            const cardVideo = card.querySelector(".token-video");
+            if (cardVideo && resetVideo) {
+              cardVideo.pause();
+              try {
+                cardVideo.currentTime = 0;
+              } catch (error) {}
+            }
+          };
+
+          const stopActiveAudio = () => {
+            if (!activeCard) return;
+            audio.pause();
+            audio.removeAttribute("src");
+            audio.load();
+            resetCard(activeCard, false);
+            activeCard = null;
+          };
+
+          // Setup Core Cards
+          cards.forEach((card) => {
+            const video = card.querySelector(".token-video");
+            const playBtn = card.querySelector(".token-primary-control");
+            const iconMuteBtn = card.querySelector(".token-mute");
+            const expandBtn = card.querySelector(".token-expand-button");
+            let hoverTimer = null;
+
+            card.addEventListener("mouseenter", () => {
+              const rect = card.getBoundingClientRect();
+              if (rect.left < 120) {
+                card.style.transformOrigin = "left center";
+              } else if (window.innerWidth - rect.right < 120) {
+                card.style.transformOrigin = "right center";
+              } else {
+                card.style.transformOrigin = "center center";
+              }
+
+              hoverTimer = window.setTimeout(() => {
+                const videoUrl = card.dataset.videoUrl;
+                
+                // 1. Force absolute source assignment & loading
+                if (video && videoUrl && !videoUrl.includes("REPLACE_WITH")) {
+                  if (video.getAttribute('src') !== videoUrl) {
+                    video.setAttribute('src', videoUrl);
+                    video.load(); // Forces browser to load the video stream
+                  }
+                  
+                  card.classList.add("is-previewing");
+                  video.muted = true; 
+                  video.playsInline = true;
+                  video.loop = true;
+                  video.play().catch((err) => {
+                    console.warn("Video playback blocked or interrupted:", err);
+                  });
+                }
+
+                // 2. Play the card's reflection audio soundtrack automatically on hover
+                const audioUrl = card.dataset.audioUrl;
+                if (audioUrl && !audioUrl.startsWith("REPLACE_WITH")) {
+                  stopActiveAudio(); 
+                  activeCard = card;
+                  card.classList.add("is-playing");
+                  
+                  audio.src = audioUrl;
+                  audio.play().catch((err) => {
+                    console.log("Audio hover-autoplay waiting for first click gesture:", err);
+                  });
+
+                  if (playBtn) playBtn.textContent = "Ⅱ";
+                }
+              }, 360);
+            });
+
+            card.addEventListener("mouseleave", () => {
+              clearTimeout(hoverTimer);
+              // Stop audio and reset card on leave
+              if (activeCard === card) {
+                stopActiveAudio();
+              }
+              resetCard(card);
+              card.blur();
+            });
+
+            card.addEventListener("click", (event) => {
+              // Direct card clicks open modal unless clicking internal controls
+              if (!event.target.closest('.token-circle') && !event.target.closest('.token-mute')) {
+                event.preventDefault();
+                openNetflixModal(card);
+              }
+            });
+
+            if (iconMuteBtn && video) {
+              iconMuteBtn.addEventListener("click", (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                video.muted = !video.muted;
+                iconMuteBtn.textContent = video.muted ? "⌁" : "◖";
+              });
+            }
+
+            if (expandBtn) {
+              expandBtn.addEventListener("click", (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                openNetflixModal(card);
+              });
+            }
+
+            const toggleAudio = () => {
+              const audioUrl = card.dataset.audioUrl;
+              const videoUrl = card.dataset.videoUrl;
+
+              if (!audioUrl) {
+                if (video && videoUrl && !video.src) {
+                  video.src = videoUrl;
+                }
+                card.classList.add("is-previewing");
+                if (video && video.src) {
+                  video.muted = true;
+                  video.play().catch(() => {});
+                }
+                return;
+              }
+
+              if (activeCard === card) {
+                if (audio.paused) {
+                  audio.play().catch(() => {});
+                  if (playBtn) playBtn.textContent = "Ⅱ";
+                } else {
+                  audio.pause();
+                  if (playBtn) playBtn.textContent = "▶";
+                }
+                return;
+              }
+
+              if (activeCard && activeCard !== card) {
+                resetCard(activeCard, false);
+                const activeVideo = activeCard.querySelector(".token-video");
+                if (activeVideo && !activeCard.matches(":hover")) activeVideo.pause();
+              }
+
+              activeCard = card;
+              card.classList.add("is-playing");
+
+              if (audio.src !== audioUrl) {
+                audio.src = audioUrl;
+                audio.currentTime = 0;
+              }
+
+              audio.play().catch(() => {});
+              if (playBtn) playBtn.textContent = "Ⅱ";
+            };
+
+            if (playBtn) {
+              playBtn.addEventListener("click", (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                toggleAudio();
+              });
+            }
+          });
+
+          audio.addEventListener("play", () => {
+            if (activeCard) {
+              activeCard.classList.add("is-playing");
+              const playBtn = activeCard.querySelector(".token-primary-control");
+              if (playBtn) playBtn.textContent = "Ⅱ";
+            }
+          });
+
+          audio.addEventListener("pause", () => {
+            if (activeCard) {
+              const playBtn = activeCard.querySelector(".token-primary-control");
+              if (playBtn) playBtn.textContent = "▶";
+            }
+          });
+
+          // Modal Opening & Rendering logic (Image 2 style)
+          function openNetflixModal(card) {
+            const title = card.dataset.title;
+            const philosopher = card.dataset.philosopher;
+            const videoUrl = card.dataset.videoUrl;
+            const question = card.dataset.question;
+            const character = card.dataset.character;
+            const tags = card.querySelector(".token-tags") ? card.querySelector(".token-tags").textContent : "";
+
+            // Populate text
+            modalTitle.textContent = title;
+            modalSubtitle.textContent = philosopher;
+            modalQuestion.textContent = `"${question}"`;
+            modalCharacter.textContent = character;
+            modalTags.textContent = tags || `${title} · Insights`;
+
+            // Load Hero Video inside Modal
+            if (videoUrl && !videoUrl.includes("REPLACE_WITH")) {
+              modalVideo.src = videoUrl;
+              modalVideo.muted = true; // Safely mute inside details modal
+              modalVideo.load();
+              modalVideo.play().catch(() => {});
+            } else {
+              modalVideo.removeAttribute("src");
+              modalVideo.load();
+            }
+
+            // Render Episodes List using our curated database array
+            modalChaptersContainer.innerHTML = "";
+            const episodes = worldviewEpisodes[title] || [
+              { title: "Introduction Chapter", duration: "12m", desc: "A structural outline of this philosophical discipline." },
+              { title: "Direct Reflections", duration: "18m", desc: "Quiet integration paths focusing on historical manuscripts." }
+            ];
+
+            episodes.forEach((ep, index) => {
+              const epRow = document.createElement("div");
+              epRow.className = "group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-lg bg-[#14100e]/30 border border-white/[0.03] hover:bg-[#1b1411]/50 hover:border-[#c6a766]/25 transition duration-300";
+              epRow.innerHTML = `
+                <span class="text-xl font-mono text-linen/30 font-semibold pl-2 hidden sm:block">${index + 1}</span>
+                <div class="relative aspect-video w-full sm:w-32 rounded overflow-hidden shrink-0 bg-black border border-white/5">
+                  <video class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-300" src="${videoUrl}" muted playsinline loop></video>
+                  <div class="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition duration-300">
+                    <span class="text-cream text-lg">▶</span>
+                  </div>
+                </div>
+                <div class="flex-1 text-left space-y-1">
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-semibold text-cream group-hover:text-antique transition duration-300">${ep.title}</h4>
+                    <span class="text-xs font-mono text-linen/40">${ep.duration}</span>
+                  </div>
+                  <p class="text-xs text-linen/60 leading-relaxed">${ep.desc}</p>
+                </div>
+              `;
+
+              // Let the mini episode card play its snippet on hover
+              const rowVideo = epRow.querySelector("video");
+              epRow.addEventListener("mouseenter", () => {
+                if (rowVideo && videoUrl && !videoUrl.includes("REPLACE_WITH")) {
+                  rowVideo.muted = true;
+                  rowVideo.play().catch(() => {});
+                }
+              });
+              epRow.addEventListener("mouseleave", () => {
+                if (rowVideo) {
+                  rowVideo.pause();
+                  rowVideo.currentTime = 0;
+                }
+              });
+
+              modalChaptersContainer.appendChild(epRow);
+            });
+
+            // Display Modal Backdrop
+            modalBackdrop.classList.add("modal-active");
+            document.body.style.overflow = "hidden"; // Prevents body scrolling
+          }
+
+          function closeNetflixModal() {
+            modalBackdrop.classList.remove("modal-active");
+            document.body.style.overflow = "";
+            modalVideo.pause();
+            modalVideo.removeAttribute("src");
+            modalVideo.load();
+          }
+
+          if (modalClose) {
+            modalClose.addEventListener("click", closeNetflixModal);
+          }
+
+          modalBackdrop.addEventListener("click", (e) => {
+            if (e.target === modalBackdrop) closeNetflixModal();
+          });
+
+          if (modalMuteToggle) {
+            modalMuteToggle.addEventListener("click", () => {
+              modalVideo.muted = !modalVideo.muted;
+              modalMuteToggle.textContent = modalVideo.muted ? "⌁" : "◖";
+            });
+          }
+
+          if (modalPlayAction) {
+            modalPlayAction.addEventListener("click", () => {
+              if (modalVideo.paused) {
+                modalVideo.play();
+                modalPlayAction.innerHTML = `<span class="text-xs">❚❚</span> Pause`;
+              } else {
+                modalVideo.pause();
+                modalPlayAction.innerHTML = `<span class="text-xs">▶</span> Play`;
+              }
+            });
+          }
+        })();
+      </script>
     </section>
 
-    <!-- SECTION 6: BESPOKE — THE ONLY OFFERING -->
+    <!-- SECTION 5: BESPOKE — THE ONLY OFFERING -->
     <section id="offerings" class="px-5 py-24 sm:py-28">
       <div class="mx-auto max-w-4xl">
         <div class="premium-audio reveal rounded-2xl p-10 sm:p-14 shadow-glow">
@@ -953,7 +1898,7 @@
 
 
 
-    <!-- SECTION 8: IMMORTALITY PROJECT -->
+    <!-- SECTION 6: IMMORTALITY PROJECT -->
     <section class="px-5 py-24 sm:py-28">
       <div class="mx-auto max-w-5xl text-center reveal">
         <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="experiment.kicker">The Experiment</p>
@@ -1057,15 +2002,16 @@
         "explore.worldview": "Explore by Worldview",
         "explore.existentialism": "Existentialism",
         "explore.stoicism": "Stoicism",
-        "explore.romanticism": "Romanticism",
         "explore.postmodernism": "Postmodernism",
         "explore.easternWisdom": "Eastern Wisdom",
         "explore.mysticism": "Mysticism",
-        "explore.powerSociety": "Explore Power & Society",
+        "explore.specialistDoors": "Specialist Doors",
         "explore.power": "Power",
         "explore.politics": "Politics",
-        "explore.society": "Society",
-        "explore.justice": "Justice",
+        "explore.becoming": "Becoming",
+        "explore.absurdism": "Absurdism",
+        "explore.theLeap": "The Leap",
+        "explore.witness": "Witness",
         "marx.kicker": "Anti-capitalist exception",
         "marx.title": "Karl Marx is the free door in a paid library.",
         "marx.copy": "Most Daily Art Cult audiobooks sit behind paid access. Marx opens differently.",
@@ -1113,7 +2059,6 @@
         "explore.worldview": "Explorar por visión del mundo",
         "explore.existentialism": "Existencialismo",
         "explore.stoicism": "Estoicismo",
-        "explore.romanticism": "Romanticismo",
         "explore.postmodernism": "Posmodernismo",
         "explore.easternWisdom": "Sabiduría oriental",
         "explore.mysticism": "Misticismo",
@@ -1594,7 +2539,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  async function runStudioPipeline() {
+ async function runStudioPipeline() {
     const payload = {
       q1: answers.q1,
       q2: answers.q2,
@@ -1603,20 +2548,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       azureStatus.textContent = "Consulting the archive...";
+      
+      // 1. Call your Gemini API
       const geminiRes = await fetch("/.netlify/functions/gemini", {
         method: "POST",
         body: JSON.stringify(payload)
       });
       const data = await geminiRes.json();
       
+      // 2. RECORD TO SUPABASE (CRM LOGGING)
+      // This happens in the background while the user waits
+      supabaseClient.from('listening_logs').insert([
+        {
+          q1_carrying: answers.q1,
+          q2_state: answers.q2,
+          q3_goal: answers.q3,
+          assigned_territory: data.territory,
+          ai_script: data.expanded_text,
+          created_at: new Date().toISOString()
+        }
+      ]).then(() => console.log("Interaction logged to production ledger."));
+
+// 3. Call your TTS API
       azureStatus.textContent = "Synthesizing voice...";
       const ttsRes = await fetch("/.netlify/functions/tts", {
         method: "POST",
         body: JSON.stringify({ text: data.expanded_text })
       });
+      
+      // Check if the response failed
+      if (!ttsRes.ok) {
+        const errData = await ttsRes.json().catch(() => ({}));
+        throw new Error(errData.error || `TTS API returned status code ${ttsRes.status}`);
+      }
+      
       const blob = await ttsRes.blob();
       aiAudio.src = URL.createObjectURL(blob);
       
+      // 4. Play the AI reading
       azureStatus.textContent = "Azure Neural Reading";
       stillYours.classList.remove("opacity-0");
       aiAudio.play();
@@ -1707,8 +2676,25 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    craftAudio.onended = () => {
-      postPlaybackUi.classList.remove("hidden");
+craftAudio.onended = () => {
+      // 1. Fade out the player interface smoothly
+      const playerInterface = document.getElementById("bespoke-player-interface");
+      if (playerInterface) {
+        playerInterface.style.transition = 'opacity 1s ease, transform 1s ease';
+        playerInterface.style.opacity = '0';
+        playerInterface.style.transform = 'translateY(-10px)';
+        
+        setTimeout(() => {
+          playerInterface.style.display = 'none';
+          
+          // 2. Reveal the new Offering/Gift UI
+          const postPlaybackUi = document.getElementById("post-playback-ui");
+          if (postPlaybackUi) {
+            postPlaybackUi.classList.remove("hidden");
+            postPlaybackUi.classList.add("py-16", "md:py-24");
+          }
+        }, 1000); // Wait for the player to fade out before showing the CTA
+      }
     };
   }
 
