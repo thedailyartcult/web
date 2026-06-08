@@ -5,7 +5,7 @@ const corsHeaders = {
 }
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests (required when invoking from web browsers)
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -29,8 +29,9 @@ Deno.serve(async (req) => {
 
       Your task:
       1. Select the most appropriate "territory" from this list: [loss, becoming, longing, belonging, endurance, creation, love, faith, wonder].
+         - If the user discusses death, bereavement, or deep grieving, you MUST select "loss".
       2. Write a "bridge_line": A very short, poetic sentence (max 10 words) that appears as text.
-      3. Write an "expanded_text": A 2-sentence, heartwarming, deeply empathetic response that will be read by an AI voice. It should acknowledge their specific struggle and offer a quiet, luxury-toned comfort. Use "unhurried" language.
+      3. Write an "expanded_text": A 2-sentence, heartwarming, deeply empathetic response that will be read by an AI voice. It should acknowledge their specific struggle with profound dignity and offer a quiet, luxury-toned comfort. Use "unhurried", calm language.
 
       Return ONLY a JSON object in this format:
       {
@@ -46,23 +47,57 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: {
-          responseMimeType: "application/json" // Guarantees JSON output, avoiding markdown wrapping
-        }
+          responseMimeType: "application/json"
+        },
+        // Adjust safety settings to allow personal discussion of death/grief without blocking
+        safetySettings: [
+          {
+            category: "HARM_CATEGORY_HARASSMENT",
+            threshold: "BLOCK_ONLY_HIGH"
+          },
+          {
+            category: "HARM_CATEGORY_HATE_SPEECH",
+            threshold: "BLOCK_ONLY_HIGH"
+          },
+          {
+            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+            threshold: "BLOCK_ONLY_HIGH"
+          },
+          {
+            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            threshold: "BLOCK_ONLY_HIGH"
+          }
+        ]
       })
     })
 
     if (!response.ok) {
       const errText = await response.text()
-      throw new Error(`Gemini API Error (Status ${response.status}): ${errText}`)
+      throw new Error(`Gemini API returned status ${response.status}: ${errText}`)
     }
 
     const data = await response.json()
     
     if (!data.candidates || data.candidates.length === 0) {
-      throw new Error("Gemini returned an empty candidate list. This is often caused by automated safety filters.")
+      throw new Error("No response candidates returned.")
     }
 
-    const resultText = data.candidates[0].content.parts[0].text
+    const candidate = data.candidates[0]
+
+    // If the safety filter still blocks the output, provide a beautiful, custom loss response
+    if (candidate.finishReason === "SAFETY") {
+      console.warn("Gemini prompt flagged by safety system. Using sensitive fallback.")
+      return new Response(JSON.stringify({
+        territory: "loss",
+        bridge_line: "To carry grief is to have loved deeply.",
+        expanded_text: "I hear the weight of the loss you are carrying. In the presence of such deep absence, there are no easy answers—only the quiet space to hold what remains."
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      })
+    }
+
+    const resultText = candidate.content.parts[0].text
     const parsedResult = JSON.parse(resultText.trim())
 
     return new Response(JSON.stringify(parsedResult), {
@@ -72,11 +107,12 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     console.error("Gemini Error:", error.message)
-    // Fallback response to prevent UI from breaking if Google's API crashes
+    
+    // A much gentler, neutral, and respectful general fallback in case of connection failure
     return new Response(JSON.stringify({
-      territory: "becoming",
-      bridge_line: "The path clears as you walk it.",
-      expanded_text: "I hear the depth of what you've shared. Even in the quietest moments, your growth is unfolding exactly as it should."
+      territory: "loss",
+      bridge_line: "The quiet weight of what we carry.",
+      expanded_text: "I am listening to what you have shared. In the silence of this moment, your thoughts are met with deep care and unhurried space."
     }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" }
