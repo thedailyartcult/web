@@ -5,7 +5,7 @@ const corsHeaders = {
 }
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
+  // Handle CORS preflight requests (required when invoking from web browsers)
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -18,22 +18,32 @@ Deno.serve(async (req) => {
       throw new Error("GEMINI_API_KEY is not defined in Supabase environment variables.")
     }
 
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
+    // Updated model to gemini-2.5-flash to prevent the 404 Not Found error
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`
 
     const prompt = `
-      You are the curator of "The Daily Art Cult," a high-end philosophical audio service. 
-      A user has shared their current state of mind:
+      You are the curator of "The Daily Art Cult," a high-end, deeply sensitive, and articulate philosophical companion. 
+      A user has trusted you with an exclusive, highly vulnerable, and raw part of their life. 
+      Here is what they shared:
       1. What they are carrying: "${q1}"
       2. Ending or Beginning: "${q2}"
-      3. What they need: "${q3}"
+      3. What they need from this: "${q3}"
 
-      Your task:
-      1. Select the most appropriate "territory" from this list: [loss, becoming, longing, belonging, endurance, creation, love, faith, wonder].
-         - If the user discusses death, bereavement, or deep grieving, you MUST select "loss".
-      2. Write a "bridge_line": A very short, poetic sentence (max 10 words) that appears as text.
-      3. Write an "expanded_text": A 2-sentence, heartwarming, deeply empathetic response that will be read by an AI voice. It should acknowledge their specific struggle with profound dignity and offer a quiet, luxury-toned comfort. Use "unhurried", calm language.
+      Your task is to honor this trust by writing a response that is completely unique, highly conversational, and deeply empathetic. 
 
-      Return ONLY a JSON object in this format:
+      Follow these strict instructions:
+      1. SELECT THE TRUEST EMOTIONAL "TERRITORY":
+         - Choose exactly one from: [loss, becoming, longing, belonging, endurance, creation, love, faith, wonder].
+         - Do not treat grief as a flat default. If they talk about a mother passing but seek connection or peace, choose the territory that matches the truest spiritual tone of their input (e.g., "love", "longing", "endurance", "belonging", or "wonder").
+      2. WRITE A "bridge_line":
+         - A very short, poetic, custom sentence (max 10 words) that directly speaks to the specific gravity of their input. Never repeat standard templates.
+      3. WRITE AN "expanded_text":
+         - Write exactly 2-3 warm, deeply conversational sentences.
+         - You MUST act as an active listener. Gently and respectfully reference specific elements or concepts they shared (e.g., if they mention their mother, reference that memory with immense dignity).
+         - NEVER use generic, pre-written AI transitions, templates, or cliches (such as "I hear the depth of what you shared", "your growth is unfolding", "even in the quietest moments"). 
+         - Speak to them like an articulate, compassionate companion who has stopped to write them a direct, personal letter. Keep the language calm, unhurried, and luxury-toned.
+
+      Return ONLY a JSON object in this exact format:
       {
         "territory": "chosen_word",
         "bridge_line": "...",
@@ -49,23 +59,22 @@ Deno.serve(async (req) => {
         generationConfig: {
           responseMimeType: "application/json"
         },
-        // Adjust safety settings to allow personal discussion of death/grief without blocking
         safetySettings: [
           {
             category: "HARM_CATEGORY_HARASSMENT",
-            threshold: "BLOCK_ONLY_HIGH"
+            threshold: "BLOCK_NONE"
           },
           {
             category: "HARM_CATEGORY_HATE_SPEECH",
-            threshold: "BLOCK_ONLY_HIGH"
-          },
-          {
-            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-            threshold: "BLOCK_ONLY_HIGH"
+            threshold: "BLOCK_NONE"
           },
           {
             category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-            threshold: "BLOCK_ONLY_HIGH"
+            threshold: "BLOCK_NONE"
+          },
+          {
+            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+            threshold: "BLOCK_NONE"
           }
         ]
       })
@@ -82,22 +91,7 @@ Deno.serve(async (req) => {
       throw new Error("No response candidates returned.")
     }
 
-    const candidate = data.candidates[0]
-
-    // If the safety filter still blocks the output, provide a beautiful, custom loss response
-    if (candidate.finishReason === "SAFETY") {
-      console.warn("Gemini prompt flagged by safety system. Using sensitive fallback.")
-      return new Response(JSON.stringify({
-        territory: "loss",
-        bridge_line: "To carry grief is to have loved deeply.",
-        expanded_text: "I hear the weight of the loss you are carrying. In the presence of such deep absence, there are no easy answers—only the quiet space to hold what remains."
-      }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      })
-    }
-
-    const resultText = candidate.content.parts[0].text
+    const resultText = data.candidates[0].content.parts[0].text
     const parsedResult = JSON.parse(resultText.trim())
 
     return new Response(JSON.stringify(parsedResult), {
@@ -108,11 +102,10 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("Gemini Error:", error.message)
     
-    // A much gentler, neutral, and respectful general fallback in case of connection failure
     return new Response(JSON.stringify({
       territory: "loss",
-      bridge_line: "The quiet weight of what we carry.",
-      expanded_text: "I am listening to what you have shared. In the silence of this moment, your thoughts are met with deep care and unhurried space."
+      bridge_line: "In the quiet space of what remains.",
+      expanded_text: "I am holding close what you have shared. When words fall short, please know that your thoughts are met here with absolute dignity, quiet attention, and an unhurried peace."
     }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" }
