@@ -44,16 +44,26 @@ Deno.serve(async (req) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }]
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json" // Guarantees JSON output, avoiding markdown wrapping
+        }
       })
     })
 
+    if (!response.ok) {
+      const errText = await response.text()
+      throw new Error(`Gemini API Error (Status ${response.status}): ${errText}`)
+    }
+
     const data = await response.json()
-    const resultText = data.candidates[0].content.parts[0].text
     
-    // Clean JSON wrapper formatting if Gemini includes markdown markdown code blocks
-    const cleanJson = resultText.replace(/```json|```/g, "").trim()
-    const parsedResult = JSON.parse(cleanJson)
+    if (!data.candidates || data.candidates.length === 0) {
+      throw new Error("Gemini returned an empty candidate list. This is often caused by automated safety filters.")
+    }
+
+    const resultText = data.candidates[0].content.parts[0].text
+    const parsedResult = JSON.parse(resultText.trim())
 
     return new Response(JSON.stringify(parsedResult), {
       status: 200,
