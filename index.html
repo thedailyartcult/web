@@ -2549,9 +2549,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       azureStatus.textContent = "Consulting the archive...";
       
-      // 1. Call your Gemini API
-      const geminiRes = await fetch("/.netlify/functions/gemini", {
+   // 1. Call your Gemini API (pointing directly to Supabase Edge)
+      const geminiRes = await fetch("https://frwjaixxlgthkgjtafhz.supabase.co/functions/v1/gemini", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
       const data = await geminiRes.json();
@@ -2569,10 +2570,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       ]).then(() => console.log("Interaction logged to production ledger."));
 
-// 3. Call your TTS API
+// 3. Call your TTS API (pointing directly to Supabase Edge)
       azureStatus.textContent = "Synthesizing voice...";
-      const ttsRes = await fetch("/.netlify/functions/tts", {
+      const ttsRes = await fetch("https://frwjaixxlgthkgjtafhz.supabase.co/functions/v1/tts", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: data.expanded_text })
       });
       
