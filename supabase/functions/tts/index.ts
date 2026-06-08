@@ -27,12 +27,15 @@ Deno.serve(async (req) => {
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&apos;")
 
+    // Use "en-US-AndrewNeural" with the native "empathetic" style markup
     const ssml = `
-      <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
-        <voice name="en-US-ChristopherNeural">
-          <prosody rate="-10%" pitch="-5%">
-            ${escapedText}
-          </prosody>
+      <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US">
+        <voice name="en-US-AndrewNeural">
+          <mstts:express-as style="empathetic" styledegree="1.2">
+            <prosody rate="-15%" pitch="-8%">
+              ${escapedText}
+            </prosody>
+          </mstts:express-as>
         </voice>
       </speak>`
 
