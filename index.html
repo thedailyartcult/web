@@ -64,6 +64,29 @@
   </script>
   
   <style>
+  @font-face {
+        font-family: "Univers Regular";
+        src: url("fonts/base.woff2") format("woff2");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    @font-face {
+        font-family: "Univers Condensed";
+        src: url("fonts/condensed-heavy.woff2") format("woff2");
+        font-weight: bold;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    @font-face {
+        font-family: "Univers Condensed";
+        src: url("fonts/condensed-regular.woff2") format("woff2");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
     :root {
       --ink: #070504;
       --night: #0d0907;
@@ -516,12 +539,28 @@
   <div class="library-overlay fixed inset-0 -z-20" aria-hidden="true"></div>
 
 <header class="relative px-5 min-h-screen flex flex-col justify-between">
-    <!-- Google Studio Style Header Navigation -->
+
+<!-- Google Studio Style Header Navigation -->
     <nav class="mx-auto flex w-full max-w-7xl items-center justify-between py-6 text-sm text-linen/80">
-      <a href="#" class="site-logo font-serif text-xl font-semibold tracking-wide text-cream" data-i18n="brand.name">The Daily Art Cult</a>
-      <div class="hidden md:flex items-center gap-6 font-mono text-[10px] uppercase tracking-[0.25em] text-linen/40">
+      
+      <!-- Left side: The unified directory path, now calibrated to the visual baseline -->
+      <div class="flex flex-wrap items-baseline gap-x-5 gap-y-2">
         
+        <!-- Original Brand Logo Style -->
+        <a href="#" class="site-logo font-serif text-xl font-semibold tracking-wide text-cream transition-colors duration-300 hover:text-antique" data-i18n="brand.name">The Daily Art Cult</a>
+        
+        <!-- Folder-style separation sequence (perfectly aligned baselines) -->
+        <span class="text-antique/20 select-none font-sans text-sm font-light">/</span>
+        <a href="#explore" class="font-sans text-xs font-medium tracking-widest uppercase text-linen/50 hover:text-antique transition-colors duration-300 py-1">Products</a>
+        
+        <span class="text-antique/20 select-none font-sans text-sm font-light">/</span>
+        
+        <a href="#the-map-section" id="nav-privacy-trigger" class="font-sans text-xs font-medium tracking-widest uppercase text-linen/50 hover:text-antique transition-colors duration-300 py-1">Privacy</a>
+        
+        <span class="text-antique/20 select-none font-sans text-sm font-light">/</span>
+        <a href="#the-map-section" class="font-sans text-xs font-medium tracking-widest uppercase text-linen/50 hover:text-antique transition-colors duration-300 py-1">Support</a>
       </div>
+      
     </nav>
 
     <!-- Center Studio Workspace -->
@@ -541,6 +580,8 @@
           <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out mr-2 sm:mr-3">Change</span>
           <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out mr-2 sm:mr-3">How</span>
           <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out mr-2 sm:mr-3">You</span>
+                   <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out mr-2 sm:mr-3">Hear</span>
+                            <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out mr-2 sm:mr-3">and</span>
           <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out mr-2 sm:mr-3">See</span>
           <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out mr-2 sm:mr-3">the</span>
           <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out">World</span>
@@ -556,7 +597,8 @@
         <!-- STATE A: Prompt Editor -->
         <div id="hero-editor-frame" class="w-full relative rounded-2xl border border-linen/10 bg-[#0d0907]/75 p-3.5 shadow-2xl backdrop-blur-xl focus-within:border-[#c6a766]/40 transition duration-300">
           <div class="flex flex-col w-full">
-            <textarea id="hero-chat-input" rows="3" placeholder="What are you carrying into today." class="w-full bg-transparent text-cream px-3 py-2 text-base outline-none resize-none font-sans leading-relaxed placeholder:text-linen/25 min-h-[76px] max-h-[180px] scrollbar-none"></textarea>
+<p id="studio-question-label" class="text-[10px] font-mono uppercase tracking-[0.26em] text-antique/50 px-3 pt-2 pb-1 transition-opacity duration-500">What do you need this to give you?</p>
+            <textarea id="hero-chat-input" rows="3" placeholder="" class="w-full bg-transparent text-cream px-3 py-2 text-base outline-none resize-none font-sans leading-relaxed placeholder:text-linen/25 min-h-[76px] max-h-[180px] scrollbar-none"></textarea>
             
             <div class="flex items-center justify-between border-t border-white/[0.05] pt-3 mt-3 px-3">
               <div class="flex items-center gap-5 text-[9px] font-mono tracking-[0.2em] text-linen/35 uppercase">
@@ -572,6 +614,28 @@
             </div>
           </div>
         </div>
+
+<!-- STATE A2: BINARY CHOICE (Q2) -->
+        <div id="booth-choice-frame" class="hidden w-full">
+          <div class="quiet-panel rounded-2xl p-6 sm:p-8 shadow-soft">
+            <p id="booth-validation-text" class="font-serif text-lg text-cream text-center leading-relaxed mb-8 italic opacity-0 transition-opacity duration-700"></p>
+            <p class="text-[10px] font-mono uppercase tracking-[0.28em] text-linen/40 text-center mb-5">Does this feel like</p>
+            <div class="grid grid-cols-2 gap-4">
+              <button type="button" id="choice-beginning" class="group flex flex-col items-center gap-3 rounded-xl border border-linen/10 bg-white/[0.03] hover:border-antique/50 hover:bg-antique/5 px-4 py-7 transition-all duration-300 active:scale-[0.97]">
+                <span class="text-2xl text-antique/50 group-hover:text-antique transition duration-300">✦</span>
+                <span class="text-sm font-semibold text-cream tracking-wide">Something beginning</span>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-linen/25 group-hover:text-antique/40 transition duration-300">opening ↗</span>
+              </button>
+              <button type="button" id="choice-ending" class="group flex flex-col items-center gap-3 rounded-xl border border-linen/10 bg-white/[0.03] hover:border-antique/50 hover:bg-antique/5 px-4 py-7 transition-all duration-300 active:scale-[0.97]">
+                <span class="text-2xl text-linen/25 group-hover:text-linen/50 transition duration-300">◦</span>
+                <span class="text-sm font-semibold text-cream tracking-wide">Something ending</span>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-linen/25 group-hover:text-antique/40 transition duration-300">closing ↘</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STATE B: LOADING & SYNTHETIC NEURAL READING -->
 
         <!-- STATE B: LOADING & SYNTHETIC NEURAL READING -->
         <div id="booth-reading-frame" class="hidden opacity-0 transform translate-y-4 transition-all duration-700">
@@ -627,51 +691,91 @@
               </div>
             </div>
 
-            <!-- POST PLAYBACK ACTION TRIGGERS (The High-End Conversion) -->
-            <div id="post-playback-ui" class="hidden text-center animate-in fade-in zoom-in duration-1000 px-4 md:px-8">
-              <div class="max-w-3xl mx-auto">
-                <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-antique/60 mb-2">The Bespoke Offering</p>
-                <h2 class="font-serif text-3xl md:text-5xl font-medium text-cream leading-tight">A chapter of a life, <br class="hidden md:block">captured in sound.</h2>
-                
-                <div class="mt-8 flex items-center justify-center gap-4">
-                  <div class="h-px w-8 bg-antique/20"></div>
-                  <p class="font-serif text-4xl text-cream italic"><span class="price-underline">$47</span></p>
-                  <div class="h-px w-8 bg-antique/20"></div>
-                </div>
+          
+          <!-- THE REVISED OFFERING: THE MEMBERSHIP -->
+<div id="post-playback-ui" class="hidden text-left animate-in fade-in zoom-in duration-1000 px-4 md:px-0">
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-antique/60 mb-2">The Annual Subscription</p>
+      <h2 class="font-serif text-3xl md:text-5xl font-medium text-cream leading-tight">A Life, Observed and Voiced.</h2>
+      <p class="mt-4 text-linen/50 font-serif italic text-lg">Your worldview, synthesized into a daily and weekly practice.</p>
+    </div>
 
-                <p class="mt-8 text-sm md:text-base leading-relaxed text-linen/60 max-w-xl mx-auto font-serif italic">
-                  Whether for your own library or as a physical card delivered to a doorstep, each piece is hand-voiced and unhurried.
-                </p>
+    <!-- The Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+      <!-- Feature 1 -->
+      <div class="quiet-panel p-6 rounded-xl border-l-2 border-l-antique/40">
+        <h4 class="text-antique font-mono text-[10px] uppercase tracking-widest mb-3">01. The Daily Triptych</h4>
+        <p class="text-cream font-serif text-lg mb-2">Three Bespoke Reflections</p>
+        <p class="text-linen/60 text-sm leading-relaxed">
+          Receive three 3-7 minute audio reflections every day: **Morning, Afternoon, and Evening.** Each is uniquely voiced to meet your current state of mind and personal context.
+        </p>
+      </div>
 
-                <!-- THE BUTTONS: TWO PATHS -->
-                <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
-                  
-                  <!-- PATH 1: PERSONAL COMMISSION -->
-                  <a href="private/index.html" class="group relative w-full sm:w-auto overflow-hidden rounded-sm bg-cream px-10 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-ink transition-all hover:bg-white hover:scale-[1.02] active:scale-[0.98]">
-                    Commission Your Chapter
-                  </a>
+      <!-- Feature 2 -->
+      <div class="quiet-panel p-6 rounded-xl border-l-2 border-l-antique/40">
+        <h4 class="text-antique font-mono text-[10px] uppercase tracking-widest mb-3">02. The Sunday Synthesis</h4>
+        <p class="text-cream font-serif text-lg mb-2">4 Bespoke Audiobooks / Month</p>
+        <p class="text-linen/60 text-sm leading-relaxed">
+          Every Sunday, receive a full-length audiobook that weaves your personal .md files with our weekly worldview theme (Stoicism, Existentialism, etc.).
+        </p>
+      </div>
+    </div>
 
-                  <!-- PATH 2: THE PHYSICAL GIFT (The "Cards in Transit" bridge) -->
-                  <a href="giftcard/index.html" class="group relative w-full sm:w-auto overflow-hidden rounded-sm border border-antique/40 px-10 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-antique transition-all hover:border-antique hover:text-cream hover:bg-antique/5 active:scale-[0.98]">
-                    <span class="relative z-10 flex items-center justify-center gap-2">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="opacity-70 group-hover:scale-110 transition-transform">
-                        <path d="M22 6L12 13L2 6" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V6" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                      Send as a Physical Gift
-                    </span>
-                  </a>
-                </div>
+    <!-- Pricing Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+      
+      <!-- Monthly Option -->
+      <div class="border border-linen/10 bg-black/20 p-8 rounded-sm flex flex-col items-center hover:border-linen/30 transition-all">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-linen/40 mb-4">Monthly Ritual</span>
+        <div class="flex items-baseline gap-1">
+          <span class="font-serif text-4xl text-cream">$49</span>
+          <span class="text-linen/40 text-xs">/ month</span>
+        </div>
+        <ul class="mt-6 space-y-2 text-center text-xs text-linen/60 font-serif italic">
+          <li>Daily Bespoke Reflections</li>
+          <li>Weekly Sunday Audiobooks</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <a href="checkout/monthly.html" class="mt-8 w-full py-4 bg-transparent border border-antique/40 text-antique text-[10px] font-bold uppercase tracking-widest hover:bg-antique/10 text-center transition">
+          Begin Monthly
+        </a>
+      </div>
 
-                <!-- SUBTLE HINT AT THE MAP BELOW -->
-                <p class="mt-10 text-[9px] font-mono uppercase tracking-[0.25em] text-linen/20">
-                  Your gift will appear on our <span class="text-linen/40">Global Transit Map</span> below
-                </p>
-              </div>
-            </div>
+      <!-- Yearly Option (The Highlight) -->
+      <div class="relative border-2 border-antique bg-antique/5 p-8 rounded-sm flex flex-col items-center scale-105 shadow-2xl">
+        <div class="absolute -top-3 bg-antique text-ink px-3 py-1 text-[9px] font-bold uppercase tracking-tighter">Recommended</div>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-antique mb-4">The Annual Ledger</span>
+        <div class="flex items-baseline gap-1">
+          <span class="font-serif text-5xl text-cream">$490</span>
+          <span class="text-linen/40 text-xs">/ year</span>
+        </div>
+        <p class="mt-2 text-antique font-mono text-[10px] uppercase font-bold tracking-widest">2 Months Free</p>
+        <ul class="mt-6 space-y-2 text-center text-xs text-cream/80 font-serif italic">
+          <li>Full Access to Daily Triptych</li>
+          <li>All Sunday Synthesis Audiobooks</li>
+          <li>Private Digital Library Access</li>
+        </ul>
+        <a href="checkout/yearly.html" class="mt-8 w-full py-4 bg-antique text-ink text-[10px] font-bold uppercase tracking-widest hover:bg-white text-center transition">
+          Secure Yearly Access
+        </a>
+      </div>
 
-            <p id="tts-error" class="hidden text-xs text-red-400 font-semibold mt-4 text-center">Something went wrong. Please try again.</p>
-          </div>
+    </div>
+
+    <!-- Secondary Links -->
+    <div class="mt-16 text-center">
+      <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-linen/20">
+        Already a member? <a href="login/index.html" class="text-linen/40 hover:text-antique border-b border-linen/10">Access your library →</a>
+      </p>
+    </div>
+
+  </div>
+</div>
+          
+          
         </div> <!-- [FIX] Closed booth-bespoke-frame wrapper -->
       </div> <!-- [FIX] Closed studio-active-container wrapper -->
 
@@ -688,39 +792,104 @@
   </header>
 
   <main>
-    <!-- SECTION 3.5: PHYSICAL CARD MAP -->
-    <section id="the-map-section" class="px-5 py-24 sm:py-28 relative">
-      <div class="mx-auto max-w-7xl">
-        <div class="reveal text-center mb-12 max-w-3xl mx-auto">
+  
+  
+  <!-- SECTION 3.5: DUAL CONSOLE (MAP & PRIVACY) -->
+<section id="the-map-section" class="px-5 py-24 sm:py-28 relative">
+  <div class="mx-auto max-w-7xl">
+    
+    <!-- Console Header with Tab Toggle -->
+    <div class="reveal text-center mb-12 max-w-3xl mx-auto">
+      <div class="flex flex-col items-center gap-6">
+        <div class="inline-flex p-1 bg-black/40 border border-linen/10 rounded-full backdrop-blur-md">
+          <button id="toggle-map-view" class="px-6 py-2 rounded-full text-[10px] font-mono tracking-widest uppercase transition-all duration-300 bg-antique text-ink font-bold shadow-lg">
+            Transit Network
+          </button>
+          <button id="toggle-privacy-view" class="px-6 py-2 rounded-full text-[10px] font-mono tracking-widest uppercase transition-all duration-300 text-linen/50 hover:text-cream">
+            Security Sanctuary
+          </button>
+        </div>
+        
+        <!-- Dynamic Header Text -->
+        <div id="console-header-map">
           <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75">Cards in Transit</p>
           <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl">Your card is somewhere on this map.</h2>
-          <p class="mt-6 leading-7 text-linen max-w-xl mx-auto">
-            Every physical card carries a letter and a private link — yours to the audiobook waiting in production. Each pin below is a member whose copy is already on its way.
-          </p>
         </div>
+        <div id="console-header-privacy" class="hidden">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-antique">Your Privacy Matters</p>
+          <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl">Built on a Fortress of Silence.</h2>
+        </div>
+      </div>
+    </div>
 
-        <div class="quiet-panel rounded-2xl p-2 sm:p-3 shadow-soft relative overflow-hidden">
-          <!-- Live Zoomable Leaflet Map styled dark -->
-          <div id="leaflet-map" class="w-full h-[450px] rounded-xl z-10"></div>
+    <!-- MAIN CONSOLE FRAME -->
+    <div class="quiet-panel rounded-2xl p-2 sm:p-3 shadow-soft relative overflow-hidden min-h-[500px]">
+      
+      <!-- LAYER A: THE MAP (Visible by Default) -->
+      <div id="map-layer" class="transition-all duration-700 opacity-100">
+        <div id="leaflet-map" class="w-full h-[450px] rounded-xl z-10"></div>
+        
+        <!-- Client Portrait Side Panel (Existing) -->
+        <div id="map-client-panel" aria-live="polite">
+           <!-- (Keep your existing panel content here) -->
+        </div>
+      </div>
 
-          <!-- Client Portrait Side Panel — appears on confirmed marker hover -->
-          <div id="map-client-panel" aria-live="polite" aria-label="Client details">
-            <p class="text-[9px] font-mono uppercase tracking-[0.22em] text-antique/70 mb-3">Confirmed Member</p>
-            <div class="client-photo-frame" id="panel-photo-frame">
-              <!-- Photo injected by JS -->
+      <!-- LAYER B: THE PRIVACY SANCTUARY (Hidden by Default) -->
+      <div id="privacy-layer" class="hidden opacity-0 transition-all duration-700 absolute inset-2 sm:inset-3 bg-[#0d0907] rounded-xl z-20 flex flex-col md:flex-row items-center overflow-hidden">
+        
+        <!-- Interactive Vault Visualization -->
+        <div class="w-full md:w-1/2 h-64 md:h-full relative bg-black/40 flex items-center justify-center p-10 border-b md:border-b-0 md:border-r border-linen/10">
+          <div class="relative w-48 h-48">
+            <!-- Central Core (Your Data) -->
+            <div class="absolute inset-0 m-auto w-12 h-12 bg-antique rounded-sm flex items-center justify-center shadow-[0_0_30px_rgba(198,167,102,0.4)] z-30">
+               <svg class="w-6 h-6 text-ink" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/></svg>
             </div>
-            <div class="panel-gold-rule"></div>
-            <p class="font-serif text-base font-semibold text-cream leading-snug" id="panel-client-name">—</p>
-            <p class="text-[10px] font-mono uppercase tracking-wider text-antique mt-1" id="panel-book-title">—</p>
-            <p class="mt-3 text-[11px] leading-relaxed text-linen/70 italic font-serif" id="panel-quote">—</p>
-            <div class="panel-gold-rule"></div>
-            <p class="text-[9px] font-mono uppercase tracking-[0.18em] text-linen/30" id="panel-location">—</p>
+            <!-- Orbiting Shield 1 (Qubes OS) -->
+            <div class="absolute inset-0 border-2 border-dashed border-antique/20 rounded-full animate-[spin_10s_linear_infinite]"></div>
+            <!-- Orbiting Shield 2 (Nessus) -->
+            <div class="absolute -inset-8 border border-emerald/30 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+            <!-- Pulsing Defense Rings -->
+            <div class="absolute inset-0 rounded-full bg-antique/5 animate-ping"></div>
           </div>
         </div>
 
-        <p class="mt-6 text-center text-xs font-mono tracking-widest text-linen/40 uppercase">Pins represent confirmed orders in production — Hawaiʻi · Switzerland · and growing</p>
+        <!-- Security Guide Content -->
+        <div class="w-full md:w-1/2 p-8 md:p-12 overflow-y-auto max-h-full">
+          <div class="space-y-8">
+            <div class="group">
+              <h4 class="text-[10px] font-mono uppercase tracking-[0.2em] text-antique mb-2 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-antique"></span> Qubes OS Architecture
+              </h4>
+              <p class="text-cream font-serif text-lg leading-relaxed">Security by Compartmentalization.</p>
+              <p class="text-linen/50 text-sm mt-2 leading-relaxed">Your personal .md files are processed in an <strong>isolated sandbox</strong>. Using the world's most secure OS, we ensure your data never touches the same system as the public internet.</p>
+            </div>
+
+            <div class="group">
+              <h4 class="text-[10px] font-mono uppercase tracking-[0.2em] text-emerald-500 mb-2 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Tenable Nessus Partner
+              </h4>
+              <p class="text-cream font-serif text-lg leading-relaxed">Continuous Vulnerability Scanning.</p>
+              <p class="text-linen/50 text-sm mt-2 leading-relaxed">We employ enterprise-grade scanning to find and seal threats before they exist. Our site is hardened daily to military standards.</p>
+            </div>
+
+            <div class="group border-t border-linen/10 pt-6">
+              <p class="text-linen/70 italic text-sm">"We do not sell to third parties. Your mind is your property. Our site is simply the studio where it is voiced."</p>
+              <div class="mt-6 flex gap-4">
+                <a href="privacy/full-policy.html" class="text-[9px] font-mono tracking-widest uppercase py-2 px-4 border border-linen/20 hover:border-antique hover:text-antique transition duration-300">Read Full Policy</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
+
+    <!-- Persistent Tracker Link -->
+    <p class="mt-6 text-center">
+      <a href="track/index.html" class="text-[10px] font-mono tracking-[0.22em] uppercase text-antique/50 hover:text-antique transition duration-300 border-b border-antique/20 hover:border-antique/50 pb-px">Track Your Card →</a>
+    </p>
+  </div>
+</section>
     
     <!-- SECTION 4: THE WORLDVIEWS ATELIER -->
     <section id="explore" class="px-5 py-24 sm:py-28 relative">
@@ -1386,7 +1555,7 @@
               <button type="button" class="token-mute token-circle" aria-label="Mute video audio" data-muted-label="⌁" data-unmuted-label="◖">⌁</button>
               <div class="token-topline flex justify-between items-start w-full">
                 <span class="text-[10px] font-mono tracking-widest text-[#c6a766] uppercase">12</span>
-                <span class="absolute right-3 top-3 z-10 rounded-sm border border-emerald/70 bg-emerald/10 backdrop-blur-md px-2 py-0.5 text-[0.55rem] font-bold uppercase tracking-[0.18em] text-emerald-300">Free</span>
+                <span class="text-xs text-linen/50">✦</span>
               </div>
               <div class="token-info text-left">
                 <div class="token-info-controls">
@@ -1495,6 +1664,56 @@
         </div>
       </div>
 <script>
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btnMap = document.getElementById('toggle-map-view');
+  const btnPrivacy = document.getElementById('toggle-privacy-view');
+  const mapLayer = document.getElementById('map-layer');
+  const privacyLayer = document.getElementById('privacy-layer');
+  const headerMap = document.getElementById('console-header-map');
+  const headerPrivacy = document.getElementById('console-header-privacy');
+
+  function showPrivacy() {
+    // Buttons
+    btnPrivacy.classList.add('bg-antique', 'text-ink', 'font-bold', 'shadow-lg');
+    btnPrivacy.classList.remove('text-linen/50');
+    btnMap.classList.remove('bg-antique', 'text-ink', 'font-bold', 'shadow-lg');
+    btnMap.classList.add('text-linen/50');
+
+    // Content
+    mapLayer.classList.add('opacity-0');
+    headerMap.classList.add('hidden');
+    headerPrivacy.classList.remove('hidden');
+    
+    setTimeout(() => {
+      mapLayer.classList.add('hidden');
+      privacyLayer.classList.remove('hidden');
+      setTimeout(() => privacyLayer.classList.add('opacity-100'), 50);
+    }, 400);
+  }
+
+  function showMap() {
+    // Buttons
+    btnMap.classList.add('bg-antique', 'text-ink', 'font-bold', 'shadow-lg');
+    btnMap.classList.remove('text-linen/50');
+    btnPrivacy.classList.remove('bg-antique', 'text-ink', 'font-bold', 'shadow-lg');
+    btnPrivacy.classList.add('text-linen/50');
+
+    // Content
+    privacyLayer.classList.remove('opacity-100');
+    headerPrivacy.classList.add('hidden');
+    headerMap.classList.remove('hidden');
+
+    setTimeout(() => {
+      privacyLayer.classList.add('hidden');
+      mapLayer.classList.remove('hidden');
+      setTimeout(() => mapLayer.classList.remove('opacity-0'), 50);
+    }, 400);
+  }
+
+  btnPrivacy.addEventListener('click', showPrivacy);
+  btnMap.addEventListener('click', showMap);
+});
         (() => {
           const explore = document.getElementById("explore");
           if (!explore) return;
@@ -1877,43 +2096,361 @@
       </script>
     </section>
 
-    <!-- SECTION 5: BESPOKE — THE ONLY OFFERING -->
-    <section id="offerings" class="px-5 py-24 sm:py-28">
-      <div class="mx-auto max-w-4xl">
-        <div class="premium-audio reveal rounded-2xl p-10 sm:p-14 shadow-glow">
-          <div class="max-w-2xl">
-            <p class="text-sm font-semibold uppercase tracking-[0.28em] text-antique/80">One offering. One price.</p>
-            <h2 class="mt-5 font-serif text-4xl font-semibold leading-tight text-cream sm:text-5xl">The Personal Reflection</h2>
-            <p class="mt-4 font-serif text-6xl font-semibold leading-none text-cream"><span class="price-underline">$47</span></p>
-            <p class="mt-8 leading-8 text-linen text-lg">You fill out a short form. You tell us something real — a chapter of your life, a question you keep returning to, a version of yourself you're working toward.</p>
-            <p class="mt-5 leading-8 text-linen">We build it into an original audiobook written around you. Hand-voiced. Unhurried. Yours to keep forever.</p>
-            <p class="mt-5 leading-8 text-linen">One piece. Made for one person. No algorithm touched it.</p>
+
+
+<!-- SECTION 4.5: THE TD-AC90X ARCHIVE (THE STUDY PORTFOLIO) -->
+<section id="products" class="px-5 py-16 sm:py-20 relative bg-transparent border-t border-linen/10">
+  <div class="mx-auto max-w-7xl">
+    
+    <!-- Archival Section Header -->
+    <div class="reveal text-center max-w-2xl mx-auto mb-16">
+      <span class="font-serif italic text-xs tracking-[0.2em] text-antique block mb-3">Atelier & Library Collections</span>
+      <h3 class="font-serif text-3xl sm:text-4xl font-semibold text-cream leading-tight">The TD-AC90X Archive</h3>
+      <div class="w-12 h-px bg-antique/30 mx-auto mt-4"></div>
+    </div>
+
+    <!-- Cinematic Portfolio Panel -->
+    <div class="reveal quiet-panel rounded-lg overflow-hidden relative border-antique/10 bg-[#0d0907]/80 backdrop-blur-md shadow-2xl p-6 md:p-10 max-w-5xl mx-auto">
+      
+      <!-- Subtle gold filament at top -->
+      <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-antique/20 to-transparent"></div>
+
+      <!-- Split Layout: Scholarly Index & Masterpiece Frame -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        
+        <!-- Left: The Scholarly Index / Table of Contents (Col-span 5) -->
+        <div class="lg:col-span-5 flex flex-col justify-center text-left space-y-6">
+          <div>
+            <span class="font-serif italic text-[11px] tracking-widest text-[#c6a766] uppercase block mb-1">Catalogus Instrumentorum</span>
+            <h4 class="font-serif text-2xl text-cream font-medium">Select Edition</h4>
+            <p class="text-linen/50 text-xs mt-2 leading-relaxed">
+              Hover over an archival entry to inspect its physical construction. Move your mouse away to restore the active study loop.
+            </p>
           </div>
-          <a href="private/index.html" class="mt-10 inline-flex btn-sweep rounded-sm border border-antique/60 px-8 py-4 text-sm font-semibold uppercase tracking-[0.18em] text-cream transition">
-            Commission Yours →
+
+          <!-- Table of Contents styled Index -->
+          <div id="catalog-index" class="space-y-4 pt-4 border-t border-white/[0.05]">
+            
+            <!-- Entry 01 -->
+            <button type="button" class="catalog-btn group w-full flex justify-between items-baseline text-left focus:outline-none transition-all duration-300"
+                    data-type="image" data-src="assets/products/TD-AC90XBase.png" data-plate="Plate I" data-title="The Base System" data-desc="A fully automatic belt-drive build utilizing a lightweight silver-alloy plinth. Built to introduce clear, unhurried analog playback to your personal sanctuary.">
+              <span class="font-serif text-xs tracking-wider text-antique/60 group-hover:text-antique transition duration-300 mr-2">I.</span>
+              <span class="font-serif text-sm text-cream/70 group-hover:text-cream transition duration-300 flex-1">The Base System</span>
+              <span class="border-b border-dashed border-white/10 flex-1 mx-2 h-2"></span>
+              <span class="font-serif italic text-xs text-linen/40">$599</span>
+            </button>
+
+            <!-- Entry 02 -->
+            <button type="button" class="catalog-btn group w-full flex justify-between items-baseline text-left focus:outline-none transition-all duration-300"
+                    data-type="image" data-src="assets/products/TD-AC90XBT.png" data-plate="Plate II" data-title="The High-Resolution BT" data-desc="A seamless bridge between historic mechanics and modern acoustics. Houses an integrated, high-resolution transmitter encased in a deep slate-grey plinth.">
+              <span class="font-serif text-xs tracking-wider text-antique/60 group-hover:text-antique transition duration-300 mr-2">II.</span>
+              <span class="font-serif text-sm text-cream/70 group-hover:text-cream transition duration-300 flex-1">The High-Resolution BT</span>
+              <span class="border-b border-dashed border-white/10 flex-1 mx-2 h-2"></span>
+              <span class="font-serif italic text-xs text-linen/40">$649</span>
+            </button>
+
+            <!-- Entry 03 -->
+            <button type="button" class="catalog-btn group w-full flex justify-between items-baseline text-left focus:outline-none transition-all duration-300"
+                    data-type="image" data-src="assets/products/TD-AC90XPro.png" data-plate="Plate III" data-title="The Manual Pro" data-desc="Built for deliberate tactile involvement. Features a hand-queuing carbon fiber tonearm resting on an anodized obsidian plinth to absolute isolation standards.">
+              <span class="font-serif text-xs tracking-wider text-antique/60 group-hover:text-antique transition duration-300 mr-2">III.</span>
+              <span class="font-serif text-sm text-cream/70 group-hover:text-cream transition duration-300 flex-1">The Manual Pro</span>
+              <span class="border-b border-dashed border-white/10 flex-1 mx-2 h-2"></span>
+              <span class="font-serif italic text-xs text-linen/40">$699</span>
+            </button>
+
+            <!-- Entry 04 (Flagship / Default Video) -->
+            <button type="button" class="catalog-btn active group w-full flex justify-between items-baseline text-left focus:outline-none transition-all duration-300"
+                    data-type="video" data-plate="Plate IV" data-title="The Signature Reference" data-desc="The pinnacle of the library series. Built from solid walnut block and deep balanced alloy, specifically tuned to resonate with the physical dimensions of acoustic and orchestral works.">
+              <span class="font-serif text-xs tracking-wider text-antique/60 group-hover:text-antique transition duration-300 mr-2">IV.</span>
+              <span class="font-serif text-sm text-cream/70 group-hover:text-cream transition duration-300 flex-1">The Signature Reference</span>
+              <span class="border-b border-dashed border-white/10 flex-1 mx-2 h-2"></span>
+              <span class="font-serif italic text-xs text-linen/40">$899</span>
+            </button>
+
+            <!-- Entry 05 -->
+            <button type="button" class="catalog-btn group w-full flex justify-between items-baseline text-left focus:outline-none transition-all duration-300"
+                    data-type="image" data-src="assets/products/TD-AC90XSignatureNietzsche.png" data-plate="Plate V" data-title="The Nietzsche Edition" data-desc="Crafted in hand-lacquered bronze and inlaid with raw brass details. A heavy-plinth instrument calibrated to resolve complex and intense musical dynamics.">
+              <span class="font-serif text-xs tracking-wider text-antique/60 group-hover:text-antique transition duration-300 mr-2">V.</span>
+              <span class="font-serif text-sm text-cream/70 group-hover:text-cream transition duration-300 flex-1">The Nietzsche Edition</span>
+              <span class="border-b border-dashed border-white/10 flex-1 mx-2 h-2"></span>
+              <span class="font-serif italic text-xs text-antique font-medium">$1,200</span>
+            </button>
+
+            <!-- Entry 06 -->
+            <button type="button" class="catalog-btn group w-full flex justify-between items-baseline text-left focus:outline-none transition-all duration-300"
+                    data-type="image" data-src="assets/products/TD-AC90XSignatureBeauvoir.png" data-plate="Plate VI" data-title="The de Beauvoir Edition" data-desc="Composed of matte-obsidian and brushed steel dampening sheets. Implements advanced mechanical isolation to allow direct, uncompromised signal fidelity.">
+              <span class="font-serif text-xs tracking-wider text-antique/60 group-hover:text-antique transition duration-300 mr-2">VI.</span>
+              <span class="font-serif text-sm text-cream/70 group-hover:text-cream transition duration-300 flex-1">The de Beauvoir Edition</span>
+              <span class="border-b border-dashed border-white/10 flex-1 mx-2 h-2"></span>
+              <span class="font-serif italic text-xs text-antique font-medium">$1,200</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Right: The Framed Study Masterpiece Plate (Col-span 7) -->
+        <div class="lg:col-span-7 flex flex-col items-center space-y-6">
+          
+          <!-- Archival Master Frame (Slightly widescreen aspect ratio matching your library footage) -->
+          <div class="relative w-full aspect-[16/10] bg-[#1a120b]/30 border border-antique/15 p-2 rounded shadow-2xl">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(198,167,102,0.03),transparent_75%)] pointer-events-none"></div>
+            
+            <!-- We added id="media-frame" here and transition classes for background color shifting -->
+            <div id="media-frame" class="relative w-full h-full overflow-hidden bg-black/90 rounded flex items-center justify-center transition-colors duration-700 ease-in-out">
+              
+              <!-- Silent Atmospheric Library Video Loop -->
+              <video id="archive-video" class="absolute inset-0 w-full h-full object-cover z-20 opacity-100 transition-opacity duration-700 ease-in-out select-none" muted loop playsinline autoplay preload="metadata">
+                <source src="assets/products/TD-AC90XSignature_teaser.mp4" type="video/mp4">
+              </video>
+
+              <!-- Archival Product Images -->
+              <img id="archive-image" class="absolute inset-0 w-full h-full object-contain p-6 z-10 opacity-0 transition-opacity duration-700 ease-in-out select-none" src="assets/products/TD-AC90XSignature.png" alt="Archival product visual">
+            </div>
+          </div>
+
+          <!-- Archival Plate Label & Description -->
+          <div class="w-full text-center space-y-2 max-w-lg">
+            <div class="flex items-center justify-center gap-2">
+              <span id="plate-number" class="font-serif italic text-xs text-antique">Plate IV</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-antique/30"></span>
+              <span id="plate-title" class="font-serif text-sm text-cream font-medium">The Signature Reference System</span>
+            </div>
+            
+            <p id="plate-desc" class="font-serif italic text-xs text-linen/50 leading-relaxed transition-opacity duration-300">
+              The pinnacle of the library series. Built from solid walnut block and deep balanced alloy, specifically tuned to resonate with the physical dimensions of acoustic and orchestral works.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Unified Footnote -->
+    <div class="reveal mt-12 pt-6 border-t border-white/[0.05] text-center max-w-xl mx-auto">
+      <p class="font-serif italic text-xs text-linen/40">
+        "An absolute fidelity to mechanical isolation is not a luxury. It is the silence that allows the word to step forward."
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- SCRIPT: SCHOLARLY ARCHIVE SWAP LOGIC -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const videoEl = document.getElementById("archive-video");
+    const imageEl = document.getElementById("archive-image");
+    const mediaFrame = document.getElementById("media-frame");
+    
+    const plateNo = document.getElementById("plate-number");
+    const plateTitle = document.getElementById("plate-title");
+    const plateDesc = document.getElementById("plate-desc");
+    
+    const catalogIndex = document.getElementById("catalog-index");
+    const catalogButtons = document.querySelectorAll(".catalog-btn");
+
+    // Unified function to swap highlighted states and media files [1]
+    const selectProduct = (btn) => {
+      // Reset active states on all catalog index buttons
+      catalogButtons.forEach(b => {
+        b.classList.remove("active");
+        b.querySelector(".font-serif").classList.remove("text-antique");
+        b.querySelector(".font-serif").classList.add("text-antique/60");
+        b.querySelector("span:nth-child(2)").classList.remove("text-cream");
+        b.querySelector("span:nth-child(2)").classList.add("text-cream/70");
+      });
+
+      // Assign active states on the currently highlighted option
+      btn.classList.add("active");
+      btn.querySelector(".font-serif").classList.add("text-antique");
+      btn.querySelector(".font-serif").classList.remove("text-antique/60");
+      btn.querySelector("span:nth-child(2)").classList.add("text-cream");
+      btn.querySelector("span:nth-child(2)").classList.remove("text-cream/70");
+
+      const mediaType = btn.getAttribute("data-type");
+      const imgPath = btn.getAttribute("data-src");
+      const indexPlate = btn.getAttribute("data-plate");
+      const indexTitle = btn.getAttribute("data-title");
+      const indexDesc = btn.getAttribute("data-desc");
+
+      // Handle Background Frame Shifting and Media Opacities [1]
+      if (mediaType === "video") {
+        // Shift frame background back to original deep black for moody library video contrast [1]
+        mediaFrame.style.backgroundColor = "rgba(13, 9, 7, 0.9)";
+        
+        imageEl.classList.add("opacity-0");
+        imageEl.classList.remove("opacity-100");
+        
+        videoEl.classList.remove("opacity-0");
+        videoEl.classList.add("opacity-100");
+        
+        videoEl.play().catch(() => {});
+      } else {
+        // Transition frame background to solid white to blend seamless with raw white PNGs [1]
+        mediaFrame.style.backgroundColor = "#ffffff";
+
+        videoEl.classList.add("opacity-0");
+        videoEl.classList.remove("opacity-100");
+        videoEl.pause();
+
+        imageEl.setAttribute("src", imgPath);
+        imageEl.classList.remove("opacity-0");
+        imageEl.classList.add("opacity-100");
+      }
+
+      // Smooth narrative label crossfade
+      plateDesc.style.opacity = 0;
+      plateNo.style.opacity = 0;
+      plateTitle.style.opacity = 0;
+
+      setTimeout(() => {
+        plateNo.textContent = indexPlate;
+        plateTitle.textContent = indexTitle;
+        plateDesc.textContent = indexDesc;
+        
+        plateDesc.style.opacity = 1;
+        plateNo.style.opacity = 1;
+        plateTitle.style.opacity = 1;
+      }, 150);
+    };
+
+    // Standard event assignments for interacting with the index elements
+    catalogButtons.forEach(btn => {
+      btn.addEventListener("click", () => selectProduct(btn));
+      btn.addEventListener("mouseenter", () => selectProduct(btn));
+    });
+
+    // Detect when user moves cursor entirely away from the Index container [1]
+    catalogIndex.addEventListener("mouseleave", () => {
+      // Locate the active Signature Reference video entry button (Plate IV) [1]
+      const defaultVideoBtn = document.querySelector('.catalog-btn[data-type="video"]');
+      if (defaultVideoBtn) {
+        // Automatically slide/fade back to default silent loop video [1]
+        selectProduct(defaultVideoBtn);
+      }
+    });
+  });
+</script>
+
+
+
+
+<!-- SECTION 6: IMMORTALITY PROJECT -->
+<section id="immortality-section" class="px-5 py-24 sm:py-28 relative border-t border-linen/10 overflow-hidden">
+  
+  <!-- Subtle atmospheric backdrop -->
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,rgba(74,16,27,0.15),transparent_70%)]"></div>
+  </div>
+
+  <div class="mx-auto max-w-7xl relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+      
+      <!-- Left Column: Copy & Presentation (Col-span 7) -->
+      <div class="lg:col-span-7 reveal text-left space-y-6">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75">The Experiment</p>
+          <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl leading-tight">
+            Immortality Projects
+          </h2>
+        </div>
+        
+        <div class="space-y-4 max-w-xl">
+          <p class="text-linen leading-relaxed text-base">
+            Becker argued that everything we build — every name we carve, every child we raise, every word we entrust to paper — is an act of defiance against our own erasure.
+          </p>
+          <p class="text-linen/60 leading-relaxed text-sm">
+            Members will be able to record the voice, the principles, and the particular phrases that made someone feel unmistakably present. What is left behind will respond — shaped by what you entrusted to it.
+          </p>
+        </div>
+
+        <div class="pt-4">
+          <a href="immortality/index.html" class="btn-sweep inline-flex items-center gap-2 border border-antique/30 px-6 py-3.5 text-[10px] font-bold uppercase tracking-widest text-antique transition duration-300">
+            Learn More About the Project
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="opacity-75"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
         </div>
-      </div>
-    </section>
 
-
-
-    <!-- SECTION 6: IMMORTALITY PROJECT -->
-    <section class="px-5 py-24 sm:py-28">
-      <div class="mx-auto max-w-5xl text-center reveal">
-        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-linen/75" data-i18n="experiment.kicker">The Experiment</p>
-        <h2 class="mt-4 font-serif text-4xl font-semibold text-cream sm:text-5xl" data-i18n="experiment.title">The Experiment — Immortality Projects</h2>
-        <p class="mx-auto mt-6 max-w-3xl text-lg leading-8 text-linen" data-i18n="experiment.copyOne">
-          Inspired by Ernest Becker's work, we explore how we can live on through the values and wisdom we leave behind.
+        <p class="text-[9px] font-mono tracking-widest uppercase text-linen/20 pt-4">
+          Inspired by Ernest Becker &nbsp;·&nbsp; <span class="italic">The Denial of Death</span>, 1973
         </p>
-        <p class="mx-auto mt-5 max-w-3xl leading-8 text-linen" data-i18n="experiment.copyTwo">
-          Members can input situations and receive responses in their loved one's voice, shaped by personal messages, remembered principles, and the particular phrases that made that person feel unmistakably present.
-        </p>
-        <a href="immortality/index.html" class="mt-9 inline-flex rounded-sm bg-cream px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-ink transition hover:bg-linen" data-i18n="experiment.cta">
-          Learn More About The Immortality Project
-        </a>
       </div>
-    </section>
+
+      <!-- Right Column: Interactive Registry Panel (Col-span 5) -->
+      <div class="lg:col-span-5 reveal">
+        <div class="quiet-panel p-8 rounded-2xl border-linen/10 relative overflow-hidden flex flex-col justify-between min-h-[340px]">
+          
+          <!-- Subtle gold filament at top of panel -->
+          <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-antique/40 to-transparent"></div>
+
+          <!-- Header of the Card -->
+          <div class="flex items-center justify-between border-b border-white/[0.06] pb-4 mb-6">
+            <span class="text-[10px] font-mono tracking-[0.25em] text-antique uppercase">Active Registry</span>
+            <span class="flex h-2 w-2 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-antique opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-antique"></span>
+            </span>
+          </div>
+
+          <!-- Countdown Grid -->
+          <div class="space-y-6 flex-1 flex flex-col justify-center">
+            <div class="grid grid-cols-3 gap-2 text-center">
+              <div class="bg-black/25 border border-white/[0.04] p-4 rounded-xl">
+                <span id="ip-days" class="block font-serif text-4xl sm:text-5xl text-cream font-medium tracking-wide">000</span>
+                <span class="block text-[8px] font-mono tracking-widest uppercase text-linen/40 mt-1">Days</span>
+              </div>
+              <div class="bg-black/25 border border-white/[0.04] p-4 rounded-xl">
+                <span id="ip-hours" class="block font-serif text-4xl sm:text-5xl text-cream font-medium tracking-wide">00</span>
+                <span class="block text-[8px] font-mono tracking-widest uppercase text-linen/40 mt-1">Hours</span>
+              </div>
+              <div class="bg-black/25 border border-white/[0.04] p-4 rounded-xl">
+                <span id="ip-minutes" class="block font-serif text-4xl sm:text-5xl text-cream font-medium tracking-wide">00</span>
+                <span class="block text-[8px] font-mono tracking-widest uppercase text-linen/40 mt-1">Mins</span>
+              </div>
+            </div>
+
+            <!-- Signature Breathing Line inside panel -->
+            <div class="flex justify-center py-2">
+              <div class="filament-breath w-32 h-px bg-gradient-to-r from-transparent via-antique/60 to-transparent"></div>
+            </div>
+          </div>
+
+          <!-- Footer of the Card -->
+          <div class="border-t border-white/[0.06] pt-4 mt-6 text-center">
+            <span class="font-mono text-[9px] tracking-[0.25em] text-linen/40 uppercase">Target Deployment: December 31, 2026</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var target = new Date('2026-12-31T00:00:00');
+      function tick() {
+        var now = new Date();
+        var diff = target - now;
+        if (diff <= 0) return;
+        var days = Math.floor(diff / 86400000);
+        var hours = Math.floor((diff % 86400000) / 3600000);
+        var minutes = Math.floor((diff % 3600000) / 60000);
+        var d = document.getElementById('ip-days');
+        var h = document.getElementById('ip-hours');
+        var m = document.getElementById('ip-minutes');
+        if (d) d.textContent = String(days).padStart(3, '0');
+        if (h) h.textContent = String(hours).padStart(2, '0');
+        if (m) m.textContent = String(minutes).padStart(2, '0');
+      }
+      tick();
+      setInterval(tick, 30000);
+    })();
+  </script>
+</section>
+
 
   </main>
 
@@ -1953,137 +2490,32 @@
       </nav>
 
       <div class="flex items-center justify-start md:justify-end">
-        <label class="language-select-wrap inline-flex items-center gap-2 rounded-full px-4 py-2">
-          <svg class="h-4 w-4 text-antique" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
-            <path d="M3.6 9h16.8M3.6 15h16.8M12 3c2.1 2.4 3.2 5.4 3.2 9S14.1 18.6 12 21M12 3C9.9 5.4 8.8 8.4 8.8 12s1.1 6.6 3.2 9" stroke="currentColor" stroke-width="1.8"/>
-          </svg>
-          <span class="sr-only" data-i18n="footer.languageLabel">Select language</span>
-          <select id="language-select" class="language-select min-w-[8.5rem] pr-5 text-sm font-semibold" aria-label="Select language" data-i18n-aria-label="footer.languageLabel">
-            <option value="en">English</option>
-            <option value="es">Español</option>
-          </select>
-        </label>
+        <a href="track/index.html" class="text-[10px] font-mono tracking-[0.22em] uppercase text-linen/35 hover:text-antique transition duration-300">Track My Card →</a>
       </div>
     </div>
   </footer>
 
   <script>
-    const translations = {
-      en: {
-      "brand.name": "The Daily Art Cult",
-      "footer.copyright": "2026 The Daily Art Cult. All rights reserved.",
-        "meta.title": "The Daily Art Cult | Quiet Philosophy Audio",
-        "meta.description": "Curated philosophical audio reflections for thoughtful minds who appreciate quiet luxury.",
-        "hero.kicker": "You read less than you'd like. You think more than most.",
-        "hero.title": "2 Minutes That Might Change How You See the World",
-        "hero.copy": "A new piece every few days — spoken. Made for the life you're actually living.",
-        "form.emailLabel": "Email address",
-        "form.emailPlaceholder": "Enter your email to begin",
-        "form.begin": "Begin",
-        "form.success": "Thank you. Your first quiet reflection will arrive soon.",
-        "booth.kicker": "The Listening Booth",
-        "booth.title": "Hear the difference",
-        "booth.subtext": "Type anything — a sentence, a thought, a line you love.",
-        "booth.placeholder": "Type up to 250 characters...",
-        "booth.generate": "Generate",
-        "booth.aiTag": "AI Voice",
-        "booth.craftTag": "Hand-Crafted",
-        "booth.error": "Something went wrong. Please try again.",
-        "lib.kicker": "The Living Archive",
-        "lib.title": '"Everyone asks if I write books. I do. You are one of them."',
-        "lib.copy": "Every bespoke audiobook created here becomes part of something larger — a living library that no publisher holds, no algorithm ranks, and no reader can finish.",
-        "lib.reviewsKicker": "Voice of the Cult",
-        "map.kicker": "Global Resonance",
-        "map.title": "The cult is spreading.",
-        "map.sub": "Letters have already arrived in Hawaiʻi and Switzerland. More are on their way.",
-        "explore.kicker": "Explore",
-        "explore.title": "Choose the door you want to open.",
-        "explore.worldview": "Explore by Worldview",
-        "explore.existentialism": "Existentialism",
-        "explore.stoicism": "Stoicism",
-        "explore.postmodernism": "Postmodernism",
-        "explore.easternWisdom": "Eastern Wisdom",
-        "explore.mysticism": "Mysticism",
-        "explore.specialistDoors": "Specialist Doors",
-        "explore.power": "Power",
-        "explore.politics": "Politics",
-        "explore.becoming": "Becoming",
-        "explore.absurdism": "Absurdism",
-        "explore.theLeap": "The Leap",
-        "explore.witness": "Witness",
-        "marx.kicker": "Anti-capitalist exception",
-        "marx.title": "Karl Marx is the free door in a paid library.",
-        "marx.copy": "Most Daily Art Cult audiobooks sit behind paid access. Marx opens differently.",
-        "marx.note": "All other selections remain part of the paid collection.",
-        "sample.kicker": "Listen In",
-        "sample.title": "This Is What It Sounds Like.",
-        "sample.copy": "A sample piece from our collection. No signup. Just listen.",
-        "sample.featured": "Featured Reflection",
-        "sample.reflectionTitle": "Attention as Generosity",
-        "experiment.kicker": "The Experiment",
-        "experiment.title": "The Experiment — Immortality Projects",
-        "experiment.copyOne": "Inspired by Ernest Becker's work, we explore how we can live on through the values we leave behind.",
-        "experiment.copyTwo": "Members can receive responses in their loved one's voice.",
-        "experiment.cta": "Learn More About The Immortality Project"
-      },
-      es: {
-      "brand.name": "The Daily Art Cult",
-       "footer.copyright": "2026 The Daily Art Cult. All rights reserved.",
-        "meta.title": "The Daily Art Cult | Audio filosófico sereno",
-        "meta.description": "Reflexiones filosóficas en audio para mentes contemplativas que aprecian el lujo silencioso.",
-        "hero.kicker": "Lees menos de lo que quisieras. Piensas más que la mayoría.",
-        "hero.title": "2 minutos que podrían cambiar cómo ves el mundo",
-        "hero.copy": "Una dosis diaria de filosofía y arte — hablada, y hecha para la vida que realmente vives.",
-        "form.emailLabel": "Correo electrónico",
-        "form.emailPlaceholder": "Escribe tu correo para comenzar",
-        "form.begin": "Comenzar",
-        "form.success": "Gracias. Tu primera reflexión serena llegará pronto.",
-        "booth.kicker": "La cabina de escucha",
-        "booth.title": "Escucha la diferencia",
-        "booth.subtext": "Escribe lo que quieras — una frase, un pensamiento, una línea que ames.",
-        "booth.placeholder": "Escribe hasta 250 caracteres...",
-        "booth.generate": "Generar",
-        "booth.aiTag": "Voz de IA",
-        "booth.craftTag": "Hecho a mano",
-        "booth.error": "Algo salió mal. Por favor, inténtalo de nuevo.",
-        "lib.kicker": "La Biblioteca",
-        "lib.title": '"Todos me preguntan si escribo libros. Sí, lo hago. Tú eres uno de ellos."',
-        "lib.copy": "Cada audiolibro a medida creado aquí pasa a formar parte de algo más grande.",
-        "lib.reviewsKicker": "Voces del Culto",
-        "map.kicker": "Resonancia Global",
-        "map.title": "El culto se está extendiendo.",
-        "map.sub": "Ya han llegado cartas a Hawái y Suiza. Más están en camino.",
-        "explore.kicker": "Explorar",
-        "explore.title": "Elige la puerta que quieres abrir.",
-        "explore.worldview": "Explorar por visión del mundo",
-        "explore.existentialism": "Existencialismo",
-        "explore.stoicism": "Estoicismo",
-        "explore.postmodernism": "Posmodernismo",
-        "explore.easternWisdom": "Sabiduría oriental",
-        "explore.mysticism": "Misticismo",
-        "explore.powerSociety": "Explorar poder y sociedad",
-        "explore.power": "Poder",
-        "explore.politics": "Política",
-        "explore.society": "Sociedad",
-        "explore.justice": "Justicia",
-        "marx.kicker": "Excepción anticapitalista",
-        "marx.title": "Karl Marx es la puerta gratuita en una biblioteca de pago.",
-        "marx.copy": "La mayoría de los audiolibros están detrás de acceso pago. Marx se abre de otro modo.",
-        "marx.note": "Todas las demás selecciones siguen siendo parte de la colección de pago.",
-        "sample.kicker": "Escucha",
-        "sample.title": "Así es como suena.",
-        "sample.copy": "Una pieza de muestra de nuestra colección. Sin registro. Solo escucha.",
-        "sample.featured": "Reflexión destacada",
-        "sample.reflectionTitle": "La atención como generosidad",
-        "experiment.kicker": "El experimento",
-        "experiment.title": "El experimento — Proyectos de inmortalidad",
-        "experiment.copyOne": "Inspirados por la obra de Ernest Becker, exploramos cómo podemos seguir viviendo a través de los valores que dejamos.",
-        "experiment.copyTwo": "Los miembros pueden recibir respuestas en la voz de un ser querido.",
-        "experiment.cta": "Conoce más sobre el Proyecto de Inmortalidad"
-      }
-    };
+  
+  // Logic to handle "Privacy" nav click: Scroll + Flip Toggle
+document.getElementById('nav-privacy-trigger').addEventListener('click', function(e) {
+  e.preventDefault(); // Stop the instant jump
 
+  // 1. Smooth scroll to the Map Section
+  const target = document.querySelector(this.getAttribute('href'));
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // 2. Automatically "click" the Security Sanctuary button
+  // We use a small timeout so the 'flip' happens as the user arrives
+  setTimeout(() => {
+    const privacyBtn = document.getElementById('toggle-privacy-view');
+    if (privacyBtn) {
+      privacyBtn.click();
+    }
+  }, 500); // 500ms delay for a smooth visual flow
+});
     // Worn Distressed Antique Spines with matching curated Reviews
     const bookSpinesData = [
       { id: 1, color: "linear-gradient(90deg, #1f0b0b 0%, #4a101b 15%, #0d0404 100%)", w: "36px", h: "230px", title: "A Grief That Had No Name", desc: "Written for a daughter seeking her father's old letters.", review: "I never felt so home in a book. I closed my eyes halfway through and didn't open them.", author: "Evelyn R., Zürich" },
@@ -2099,44 +2531,12 @@
       { id: 11, color: "linear-gradient(90deg, #3d2c14 0%, #8c652e 15%, #1a1208 100%)", w: "54px", h: "338px", title: "Notes From Unreadable Year", desc: "Written during a year that refused to offer clarity.", review: "Deep, slow, and completely real. A masterpiece of custom craftsmanship.", author: "Founding Patron, Tokyo" }
     ];
 
-    let activeLanguage = "en";
-
-    const t = (key, language = activeLanguage) => translations[language]?.[key] ?? translations.en[key] ?? key;
-
-    const detectLanguage = () => {
-      const savedLanguage = window.localStorage.getItem("dailyArtCultLanguage");
-      if (Object.keys(translations).includes(savedLanguage)) return savedLanguage;
-      return "en";
-    };
-
-    const applyLanguage = (language, shouldPersist = true) => {
-      activeLanguage = Object.keys(translations).includes(language) ? language : "en";
-      document.documentElement.lang = activeLanguage;
-      document.title = t("meta.title");
-
-      document.querySelectorAll("[data-i18n]").forEach((element) => {
-        element.textContent = t(element.dataset.i18n);
-      });
-      document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
-        element.setAttribute("placeholder", t(element.dataset.i18nPlaceholder));
-      });
-      document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
-        element.setAttribute("aria-label", t(element.dataset.i18nAriaLabel));
-      });
-      document.querySelectorAll("[data-i18n-alt]").forEach((element) => {
-        element.setAttribute("alt", t(element.dataset.i18nAlt));
-      });
-
-      const languageSelect = document.querySelector("#language-select");
-      if (languageSelect) languageSelect.value = activeLanguage;
-      if (shouldPersist) window.localStorage.setItem("dailyArtCultLanguage", activeLanguage);
-    };
 
     document.addEventListener("DOMContentLoaded", () => {
-      applyLanguage(detectLanguage(), !window.localStorage.getItem("dailyArtCultLanguage"));
       buildSpines();
       initLiveMap();
     });
+
 
     // Populate rugged antique book spines on library shelf
     function buildSpines() {
@@ -2330,8 +2730,6 @@
       });
     }
 
-    window.t = t;
-    window.applyLanguage = applyLanguage;
   </script>
 
   <script>
@@ -2417,17 +2815,84 @@ document.addEventListener("DOMContentLoaded", () => {
   const stageLimits = { 1: 150, 2: 120, 3: 200 };
   const answers = { q1: '', q2: '', q3: '' };
 
+// Q1 — What do you need this to give you? (tap suggestions + typewriter examples)
   const q1Suggestions = [
+    { text: "I want to feel less alone in it", label: "Feel less alone" },
+    { text: "I want language for something I can't name", label: "Find language for it" },
+    { text: "I want to be challenged, not comforted", label: "Be challenged" }
+  ];
+
+  const q1Examples = [
+    "I want to feel less alone in this.",
+    "I want language for something I can't name.",
+    "I want to be challenged, not comforted."
+  ];
+
+  // Q3 — What are you really carrying today? (was Q1)
+  const q3Suggestions = [
     { text: "Something I've lost that I haven't fully admitted I'm grieving.", label: "Something I've lost" },
-    { text: "Something I'm building or becoming inside myself or out in the world", label: "Something I'm creating" },
+    { text: "Something I'm building or becoming inside myself or out in the world.", label: "Something I'm creating" },
     { text: "A feeling I can't name or a want I can't let go of.", label: "Something I can't name" }
   ];
 
-  const q3Suggestions = [
-    { text: "I want to feel less alone in it", label: "Feel less alone" },
-    { text: "I want language for something I can't name", label: "Find language for it" },
-    { text: "I want to be challenged, not comforted", label: "Be challenged, not comforted" }
-  ];
+  // Typewriter placeholder cycle for Q1
+  let typingInterval = null;
+  let typingTimeout = null;
+
+  function startPlaceholderCycle() {
+    if (!chatInput) return;
+    let exIdx = 0, chIdx = 0, deleting = false;
+
+    function tick() {
+      const phrase = q1Examples[exIdx];
+      if (!deleting) {
+        chatInput.placeholder = phrase.substring(0, chIdx + 1);
+        chIdx++;
+        if (chIdx === phrase.length) {
+          clearInterval(typingInterval);
+          typingTimeout = setTimeout(() => {
+            deleting = true;
+            typingInterval = setInterval(tick, 34);
+          }, 2000);
+          return;
+        }
+      } else {
+        chatInput.placeholder = phrase.substring(0, chIdx - 1);
+        chIdx--;
+        if (chIdx === 0) {
+          deleting = false;
+          exIdx = (exIdx + 1) % q1Examples.length;
+          clearInterval(typingInterval);
+          typingTimeout = setTimeout(() => {
+            typingInterval = setInterval(tick, 52);
+          }, 380);
+          return;
+        }
+      }
+    }
+    typingInterval = setInterval(tick, 52);
+  }
+
+  function stopPlaceholderCycle() {
+    clearInterval(typingInterval);
+    clearTimeout(typingTimeout);
+    typingInterval = null;
+    chatInput.placeholder = '';
+  }
+
+  // Echo validation message for Q2 — makes user feel heard
+  function buildValidationText(q1Answer) {
+    const t = q1Answer.toLowerCase();
+    if (t.includes('alone') || t.includes('seen') || t.includes('understood')) {
+      return "Just making sure I'm with you — you're looking for something that makes you feel less alone in this.";
+    } else if (t.includes('language') || t.includes('name') || t.includes('words') || t.includes('describe')) {
+      return "Just making sure I'm with you — you want words for something that hasn't had them yet.";
+    } else if (t.includes('challeng') || t.includes('push') || t.includes('comfort')) {
+      return "Just making sure I'm with you — you want something that pushes back, not soothes.";
+    } else {
+      return "Just making sure I'm with you — I heard what you shared. Now one more thing.";
+    }
+  }
 
   const updateCharacterCount = () => {
     if (!chatInput || !charCounter) return;
@@ -2507,26 +2972,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
       appendChatMessage(text);
 
-      if (currentStage === 1) {
+if (currentStage === 1) {
         answers.q1 = text;
         currentStage = 2;
-        chatInput.value = '';
-        chatInput.style.height = 'auto';
-        chatInput.placeholder = "Does it feel like something ending or something beginning?";
+        stopPlaceholderCycle();
         stageLabel.textContent = "Step 2 of 3";
-        updateCharacterCount();
-        renderSuggestions(2);
-      } else if (currentStage === 2) {
-        answers.q2 = text;
-        currentStage = 3;
-        chatInput.value = '';
-        chatInput.style.height = 'auto';
-        chatInput.placeholder = "What do you want this to do for you?";
-        stageLabel.textContent = "Step 3 of 3";
-        updateCharacterCount();
-        renderSuggestions(3);
+        renderSuggestions(4);
+
+        editorFrame.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        editorFrame.style.opacity = '0';
+        editorFrame.style.transform = 'translateY(-8px)';
+        setTimeout(() => {
+          editorFrame.classList.add('hidden');
+          editorFrame.style.cssText = '';
+
+          const choiceFrame = document.getElementById('booth-choice-frame');
+          const validationEl = document.getElementById('booth-validation-text');
+          choiceFrame.classList.remove('hidden');
+          validationEl.textContent = buildValidationText(answers.q1);
+          requestAnimationFrame(() => validationEl.classList.remove('opacity-0'));
+        }, 420);
+
       } else if (currentStage === 3) {
-        answers.q3 = text;
 
         editorFrame.classList.add("hidden");
         renderSuggestions(4);
@@ -2538,6 +3005,53 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  
+// Q2 — binary choice buttons
+  const choiceBeginning = document.getElementById('choice-beginning');
+  const choiceEnding = document.getElementById('choice-ending');
+  const questionLabel = document.getElementById('studio-question-label');
+
+  function advanceToQ3(value) {
+    answers.q2 = value;
+    currentStage = 3;
+    appendChatMessage(value);
+
+    const choiceFrame = document.getElementById('booth-choice-frame');
+    choiceFrame.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    choiceFrame.style.opacity = '0';
+    choiceFrame.style.transform = 'translateY(-8px)';
+
+    setTimeout(() => {
+      choiceFrame.classList.add('hidden');
+      choiceFrame.style.cssText = '';
+
+      if (questionLabel) {
+        questionLabel.style.opacity = '0';
+        questionLabel.textContent = 'What are you really carrying today?';
+        setTimeout(() => questionLabel.style.opacity = '1', 50);
+      }
+
+      chatInput.value = '';
+      chatInput.style.height = 'auto';
+      chatInput.placeholder = "Last question — be honest with yourself. The more real you are, the closer we get.";
+      stageLabel.textContent = "Last question";
+      updateCharacterCount();
+      renderSuggestions(3);
+
+      editorFrame.classList.remove('hidden');
+      editorFrame.style.opacity = '0';
+      editorFrame.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      editorFrame.style.transform = 'translateY(8px)';
+      setTimeout(() => {
+        editorFrame.style.opacity = '1';
+        editorFrame.style.transform = 'translateY(0)';
+        chatInput.focus();
+      }, 50);
+    }, 420);
+  }
+
+  if (choiceBeginning) choiceBeginning.addEventListener('click', () => advanceToQ3('Something beginning'));
+  if (choiceEnding) choiceEnding.addEventListener('click', () => advanceToQ3('Something ending'));
 
  async function runStudioPipeline() {
     const payload = {
@@ -2607,7 +3121,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (err) {
       console.error(err);
-      document.getElementById("tts-error").classList.remove("hidden");
       showBespokePlayer("becoming"); 
     }
   }
@@ -2709,8 +3222,9 @@ craftAudio.onended = () => {
     });
   }
 
-  renderSuggestions(1);
+renderSuggestions(1);
   updateCharacterCount();
+  startPlaceholderCycle();
 });
 
     /* Sample Audio Premium Player */
