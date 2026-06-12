@@ -142,6 +142,303 @@
       transform: translateY(0);
     }
 
+    #hero-headline .word {
+      opacity: 0;
+      transform: translateY(0.48em);
+      filter: blur(7px);
+      transition:
+        opacity 860ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 860ms cubic-bezier(0.16, 1, 0.3, 1),
+        filter 860ms cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform, filter;
+    }
+
+    #hero-headline .word.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    .headline-countdown {
+      display: inline-block;
+      min-width: 4.55em;
+      position: relative;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      transition: opacity 320ms ease;
+      will-change: opacity;
+    }
+
+    #hero-countdown-value {
+      font-size: 1.22em;
+      line-height: 0.9;
+    }
+
+    .headline-countdown::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -0.12em;
+      width: var(--headline-underline-width, 4.35em);
+      height: 0.075em;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(198, 167, 102, 0.2) 8%, #c6a766 48%, rgba(198, 167, 102, 0.72) 88%, transparent);
+      transform: translateX(-50%) scaleX(0);
+      transform-origin: left center;
+      opacity: 0;
+      transition:
+        opacity 520ms ease,
+        transform 920ms cubic-bezier(0.16, 1, 0.3, 1),
+        width 320ms ease;
+    }
+
+    .headline-countdown.is-underlined::after {
+      opacity: 0.95;
+      transform: translateX(-50%) scaleX(1);
+    }
+
+    .headline-countdown.is-changing {
+      opacity: 0.72;
+    }
+
+    #hero-headline-wrap {
+      max-height: 260px;
+      transition: opacity 420ms ease, transform 420ms ease, max-height 420ms ease, margin-bottom 420ms ease;
+      overflow: hidden;
+    }
+
+    #hero-headline-wrap.is-dismissed {
+      opacity: 0;
+      transform: translateY(-10px);
+      max-height: 0;
+      margin-bottom: 0;
+      pointer-events: none;
+    }
+
+    .headline-countdown-second {
+      color: #c6a766;
+    }
+
+    @keyframes studioReveal {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+        filter: blur(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes studioChoiceReveal {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.985);
+        filter: blur(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    #studio-mode-switcher {
+      animation: studioReveal 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    #studio-mode-switcher button {
+      position: relative;
+      overflow: hidden;
+    }
+
+    #studio-mode-switcher button::after {
+      content: "";
+      position: absolute;
+      left: 18%;
+      right: 18%;
+      bottom: 0.46rem;
+      height: 1px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(198, 167, 102, 0.85), transparent);
+      opacity: 0;
+      transform: scaleX(0);
+      transition: opacity 360ms ease, transform 560ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #studio-mode-switcher button[aria-pressed="true"]::after {
+      opacity: 0.75;
+      transform: scaleX(1);
+    }
+
+    #hero-editor-frame {
+      overflow: hidden;
+      animation: studioReveal 820ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+    }
+
+    #hero-editor-frame::before {
+      content: "";
+      position: absolute;
+      left: 1rem;
+      right: 1rem;
+      top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(198, 167, 102, 0.58), transparent);
+      opacity: 0.26;
+      transform: scaleX(0.5);
+      transform-origin: center;
+      transition: opacity 420ms ease, transform 640ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #hero-editor-frame:focus-within::before {
+      opacity: 0.9;
+      transform: scaleX(1);
+    }
+
+    #studio-prompt-panel:not(.hidden),
+    #studio-md-panel:not(.hidden) {
+      animation: studioReveal 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    #hero-chat-input,
+    #hero-md-input {
+      transition: color 260ms ease, background-color 260ms ease, filter 260ms ease;
+    }
+
+    #hero-chat-input:focus,
+    #hero-md-input:focus {
+      filter: brightness(1.05);
+    }
+
+    #studio-question-label {
+      animation: studioReveal 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .studio-floating-question {
+      animation: studioReveal 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    #booth-choice-frame:not(.hidden) .quiet-panel {
+      animation: studioReveal 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    #booth-choice-frame:not(.hidden) button {
+      animation: studioChoiceReveal 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    #booth-choice-frame:not(.hidden) button:nth-child(2) {
+      animation-delay: 90ms;
+    }
+
+    #choice-beginning,
+    #choice-ending,
+    #hero-chat-submit {
+      transition:
+        transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 260ms ease,
+        background-color 260ms ease,
+        color 260ms ease,
+        box-shadow 260ms ease;
+    }
+
+    #choice-beginning:hover,
+    #choice-ending:hover {
+      box-shadow: inset 0 1px 0 rgba(242, 234, 220, 0.06), 0 18px 46px rgba(0, 0, 0, 0.22);
+    }
+
+    #booth-reading-frame:not(.hidden),
+    #booth-bridge-frame:not(.hidden),
+    #booth-bespoke-frame:not(.hidden),
+    #post-playback-ui:not(.hidden) {
+      animation: studioReveal 820ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .studio-oracle-mark {
+      position: relative;
+      width: 4.5rem;
+      height: 1px;
+      margin: 0 auto;
+      background: linear-gradient(90deg, transparent, rgba(198, 167, 102, 0.95), transparent);
+      transform-origin: center;
+      animation: studioLineDraw 1200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .studio-oracle-mark::before,
+    .studio-oracle-mark::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 0.38rem;
+      height: 0.38rem;
+      border: 1px solid rgba(198, 167, 102, 0.76);
+      border-radius: 999px;
+      transform: translateY(-50%);
+      background: rgba(13, 9, 7, 0.92);
+    }
+
+    .studio-oracle-mark::before {
+      left: 0;
+    }
+
+    .studio-oracle-mark::after {
+      right: 0;
+    }
+
+    @keyframes studioLineDraw {
+      from {
+        opacity: 0;
+        transform: scaleX(0.25);
+        filter: blur(5px);
+      }
+      to {
+        opacity: 1;
+        transform: scaleX(1);
+        filter: blur(0);
+      }
+    }
+
+    .studio-bridge-line {
+      animation: studioReveal 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    #bespoke-player-interface,
+    #post-playback-ui .membership-reveal {
+      animation: studioReveal 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    #post-playback-ui .membership-reveal:nth-child(2) {
+      animation-delay: 90ms;
+    }
+
+    #post-playback-ui .membership-reveal:nth-child(3) {
+      animation-delay: 170ms;
+    }
+
+    .membership-panel {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .membership-panel::before {
+      content: "";
+      position: absolute;
+      left: 1.5rem;
+      right: 1.5rem;
+      top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(198, 167, 102, 0.62), transparent);
+      opacity: 0.5;
+      transform: scaleX(0.72);
+      transition: opacity 360ms ease, transform 560ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .membership-panel:hover::before {
+      opacity: 0.95;
+      transform: scaleX(1);
+    }
+
     .quiet-panel {
       border: 1px solid rgba(242, 234, 220, 0.14);
       background: rgba(9, 6, 5, 0.58);
@@ -566,14 +863,13 @@
     <!-- Center Studio Workspace -->
     <section class="mx-auto flex flex-1 w-full max-w-3xl flex-col justify-center pb-24 pt-8">
       <!-- Animated Headline -->
-      <div class="text-center mb-10">
+      <div id="hero-headline-wrap" class="text-center mb-10">
         <h1 id="hero-headline" class="font-serif text-4xl font-semibold leading-[1.3] text-cream sm:text-5xl lg:text-6xl max-w-3xl mx-auto">
-          <span class="relative inline-block mr-2 sm:mr-3" id="underline-target">
-            <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out mr-1">2</span>
-            <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out">Minutes</span>
-            <svg class="absolute left-0 -bottom-2 w-[105%] h-[12px] pointer-events-none" viewBox="0 0 120 10" preserveAspectRatio="none">
-              <path d="M3,5 Q60,9 117,4" stroke="#c6a766" stroke-width="2.5" stroke-linecap="round" fill="none" id="headline-underline" style="stroke-dasharray: 120; stroke-dashoffset: 120; transition: stroke-dashoffset 1000ms cubic-bezier(0.25, 1, 0.5, 1);" />
-            </svg>
+          <span class="relative inline-block mr-1 sm:mr-1.5" id="underline-target">
+            <span id="hero-countdown-text" class="headline-countdown inline-block whitespace-nowrap">
+              <span id="hero-countdown-value" class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out mr-1">2</span>
+              <span id="hero-countdown-unit" class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out">Minutes</span>
+            </span>
           </span>
           <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out mr-2 sm:mr-3">That</span>
           <span class="word inline-block opacity-0 transform translate-y-3 transition-all duration-[600ms] ease-out mr-2 sm:mr-3">Might</span>
@@ -593,12 +889,24 @@
 
       <!-- Active Workspace Node containing states -->
       <div id="studio-active-container" class="w-full relative">
+        <div id="studio-mode-switcher" class="mb-3 flex flex-wrap items-center justify-center gap-2">
+          <button type="button" id="studio-mode-prompt" class="px-4 py-2 rounded-full text-[10px] font-mono tracking-widest uppercase transition-all duration-300 bg-antique text-ink font-bold shadow-lg" aria-pressed="true">What do you need this to give you?</button>
+          <button type="button" id="studio-mode-md" class="px-4 py-2 rounded-full text-[10px] font-mono tracking-widest uppercase transition-all duration-300 text-linen/50 hover:text-cream" aria-pressed="false">I already have a .md file</button>
+        </div>
+        <div id="studio-floating-question" class="studio-floating-question hidden mb-4 text-center">
+          <p id="studio-floating-question-text" class="font-serif text-xl sm:text-2xl text-cream leading-relaxed"></p>
+        </div>
         
         <!-- STATE A: Prompt Editor -->
         <div id="hero-editor-frame" class="w-full relative rounded-2xl border border-linen/10 bg-[#0d0907]/75 p-3.5 shadow-2xl backdrop-blur-xl focus-within:border-[#c6a766]/40 transition duration-300">
           <div class="flex flex-col w-full">
-<p id="studio-question-label" class="text-[10px] font-mono uppercase tracking-[0.26em] text-antique/50 px-3 pt-2 pb-1 transition-opacity duration-500">What do you need this to give you?</p>
-            <textarea id="hero-chat-input" rows="3" placeholder="" class="w-full bg-transparent text-cream px-3 py-2 text-base outline-none resize-none font-sans leading-relaxed placeholder:text-linen/25 min-h-[76px] max-h-[180px] scrollbar-none"></textarea>
+            <p id="studio-question-label" class="hidden text-[10px] font-mono uppercase tracking-[0.26em] text-antique/50 px-3 pt-2 pb-1 transition-opacity duration-500">What do you need this to give you?</p>
+            <div id="studio-prompt-panel">
+              <textarea id="hero-chat-input" rows="3" placeholder="" class="w-full bg-transparent text-cream px-3 py-2 text-base outline-none resize-none font-sans leading-relaxed placeholder:text-linen/25 min-h-[76px] max-h-[180px] scrollbar-none"></textarea>
+            </div>
+            <div id="studio-md-panel" class="hidden">
+              <textarea id="hero-md-input" rows="5" placeholder="Paste your .md archive here..." class="w-full bg-black/30 text-cream px-3 py-3 text-sm outline-none resize-none font-mono leading-relaxed placeholder:text-linen/25 min-h-[132px] max-h-[240px] scrollbar-none"></textarea>
+            </div>
             
             <div class="flex items-center justify-between border-t border-white/[0.05] pt-3 mt-3 px-3">
               <div class="flex items-center gap-5 text-[9px] font-mono tracking-[0.2em] text-linen/35 uppercase">
@@ -617,9 +925,8 @@
 
 <!-- STATE A2: BINARY CHOICE (Q2) -->
         <div id="booth-choice-frame" class="hidden w-full">
+          <p id="booth-validation-text" class="studio-floating-question font-serif text-xl sm:text-2xl text-cream text-center leading-relaxed mb-6 italic opacity-0 transition-opacity duration-700"></p>
           <div class="quiet-panel rounded-2xl p-6 sm:p-8 shadow-soft">
-            <p id="booth-validation-text" class="font-serif text-lg text-cream text-center leading-relaxed mb-8 italic opacity-0 transition-opacity duration-700"></p>
-            <p class="text-[10px] font-mono uppercase tracking-[0.28em] text-linen/40 text-center mb-5">Does this feel like</p>
             <div class="grid grid-cols-2 gap-4">
               <button type="button" id="choice-beginning" class="group flex flex-col items-center gap-3 rounded-xl border border-linen/10 bg-white/[0.03] hover:border-antique/50 hover:bg-antique/5 px-4 py-7 transition-all duration-300 active:scale-[0.97]">
                 <span class="text-2xl text-antique/50 group-hover:text-antique transition duration-300">✦</span>
@@ -635,24 +942,17 @@
           </div>
         </div>
 
-        <!-- STATE B: LOADING & SYNTHETIC NEURAL READING -->
-
-        <!-- STATE B: LOADING & SYNTHETIC NEURAL READING -->
+        <!-- STATE B: LOADING & ARCHIVE READING -->
         <div id="booth-reading-frame" class="hidden opacity-0 transform translate-y-4 transition-all duration-700">
           <div class="quiet-panel rounded-2xl p-8 shadow-soft text-center">
-            <div class="flex justify-center mb-6">
-              <div class="relative flex h-12 w-12 items-center justify-center rounded-full bg-blue-950/30 border border-blue-500/20">
-                <div class="absolute inset-0 rounded-full border border-blue-500/30 animate-ping opacity-25"></div>
-                <span class="text-xs text-blue-300 font-mono">AI</span>
-              </div>
+            <div class="mb-6">
+              <div class="studio-oracle-mark" aria-hidden="true"></div>
             </div>
-            <h4 class="text-xs font-semibold text-[#f2eadc] uppercase tracking-[0.25em] opacity-80 mb-2">Synthetic Draft</h4>
-            <p id="azure-status-text" class="text-xs text-linen/60 mb-6">Consulting the archive...</p>
+            <h4 class="font-serif text-2xl text-cream mb-2">Composing your reading.</h4>
+            <p id="azure-status-text" class="text-xs font-mono uppercase tracking-[0.24em] text-antique/60 mb-6">Consulting the archive...</p>
             
-            <div class="wave-container flex justify-center h-8 gap-1 mb-6" id="ai-waveform">
-              <div class="wave-bar bg-blue-400/50 w-1 rounded-full animate-pulse h-6"></div>
-              <div class="wave-bar bg-blue-400/50 w-1 rounded-full animate-pulse h-4" style="animation-delay:0.1s"></div>
-              <div class="wave-bar bg-blue-400/50 w-1 rounded-full animate-pulse h-5" style="animation-delay:0.2s"></div>
+            <div class="wave-container flex justify-center mb-6" id="ai-waveform" aria-hidden="true">
+              <div class="h-px w-24 bg-gradient-to-r from-transparent via-antique/50 to-transparent"></div>
             </div>
 
             <p id="still-yours" class="text-[10px] font-serif italic text-antique/50 opacity-0 transition-opacity duration-1000">Still yours.</p>
@@ -671,12 +971,12 @@
             <!-- WRAPPER FOR PLAYER (To be hidden later) -->
             <div id="bespoke-player-interface">
               <div class="text-center mb-6">
-                <span class="inline-block bg-[#102c26]/40 text-emerald-300 border border-emerald/20 text-[9px] uppercase tracking-[0.25em] px-3.5 py-1 rounded-full font-bold">Bespoke Master</span>
+                <span class="inline-block text-antique/70 text-[9px] uppercase tracking-[0.25em] font-mono">Bespoke Master</span>
                 <h3 class="font-serif text-3xl font-semibold text-cream mt-3">The Bespoke Audio Edition</h3>
                 <p id="bespoke-territory-label" class="text-xs text-linen/70 mt-1 italic">A piece on becoming.</p>
               </div>
 
-              <div class="bg-black/40 border border-[#c6a766]/15 rounded-xl p-5 sm:p-6 backdrop-blur-md">
+              <div class="membership-panel bg-black/35 border border-[#c6a766]/15 rounded-xl p-5 sm:p-6 backdrop-blur-md">
                 <div class="flex items-center gap-3">
                   <span id="bespoke-time-current" class="text-[10px] font-mono text-linen/60">0:00</span>
                   <div class="relative flex-1">
@@ -686,27 +986,28 @@
                 </div>
 
                 <div class="flex items-center justify-center gap-8 mt-6">
-                  <button type="button" id="play-bespoke-btn" class="flex h-16 w-16 items-center justify-center rounded-full bg-cream text-ink text-xl transition-all duration-300 hover:bg-antique hover:scale-105 shadow-lg shadow-black/40 animate-pulse">▶</button>
+                  <button type="button" id="play-bespoke-btn" class="flex h-16 w-16 items-center justify-center rounded-full bg-cream text-ink text-xl transition-all duration-300 hover:bg-antique hover:scale-105 shadow-lg shadow-black/40">▶</button>
                 </div>
               </div>
             </div>
 
           
           <!-- THE REVISED OFFERING: THE MEMBERSHIP -->
-<div id="post-playback-ui" class="hidden text-left animate-in fade-in zoom-in duration-1000 px-4 md:px-0">
+<div id="post-playback-ui" class="hidden text-left px-4 md:px-0">
   <div class="max-w-4xl mx-auto">
     
     <!-- Header -->
-    <div class="text-center mb-12">
-      <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-antique/60 mb-2">The Annual Subscription</p>
+    <div class="membership-reveal text-center mb-12">
+      <div class="studio-oracle-mark mb-6" aria-hidden="true"></div>
+      <p class="text-[10px] font-mono uppercase tracking-[0.3em] text-antique/60 mb-2">The Annual Subscription</p>
       <h2 class="font-serif text-3xl md:text-5xl font-medium text-cream leading-tight">A Life, Observed and Voiced.</h2>
       <p class="mt-4 text-linen/50 font-serif italic text-lg">Your worldview, synthesized into a daily and weekly practice.</p>
     </div>
 
     <!-- The Features Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+    <div class="membership-reveal grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
       <!-- Feature 1 -->
-      <div class="quiet-panel p-6 rounded-xl border-l-2 border-l-antique/40">
+      <div class="membership-panel quiet-panel p-6 rounded-xl">
         <h4 class="text-antique font-mono text-[10px] uppercase tracking-widest mb-3">01. The Daily Triptych</h4>
         <p class="text-cream font-serif text-lg mb-2">Three Bespoke Reflections</p>
         <p class="text-linen/60 text-sm leading-relaxed">
@@ -715,7 +1016,7 @@
       </div>
 
       <!-- Feature 2 -->
-      <div class="quiet-panel p-6 rounded-xl border-l-2 border-l-antique/40">
+      <div class="membership-panel quiet-panel p-6 rounded-xl">
         <h4 class="text-antique font-mono text-[10px] uppercase tracking-widest mb-3">02. The Sunday Synthesis</h4>
         <p class="text-cream font-serif text-lg mb-2">4 Bespoke Audiobooks / Month</p>
         <p class="text-linen/60 text-sm leading-relaxed">
@@ -725,10 +1026,10 @@
     </div>
 
     <!-- Pricing Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+    <div class="membership-reveal grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
       
       <!-- Monthly Option -->
-      <div class="border border-linen/10 bg-black/20 p-8 rounded-sm flex flex-col items-center hover:border-linen/30 transition-all">
+      <div class="membership-panel border border-linen/10 bg-black/20 p-8 rounded-xl flex flex-col items-center hover:border-antique/30 transition-all">
         <span class="text-[10px] font-mono uppercase tracking-widest text-linen/40 mb-4">Monthly Ritual</span>
         <div class="flex items-baseline gap-1">
           <span class="font-serif text-4xl text-cream">$49</span>
@@ -745,8 +1046,8 @@
       </div>
 
       <!-- Yearly Option (The Highlight) -->
-      <div class="relative border-2 border-antique bg-antique/5 p-8 rounded-sm flex flex-col items-center scale-105 shadow-2xl">
-        <div class="absolute -top-3 bg-antique text-ink px-3 py-1 text-[9px] font-bold uppercase tracking-tighter">Recommended</div>
+      <div class="membership-panel relative border border-antique/60 bg-antique/5 p-8 rounded-xl flex flex-col items-center shadow-2xl shadow-black/30">
+        <div class="absolute -top-3 bg-antique text-ink px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest">Recommended</div>
         <span class="text-[10px] font-mono uppercase tracking-widest text-antique mb-4">The Annual Ledger</span>
         <div class="flex items-baseline gap-1">
           <span class="font-serif text-5xl text-cream">$490</span>
@@ -766,7 +1067,7 @@
     </div>
 
     <!-- Secondary Links -->
-    <div class="mt-16 text-center">
+    <div class="membership-reveal mt-16 text-center">
       <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-linen/20">
         Already a member? <a href="login/index.html" class="text-linen/40 hover:text-antique border-b border-linen/10">Access your library →</a>
       </p>
@@ -2764,35 +3065,117 @@ document.getElementById('nav-privacy-trigger').addEventListener('click', functio
     
 document.addEventListener("DOMContentLoaded", () => {
   // --- HEADLINE ANIMATION LOGIC ---
+  const heroHeadlineWrap = document.getElementById('hero-headline-wrap');
   const words = document.querySelectorAll('#hero-headline .word');
-  const underline = document.getElementById('headline-underline');
+  const countdownText = document.getElementById('hero-countdown-text');
+  const countdownValue = document.getElementById('hero-countdown-value');
+  const countdownUnit = document.getElementById('hero-countdown-unit');
+  let countdownInterval = null;
+  let countdownTimeout = null;
+  let countdownStopped = false;
 
   const animateHeadline = () => {
     let delay = 100;
     words.forEach((word, idx) => {
       setTimeout(() => {
-        word.classList.remove('opacity-0', 'translate-y-3');
-        word.classList.add('opacity-100', 'translate-y-0');
-        
-        if (idx === 1 && underline) {
-          setTimeout(() => {
-            underline.style.strokeDashoffset = '0';
-          }, 250);
+        word.classList.add('is-visible');
+
+        if (idx === 1 && countdownText) {
+          setTimeout(() => countdownText.classList.add('is-underlined'), 320);
         }
       }, delay);
-      delay += 220; 
+      delay += idx < 2 ? 170 : 125;
     });
+
+    countdownTimeout = setTimeout(startHeadlineCountdown, delay + 600 + 5000);
+  };
+
+  const setCountdownText = (value, unit, shouldFade = false) => {
+    if (!countdownText || !countdownValue || !countdownUnit) return;
+    const underlineWidth = unit === 'Minute' ? '5.15em' : unit === 'Second' ? '4.1em' : unit === 'Seconds' ? '4.7em' : '4.35em';
+    countdownText.style.setProperty('--headline-underline-width', underlineWidth);
+
+    if (!shouldFade) {
+      countdownValue.innerHTML = value;
+      countdownUnit.textContent = unit;
+      return;
+    }
+
+    countdownText.classList.add('is-changing');
+    setTimeout(() => {
+      countdownValue.innerHTML = value;
+      countdownUnit.textContent = unit;
+      requestAnimationFrame(() => countdownText.classList.remove('is-changing'));
+    }, 180);
+  };
+
+  const formatCountdown = (seconds) => {
+    if (seconds >= 60) {
+      const mins = Math.floor(seconds / 60);
+      const secs = String(seconds % 60).padStart(2, '0');
+      return { value: `${mins}:<span class="headline-countdown-second">${secs}</span>`, unit: 'Minute' };
+    }
+
+    return {
+      value: `<span class="headline-countdown-second">${seconds}</span>`,
+      unit: seconds === 1 ? 'Second' : 'Seconds'
+    };
+  };
+
+  const startHeadlineCountdown = () => {
+    if (!countdownText || !countdownValue || !countdownUnit || countdownInterval || countdownStopped) return;
+
+    let remaining = 119;
+    const tick = () => {
+      if (countdownStopped) return;
+      const next = formatCountdown(remaining);
+      setCountdownText(next.value, next.unit, remaining === 119);
+
+      if (remaining <= 1) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        setTimeout(() => setCountdownText('2', 'Minutes', true), 1200);
+        return;
+      }
+
+      remaining = Math.max(1, remaining - 3);
+    };
+
+    tick();
+    countdownInterval = setInterval(tick, 3000);
+  };
+
+  const stopHeadlineCountdown = () => {
+    if (countdownStopped) return;
+    countdownStopped = true;
+    clearTimeout(countdownTimeout);
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+    setCountdownText('2', 'Minutes', false);
+  };
+
+  const dismissHeroHeadline = () => {
+    stopHeadlineCountdown();
+    heroHeadlineWrap?.classList.add('is-dismissed');
   };
 
   animateHeadline();
 
   // --- CONVERSATIONAL STUDIO WORKSPACE LOGIC ---
   const chatInput = document.getElementById('hero-chat-input');
+  const mdInput = document.getElementById('hero-md-input');
   const chatSubmit = document.getElementById('hero-chat-submit');
   const chatHistory = document.getElementById('hero-chat-history');
   const suggestionsContainer = document.getElementById('hero-suggestions');
   const stageLabel = document.getElementById('studio-stage-label');
   const charCounter = document.getElementById('studio-char-count');
+  const studioModeSwitcher = document.getElementById('studio-mode-switcher');
+  const studioModePrompt = document.getElementById('studio-mode-prompt');
+  const studioModeMd = document.getElementById('studio-mode-md');
+  const studioPromptPanel = document.getElementById('studio-prompt-panel');
+  const studioMdPanel = document.getElementById('studio-md-panel');
+  const studioFloatingQuestion = document.getElementById('studio-floating-question');
+  const studioFloatingQuestionText = document.getElementById('studio-floating-question-text');
 
   const editorFrame = document.getElementById('hero-editor-frame');
   const readingFrame = document.getElementById('booth-reading-frame');
@@ -2812,6 +3195,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const postPlaybackUi = document.getElementById('post-playback-ui');
 
   let currentStage = 1;
+  let studioInputMode = 'prompt';
+  let studioSubmissionSource = 'guided';
   const stageLimits = { 1: 150, 2: 120, 3: 200 };
   const answers = { q1: '', q2: '', q3: '' };
 
@@ -2841,6 +3226,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startPlaceholderCycle() {
     if (!chatInput) return;
+    stopPlaceholderCycle();
     let exIdx = 0, chIdx = 0, deleting = false;
 
     function tick() {
@@ -2896,6 +3282,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updateCharacterCount = () => {
     if (!chatInput || !charCounter) return;
+    if (studioInputMode === 'md' && mdInput) {
+      charCounter.textContent = `${mdInput.value.length} chars`;
+      return;
+    }
     const limit = stageLimits[currentStage] || 150;
     const currentLen = chatInput.value.length;
     charCounter.textContent = `${currentLen} / ${limit}`;
@@ -2921,6 +3311,82 @@ document.addEventListener("DOMContentLoaded", () => {
     chatHistory.scrollTop = chatHistory.scrollHeight;
   };
 
+  const setStudioInputMode = (mode) => {
+    studioInputMode = mode;
+    const isMdMode = mode === 'md';
+
+    studioPromptPanel?.classList.toggle('hidden', isMdMode);
+    studioMdPanel?.classList.toggle('hidden', !isMdMode);
+    studioModePrompt?.classList.toggle('bg-antique', !isMdMode);
+    studioModePrompt?.classList.toggle('text-ink', !isMdMode);
+    studioModePrompt?.classList.toggle('font-bold', !isMdMode);
+    studioModePrompt?.classList.toggle('shadow-lg', !isMdMode);
+    studioModePrompt?.classList.toggle('text-linen/50', isMdMode);
+    studioModePrompt?.classList.toggle('hover:text-cream', isMdMode);
+    studioModeMd?.classList.toggle('bg-antique', isMdMode);
+    studioModeMd?.classList.toggle('text-ink', isMdMode);
+    studioModeMd?.classList.toggle('font-bold', isMdMode);
+    studioModeMd?.classList.toggle('shadow-lg', isMdMode);
+    studioModeMd?.classList.toggle('text-linen/50', !isMdMode);
+    studioModeMd?.classList.toggle('hover:text-cream', !isMdMode);
+    studioModePrompt?.setAttribute('aria-pressed', String(!isMdMode));
+    studioModeMd?.setAttribute('aria-pressed', String(isMdMode));
+
+    if (currentStage === 1) {
+      stageLabel.textContent = isMdMode ? 'Markdown archive' : 'Step 1 of 3';
+      suggestionsContainer?.classList.toggle('hidden', isMdMode);
+    }
+
+    if (isMdMode) {
+      stopPlaceholderCycle();
+      mdInput?.focus();
+    } else if (currentStage === 1) {
+      startPlaceholderCycle();
+      chatInput?.focus();
+    } else {
+      stopPlaceholderCycle();
+      chatInput?.focus();
+    }
+    updateCharacterCount();
+  };
+
+  const syncActiveInputToChatInput = () => {
+    if (studioInputMode === 'md' && mdInput && chatInput) {
+      chatInput.value = mdInput.value;
+    }
+  };
+
+  const beginReadingState = () => {
+    editorFrame.classList.add("hidden");
+    renderSuggestions(4);
+
+    readingFrame.classList.remove("hidden");
+    setTimeout(() => readingFrame.classList.remove("opacity-0", "translate-y-4"), 50);
+
+    runStudioPipeline();
+  };
+
+  const logStudioInteraction = (territory = "pending", script = "") => {
+    return supabaseClient.from('listening_logs').insert([
+      {
+        q1_carrying: answers.q1,
+        q2_state: answers.q2,
+        q3_goal: answers.q3,
+        assigned_territory: territory,
+        ai_script: script,
+        created_at: new Date().toISOString()
+      }
+    ]).then(({ error }) => {
+      if (error) {
+        console.error("Supabase logging failed:", error);
+        return false;
+      } else {
+        console.log("Interaction logged to production ledger.");
+        return true;
+      }
+    });
+  };
+
   const renderSuggestions = (stage) => {
     if (!suggestionsContainer) return;
     suggestionsContainer.innerHTML = '';
@@ -2943,6 +3409,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (chatInput) {
           chatInput.value = item.text;
           chatInput.dispatchEvent(new Event('input'));
+          chatInput.focus();
         }
       });
       suggestionsContainer.appendChild(btn);
@@ -2951,12 +3418,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (chatInput) {
     chatInput.addEventListener('input', () => {
+      stopHeadlineCountdown();
       chatInput.style.height = 'auto';
       chatInput.style.height = Math.min(chatInput.scrollHeight, 180) + 'px';
       updateCharacterCount();
     });
 
+    chatInput.addEventListener('focus', stopHeadlineCountdown);
+
     chatInput.addEventListener('keydown', (e) => {
+      stopHeadlineCountdown();
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         chatSubmit.click();
@@ -2964,17 +3435,59 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  if (mdInput) {
+    mdInput.addEventListener('input', () => {
+      stopHeadlineCountdown();
+      mdInput.style.height = 'auto';
+      mdInput.style.height = Math.min(mdInput.scrollHeight, 240) + 'px';
+      updateCharacterCount();
+    });
+
+    mdInput.addEventListener('focus', stopHeadlineCountdown);
+
+    mdInput.addEventListener('keydown', (e) => {
+      stopHeadlineCountdown();
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        syncActiveInputToChatInput();
+        chatSubmit.click();
+      }
+    });
+  }
+
+  studioModePrompt?.addEventListener('click', () => setStudioInputMode('prompt'));
+  studioModeMd?.addEventListener('click', () => setStudioInputMode('md'));
+
   if (chatSubmit) {
     chatSubmit.addEventListener('click', () => {
       if (!chatInput) return;
+      syncActiveInputToChatInput();
       const text = chatInput.value.trim();
       if (!text) return;
 
-      appendChatMessage(text);
+      const isMdArchiveSubmission = studioInputMode === 'md' && currentStage === 1;
+      appendChatMessage(isMdArchiveSubmission ? 'Markdown archive received.' : text);
+
+      if (isMdArchiveSubmission) {
+        studioSubmissionSource = 'markdown_archive';
+        answers.q1 = 'Markdown archive provided';
+        answers.q2 = 'Archive mode';
+        answers.q3 = text;
+        if (studioModeSwitcher) studioModeSwitcher.classList.add('hidden');
+        if (studioFloatingQuestion) studioFloatingQuestion.classList.add('hidden');
+        dismissHeroHeadline();
+        stopPlaceholderCycle();
+        beginReadingState();
+        return;
+      }
 
 if (currentStage === 1) {
+        studioSubmissionSource = 'guided';
         answers.q1 = text;
         currentStage = 2;
+        if (studioModeSwitcher) studioModeSwitcher.classList.add('hidden');
+        if (studioFloatingQuestion) studioFloatingQuestion.classList.add('hidden');
+        dismissHeroHeadline();
         stopPlaceholderCycle();
         stageLabel.textContent = "Step 2 of 3";
         renderSuggestions(4);
@@ -2995,13 +3508,9 @@ if (currentStage === 1) {
 
       } else if (currentStage === 3) {
 
-        editorFrame.classList.add("hidden");
-        renderSuggestions(4);
-
-        readingFrame.classList.remove("hidden");
-        setTimeout(() => readingFrame.classList.remove("opacity-0", "translate-y-4"), 50);
-
-        runStudioPipeline();
+        answers.q3 = text;
+        if (studioFloatingQuestion) studioFloatingQuestion.classList.add('hidden');
+        beginReadingState();
       }
     });
   }
@@ -3026,11 +3535,16 @@ if (currentStage === 1) {
       choiceFrame.style.cssText = '';
 
       if (questionLabel) {
-        questionLabel.style.opacity = '0';
-        questionLabel.textContent = 'What are you really carrying today?';
-        setTimeout(() => questionLabel.style.opacity = '1', 50);
+        questionLabel.classList.add('hidden');
       }
 
+      if (studioFloatingQuestion && studioFloatingQuestionText) {
+        studioFloatingQuestionText.textContent = 'What are you really carrying today?';
+        studioFloatingQuestion.classList.remove('hidden');
+      }
+
+      if (studioModeSwitcher) studioModeSwitcher.classList.add('hidden');
+      setStudioInputMode('prompt');
       chatInput.value = '';
       chatInput.style.height = 'auto';
       chatInput.placeholder = "Last question — be honest with yourself. The more real you are, the closer we get.";
@@ -3059,6 +3573,7 @@ if (currentStage === 1) {
       q2: answers.q2,
       q3: answers.q3
     };
+    let interactionLogged = false;
 
     try {
       azureStatus.textContent = "Consulting the archive...";
@@ -3069,23 +3584,14 @@ if (currentStage === 1) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
+      if (!geminiRes.ok) {
+        throw new Error(`Gemini API returned status code ${geminiRes.status}`);
+      }
       const data = await geminiRes.json();
-      
-      // 2. RECORD TO SUPABASE (CRM LOGGING)
-      // This happens in the background while the user waits
-      supabaseClient.from('listening_logs').insert([
-        {
-          q1_carrying: answers.q1,
-          q2_state: answers.q2,
-          q3_goal: answers.q3,
-          assigned_territory: data.territory,
-          ai_script: data.expanded_text,
-          created_at: new Date().toISOString()
-        }
-      ]).then(() => console.log("Interaction logged to production ledger."));
+      interactionLogged = await logStudioInteraction(data.territory, data.expanded_text);
 
 // 3. Call your TTS API (pointing directly to Supabase Edge)
-      azureStatus.textContent = "Synthesizing voice...";
+      azureStatus.textContent = "Preparing the voice...";
       const ttsRes = await fetch("https://frwjaixxlgthkgjtafhz.supabase.co/functions/v1/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -3102,7 +3608,7 @@ if (currentStage === 1) {
       aiAudio.src = URL.createObjectURL(blob);
       
       // 4. Play the AI reading
-      azureStatus.textContent = "Azure Neural Reading";
+      azureStatus.textContent = "Reading prepared";
       stillYours.classList.remove("opacity-0");
       aiAudio.play();
 
@@ -3121,21 +3627,20 @@ if (currentStage === 1) {
 
     } catch (err) {
       console.error(err);
+      if (!interactionLogged) {
+        logStudioInteraction(studioSubmissionSource === 'markdown_archive' ? 'markdown_archive' : 'pipeline_error', err.message || "Pipeline failed");
+      }
       showBespokePlayer("becoming"); 
     }
   }
 
   function revealBridgeText(text, callback) {
-    const words = text.split(" ");
     bridgeTextContainer.innerHTML = "";
-    words.forEach((word, i) => {
-      const span = document.createElement("span");
-      span.textContent = word + " ";
-      span.className = "opacity-0 transition-opacity duration-700 inline-block";
-      bridgeTextContainer.appendChild(span);
-      setTimeout(() => span.classList.remove("opacity-0"), i * 80);
-    });
-    setTimeout(callback, words.length * 80 + 1000);
+    const line = document.createElement("span");
+    line.textContent = text;
+    line.className = "studio-bridge-line inline-block";
+    bridgeTextContainer.appendChild(line);
+    setTimeout(callback, 2100);
   }
 
   function showBespokePlayer(territory) {
